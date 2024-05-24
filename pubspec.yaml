@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   salomon_bottom_bar: ^3.0.0 # 원하는 버전으로 설정
+  http: ^1.2.1 # 최신 버전으로 변경
 
 
   # The following adds the Cupertino Icons font to your application.
