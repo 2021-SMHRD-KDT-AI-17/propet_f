@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:propetsor/chatbot/api_service.dart';
 import 'package:propetsor/chatbot/chatbot.dart';
 import 'package:propetsor/mainPage/main_non.dart';
 import 'package:propetsor/mypage/mypage_1.dart';
@@ -17,7 +18,7 @@ class _GoogleBottomBarState extends State<MainPage_1> {
 
   final List<Widget> _pages = [
     MainNon(),
-    ChatBotPage(),
+    ChatBotPage(apiService: APIService()),
     MainShopPage(),
     MyPage(),
   ];

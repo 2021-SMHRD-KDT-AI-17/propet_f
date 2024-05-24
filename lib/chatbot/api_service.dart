@@ -13,7 +13,6 @@ class APIService {
       }),
     );
 
-    print("------------------------------ 통신이 되는지 확인 중");
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['response'];
     } else {
