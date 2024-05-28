@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:propetsor/model/Users.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 
 class JoinPage extends StatelessWidget {
   const JoinPage({Key? key}) : super(key: key);
@@ -182,6 +183,16 @@ void joinMember(member,context) async{
     data: {'joinMember':member}, // 요쳥할 때 같이 보낼 데이터(json-key:value)
   );
 
-
+  if(int.parse(res.toString())==1){ // 회원가입 성공
+    CherryToast.success(
+      title: Text('회원가입에 성공했습니다'),
+    ).show(context);
+    // main -> login_view -> join_view
+    Navigator.pop(context); //로그인 화면으로 이동
+  }else{ //0 회원가입 실패
+    CherryToast.info(
+      title: Text('회원가입에 실패했습니다'),
+    ).show(context);
+  }
 
 }
