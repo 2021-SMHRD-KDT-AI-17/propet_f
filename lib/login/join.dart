@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/login/login.dart';
 import 'package:propetsor/model/Users.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 
@@ -188,7 +189,11 @@ void joinMember(member,context) async{
       title: Text('회원가입에 성공했습니다'),
     ).show(context);
     // main -> login_view -> join_view
-    Navigator.pop(context); //로그인 화면으로 이동
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => LoginPage()), // YourMainPage 대신에 이동할 페이지를 지정하세요.
+          (route) => false,
+    );
   }else{ //0 회원가입 실패
     CherryToast.info(
       title: Text('회원가입에 실패했습니다'),
