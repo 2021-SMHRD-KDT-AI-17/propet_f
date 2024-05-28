@@ -191,7 +191,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: AnimatedTextKit(
                   animatedTexts: [
                     TyperAnimatedText(
-                      '잠시만 기다려주세요..!',
+                      '잠시만 기다려주세요..!!',
                       textStyle: TextStyle(fontStyle: FontStyle.italic, color: Colors.black),
                       speed: Duration(milliseconds: 100),
                     ),
