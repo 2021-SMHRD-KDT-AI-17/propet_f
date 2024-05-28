@@ -152,7 +152,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  '답변을 기다리는 중...!',
+                  '답변을 기다리는 중...!!',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
