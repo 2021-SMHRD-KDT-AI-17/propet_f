@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:propetsor/login/join.dart';
-import 'package:propetsor/model/AiMember.dart';
+
+import 'package:propetsor/model/Users.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -165,7 +166,7 @@ class __FormContentState extends State<_FormContent> {
               //   return null;
               // },
               decoration: const InputDecoration(
-                labelText: 'IDd',
+                labelText: 'ID',
                 hintText: 'Enter your ID',
                 prefixIcon: Icon(Icons.perm_identity),
                 border: OutlineInputBorder(),
@@ -221,7 +222,7 @@ class __FormContentState extends State<_FormContent> {
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
                     // 로그인 로직 처리
-                    AiMember m = AiMember.login(id: idCon.text, pw: pwCon.text);
+                    Users m = Users.login(id: idCon.text, pw: pwCon.text);
                     loginMember(m,context);
                   }
 
@@ -242,6 +243,7 @@ class __FormContentState extends State<_FormContent> {
                 ),
                 onPressed: () {
                   // 추가적인 로직 처리
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => JoinPage()));
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -269,7 +271,7 @@ void loginMember(member, context) async {
 
   try {
     Response res = await dio.post(
-      'http://59.0.124.89:8089/boot/login',
+      'http://59.0.236.149:8089/boot/login',
       data: {'loginMember': member},
     );
     print(res);

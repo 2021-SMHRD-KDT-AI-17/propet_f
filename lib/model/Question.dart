@@ -1,20 +1,21 @@
 class Question{
-  int q_idx;
-  String q_content;
-  String q_answer;
+  int qidx;
+  String qcontent;
+  String qanswer;
   //Unit8List q_embedding;  // gpt는 된다는데 안됨
 
-  String q_tf;
-  String q_category;
-  String u_id;
+  String qtf;
+  String qcategory;
+  int uidx;
 
   Question({
-    required this.q_idx,
-    required this.q_content,
-    required this.q_answer,
-    required this.q_tf,
-    required this.q_category,
-    required this.u_id,
+    required this.qidx,
+    required this.qcontent,
+    required this.qanswer,
+
+    required this.qtf,
+    required this.qcategory,
+    required this.uidx,
 
   });
 

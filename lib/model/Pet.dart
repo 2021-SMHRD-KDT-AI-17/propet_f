@@ -1,26 +1,26 @@
 class Pet{
-  int p_idx;
-  String p_name;
-  String p_kind;
-  int p_age;
-  double p_kg;
-  String p_gender;
-  String p_surgery;
-  String p_disease;
-  String p_diseaseinf;
-  String u_id;
+  int pidx;
+  String pname;
+  String pkind;
+  int page;
+  double pkg;
+  String pgender;
+  String psurgery;
+  String pdisease;
+  String pdiseaseinf;
+  int uidx;
 
   Pet({
-    required this.p_idx,
-    required this.p_name,
-    required this.p_kind,
-    required this.p_age,
-    required this.p_kg,
-    required this.p_gender,
-    required this.p_surgery,
-    required this.p_disease,
-    required this.p_diseaseinf,
-    required this.u_id,
+    required this.pidx,
+    required this.pname,
+    required this.pkind,
+    required this.page,
+    required this.pkg,
+    required this.pgender,
+    required this.psurgery,
+    required this.pdisease,
+    required this.pdiseaseinf,
+    required this.uidx,
 
   });
 

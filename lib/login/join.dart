@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/model/Users.dart';
 
 class JoinPage extends StatelessWidget {
   const JoinPage({Key? key}) : super(key: key);
@@ -38,8 +40,14 @@ class JoinPage extends StatelessWidget {
 class _Logo extends StatelessWidget {
   const _Logo({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
+
+
+
+
     final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
 
     return Column(
@@ -67,8 +75,17 @@ class __FormContentState extends State<_FormContent> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  TextEditingController idCon=TextEditingController();
+  TextEditingController pwCon=TextEditingController();
+  TextEditingController nameCon=TextEditingController();
+  TextEditingController phoneCon=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+
+
+
+
     return Container(
       constraints: const BoxConstraints(maxWidth: 300),
       child: Form(
@@ -78,6 +95,7 @@ class __FormContentState extends State<_FormContent> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextFormField(
+              controller: idCon,
               decoration: const InputDecoration(
                 labelText: 'Id',
                 hintText: 'Enter your ID',
@@ -87,6 +105,7 @@ class __FormContentState extends State<_FormContent> {
             ),
             _gap(),
             TextFormField(
+              controller: pwCon,
               decoration: const InputDecoration(
                 labelText: 'Pw',
                 hintText: 'Enter your PW',
@@ -96,6 +115,7 @@ class __FormContentState extends State<_FormContent> {
             ),
             _gap(),
             TextFormField(
+              controller: nameCon,
               decoration: const InputDecoration(
                 labelText: 'Name',
                 hintText: 'Enter your Name',
@@ -105,6 +125,7 @@ class __FormContentState extends State<_FormContent> {
             ),
             _gap(),
             TextFormField(
+              controller: phoneCon,
               decoration: const InputDecoration(
                 labelText: 'Phone',
                 hintText: 'Enter your Phone',
@@ -127,6 +148,8 @@ class __FormContentState extends State<_FormContent> {
                 ),
                 onPressed: () {
                   // 추가적인 로직 처리
+                  Users m = Users.join(id: idCon.text, uname: nameCon.text, uphone: phoneCon.text, pw: pwCon.text);
+                  joinMember(m,context);
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -145,4 +168,20 @@ class __FormContentState extends State<_FormContent> {
   }
 
   Widget _gap() => const SizedBox(height: 16);
+}
+
+void joinMember(member,context) async{
+
+  //boot 서버로 member 객체 보내기!(비동기 통신->dio라이브러리)
+  final dio = Dio();
+
+  // 비동기 통신 -> 회원가입 (boot로 요청)
+  // 응답 올때까지 기다려야함(await)
+  Response res =await dio.post(
+    'http://59.0.236.149:8089/boot/join', // 요청. url(경로)
+    data: {'joinMember':member}, // 요쳥할 때 같이 보낼 데이터(json-key:value)
+  );
+
+
+
 }
