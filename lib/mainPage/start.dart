@@ -1,7 +1,10 @@
 // start.dart
 
 import 'package:flutter/material.dart';
+import 'package:propetsor/mainPage/main_1.dart';
 import 'dart:async';
+
+import 'package:propetsor/mainPage/main_non.dart';
 
 class StartScreen extends StatefulWidget {
   @override
@@ -13,10 +16,10 @@ class _StartScreenState extends State<StartScreen> {
   void initState() {
     super.initState();
     // 3초 후에 메인 페이지로 이동
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainPage()), // 메인 페이지로 이동
+        MaterialPageRoute(builder: (context) => MainPage_1()), // 메인 페이지로 이동
       );
     });
   }

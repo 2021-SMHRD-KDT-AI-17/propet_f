@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:propetsor/login/join.dart';
 import 'package:propetsor/login/login.dart';
 import 'package:propetsor/mainPage/main_1.dart';
+import 'package:propetsor/mainPage/main_2.dart';
 import 'package:propetsor/mainPage/start.dart';
 
 void main() {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage()
+      home: const MainPage_2()
     );
   }
 }

@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'api_service.dart';
 
-class ChatBotPage extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final APIService apiService;
 
-  ChatBotPage({required this.apiService});
+  ChatScreen({required this.apiService});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatBotPage> {
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
   bool _isWaitingForResponse = false;
@@ -188,4 +188,3 @@ class _ChatScreenState extends State<ChatBotPage> {
     );
   }
 }
-
