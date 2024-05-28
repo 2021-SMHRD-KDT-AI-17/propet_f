@@ -166,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       controller: _controller,
                       onSubmitted: (_) => _sendMessage(), // 엔터 키를 눌렀을 때 _sendMessage 함수 호출
                       decoration: InputDecoration(
-                        hintText: '질문을 입력해주세요!',
+                        hintText: '질문을 입력해주세요!!',
                         border: OutlineInputBorder(),
                       ),
                     ),
