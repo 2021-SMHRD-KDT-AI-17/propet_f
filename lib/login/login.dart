@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:propetsor/login/join.dart';
 import 'package:propetsor/mainPage/main_1.dart';
+import 'package:propetsor/mainPage/main_2.dart';
 import 'package:propetsor/mainPage/start.dart';
 
 import 'package:propetsor/model/Users.dart';
@@ -294,7 +295,7 @@ void loginMember(member, context) async {
       // 메인 화면으로 이동 (이전 모든 화면 삭제)
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => MainPage_1()), // YourMainPage 대신에 이동할 페이지를 지정하세요.
+        MaterialPageRoute(builder: (_) => MainPage_2()), // YourMainPage 대신에 이동할 페이지를 지정하세요.
             (route) => false,
       );
     } else {

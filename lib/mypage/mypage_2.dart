@@ -1,13 +1,31 @@
 import 'dart:ui';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:propetsor/login/login.dart';
+import 'package:propetsor/main.dart';
+import 'package:propetsor/mainPage/main_1.dart';
 import 'package:propetsor/mypage/mychatpage.dart';
 import 'package:propetsor/mypage/mypage_update.dart';
 import 'package:propetsor/mypage/mypetpage.dart';
 
+final storage = FlutterSecureStorage();
+
 class MyPage_2 extends StatelessWidget {
   const MyPage_2({Key? key}) : super(key: key);
+
+  Future<void> logout(BuildContext context) async {
+    await storage.delete(key: 'member');
+
+    CherryToast.success(
+      title: Text('로그아웃 성공했습니다'),
+    ).show(context);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MainPage_1()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +42,7 @@ class MyPage_2 extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     "'조세핀'님 안녕하세요!",
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .headline6
                         ?.copyWith(fontWeight: FontWeight.bold),
@@ -34,10 +51,7 @@ class MyPage_2 extends StatelessWidget {
                   Column(
                     children: [
                       Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                         height: 1.0,
                         color: Colors.grey,
                       ),
@@ -47,7 +61,12 @@ class MyPage_2 extends StatelessWidget {
                         children: [
                           Expanded(
                             child: _buildButton(context, "마이 펫 관리",
-                                Icons.edit_location_alt_outlined, () {}),
+                                Icons.edit_location_alt_outlined, () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => MyPetPage()),
+                                  );
+                                }),
                           ),
                           Container(
                             width: 1.0,
@@ -56,16 +75,18 @@ class MyPage_2 extends StatelessWidget {
                           ),
                           Expanded(
                             child: _buildButton(context, "마이 채팅 관리",
-                                Icons.message_rounded, () {}),
+                                Icons.message_rounded, () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => MyChatPage()),
+                                  );
+                                }),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16.0), // Increased spacing
                       Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                         height: 1.0,
                         color: Colors.grey,
                       ),
@@ -75,7 +96,18 @@ class MyPage_2 extends StatelessWidget {
                         children: [
                           Expanded(
                             child: _buildButton(context, "찜 목록",
-                                Icons.favorite_border, () {}),
+                                Icons.favorite_border, () {
+                                  CherryToast.info(
+                                    title: Text(
+                                      "구현 예정입니다!",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ).show(context);
+                                }),
                           ),
                           Container(
                             width: 1.0,
@@ -84,16 +116,15 @@ class MyPage_2 extends StatelessWidget {
                           ),
                           Expanded(
                             child: _buildButton(context, "로그아웃",
-                                Icons.login_outlined, () {}),
+                                Icons.login_outlined, () {
+                                  logout(context);
+                                }),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16.0), // Increased spacing
                       Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                         height: 1.0,
                         color: Colors.grey,
                       ),
@@ -108,7 +139,6 @@ class MyPage_2 extends StatelessWidget {
     );
   }
 }
-
 
 class _TopPortion extends StatelessWidget {
   const _TopPortion({Key? key}) : super(key: key);
@@ -132,7 +162,6 @@ class _TopPortion extends StatelessWidget {
             ),
           ),
         ),
-
         Align(
           alignment: Alignment.bottomCenter,
           child: SizedBox(
@@ -152,7 +181,6 @@ class _TopPortion extends StatelessWidget {
                     border: Border.all(color: Colors.grey), // 보더 추가
                   ),
                 ),
-
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -192,13 +220,11 @@ class _TopPortion extends StatelessWidget {
   }
 }
 
-
-
 Widget _buildButton(BuildContext context, String text, IconData icon, VoidCallback onPressed) {
   Color iconColor = Color(0xFFDDA0DD); // 기본 아이콘 색상
 
   if (text == "마이 펫 관리") {
-      iconColor = Color(0xFFB0E2FF); // 마이 펫 관리 아이콘 색상
+    iconColor = Color(0xFFB0E2FF); // 마이 펫 관리 아이콘 색상
   } else if (text == "마이 채팅 관리") {
     iconColor = Color(0xFFB0E2FF); // 마이 채팅 관리 아이콘 색상
   } else if (text == "찜 목록") {
@@ -210,36 +236,7 @@ Widget _buildButton(BuildContext context, String text, IconData icon, VoidCallba
   return Column(
     children: [
       IconButton(
-        onPressed: () {
-          if (text == "마이 펫 관리") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyPetPage()),
-            );
-          } else if (text == "마이 채팅 관리") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyChatPage()),
-            );
-          } else if (text == "찜 목록") {
-            CherryToast.info(
-              title: Text(
-                "구현 예정입니다!",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ).show(context);
-
-          } else if (text == "로그아웃") {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
-          }
-        },
+        onPressed: onPressed,
         icon: Icon(icon, color: iconColor), // 아이콘 색상 설정
         iconSize: 40, // Icon size increased
       ),
@@ -254,5 +251,3 @@ Widget _buildButton(BuildContext context, String text, IconData icon, VoidCallba
     ],
   );
 }
-
-

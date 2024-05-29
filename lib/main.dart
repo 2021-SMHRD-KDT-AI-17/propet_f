@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:propetsor/login/join.dart';
 import 'package:propetsor/login/login.dart';
 import 'package:propetsor/mainPage/main_1.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 import 'package:propetsor/mainPage/start.dart';
+import 'package:propetsor/model/Users.dart';
+
+final storage = FlutterSecureStorage();
 
 void main() {
   runApp(const MyApp());
@@ -12,17 +19,43 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  Future<String?> _checkLoginStatus() async {
+    return await storage.read(key: 'member');
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+    return FutureBuilder(
+      future: _checkLoginStatus(),
+      builder: (context, snapshot) {
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MainPage_2()
+        if(snapshot.data!=null){ //로그인후
+          Map<String,dynamic> jsonMember = jsonDecode(snapshot.data!);
+
+          Users member = Users.fromJson(jsonMember);
+          return MaterialApp(
+              title: 'Flutter Demo',
+              theme: ThemeData(
+
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+              home: const MainPage_2()
+          );
+        }else{//로그인전
+          return MaterialApp(
+              title: 'Flutter Demo',
+              theme: ThemeData(
+
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+              home: const MainPage_1()
+          );
+        }
+
+      }
     );
   }
 }
@@ -113,4 +146,31 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+//   로그인 상태 확인
+  Future<String?> _checkLoginStatus() async{
+//     storage 'member' 값이 저장 되어 있는지/안 되어 있는지
+//   storage.read 값 가져오기
+//   로그인 하지 않은 상태 => null 이라 ? 붙이기
+    String? value = await storage.read(key: 'member');
+    return value;
+  }
+
+  //로그아웃
+  void logout(context) async{
+    //스토리지에 저장된 정보('member') 삭제
+    await storage.delete(key: 'member');
+
+    CherryToast.success(
+      title: Text('로그아웃 성공했습니다'),
+    ).show(context);
+
+    //현재 페이지 pop 다시 push
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage_1()));
+
+  }
+
+
+
+
 }
