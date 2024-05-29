@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:propetsor/chatbot/chatbot.dart';
 import 'package:propetsor/mainPage/main_2.dart';
+import 'package:propetsor/mypage/prechat.dart';
 
 class MyChatPage extends StatefulWidget {
   const MyChatPage({Key? key}) : super(key: key);
@@ -10,7 +11,18 @@ class MyChatPage extends StatefulWidget {
 }
 
 class _MyChatPageState extends State<MyChatPage> {
-  final List<Map<String, String>> chats = []; // 대화 목록을 저장할 리스트
+  final List<Map<String, String>> chats = [
+    {
+      'title': '기존 대화',
+      'date': '2024-05-20',
+      'content': '이것은 정상적인 답변입니다.'
+    },
+    {
+      'title': '기존 대화',
+      'date': '2024-05-21',
+      'content': '챗봇이 아직 답변할 수 없습니다.'
+    },
+  ];
 
   void _addChat(Map<String, String> chat) {
     setState(() {
@@ -154,7 +166,7 @@ class _MyChatPageState extends State<MyChatPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatDetailPage(
+                          builder: (context) => PreChat(
                             chatData: chat,
                           ),
                         ),
@@ -231,6 +243,8 @@ class _ChatInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isBotNoAnswerMessage = chat['content'] == '챗봇이 아직 답변할 수 없습니다.';
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -248,7 +262,10 @@ class _ChatInfoCard extends StatelessWidget {
                 border: Border.all(color: Colors.grey), // 회색 테두리 추가
                 color: Colors.white, // 배경을 흰색으로 설정
               ),
-              child: Icon(Icons.chat, color: Colors.deepPurpleAccent), // 아이콘 색깔을 퍼플로 설정
+              child: Icon(
+                isBotNoAnswerMessage ? Icons.error : Icons.chat,
+                color: isBotNoAnswerMessage ? Colors.red : Colors.deepPurpleAccent,
+              ), // 아이콘 색깔 설정
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -309,75 +326,6 @@ class _ChatInfoCard extends StatelessWidget {
               onPressed: onDelete,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class ChatDetailPage extends StatelessWidget {
-  final Map<String, String> chatData;
-
-  const ChatDetailPage({Key? key, required this.chatData}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('대화 내용'),
-        backgroundColor: Colors.deepPurpleAccent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              chatData['title'] ?? '',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              chatData['date'] ?? '',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              chatData['content'] ?? '',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ChatBotPage extends StatelessWidget {
-  final Function(Map<String, String>) onAddChat;
-
-  const ChatBotPage({Key? key, required this.onAddChat}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat Bot'),
-        backgroundColor: Colors.deepPurpleAccent,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // 예제 대화 데이터
-            final chatData = {
-              'title': '새로운 대화',
-              'date': '2024-05-28',
-              'content': '이것은 예제 대화 내용입니다.',
-            };
-            onAddChat(chatData);
-            Navigator.pop(context);
-          },
-          child: Text('대화 추가'),
         ),
       ),
     );

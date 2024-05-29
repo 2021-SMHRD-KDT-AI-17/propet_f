@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'shop_details.dart';
 
 class MainShopPage extends StatefulWidget {
   const MainShopPage({Key? key}) : super(key: key);
@@ -14,28 +15,28 @@ class _MainShopPageState extends State<MainShopPage> {
   @override
   void initState() {
     super.initState();
-    _currentCategoryImages = _images; // Initial images
+    _currentCategoryImages = _images; // 초기 이미지
   }
 
   void _onCategorySelected(int index) {
     setState(() {
       _selectedCategoryIndex = index;
-      // Update images based on selected category
+      // 선택한 카테고리에 따라 이미지 업데이트
       switch (index) {
         case 0:
-          _currentCategoryImages = _images; // All images
+          _currentCategoryImages = _images; // 모든 이미지
           break;
         case 1:
-          _currentCategoryImages = _images.sublist(0, 2); // First two images
+          _currentCategoryImages = _images.sublist(0, 2); // 첫 두 개의 이미지
           break;
         case 2:
-          _currentCategoryImages = _images.sublist(2, 4); // Middle two images
+          _currentCategoryImages = _images.sublist(2, 4); // 중간 두 개의 이미지
           break;
         case 3:
-          _currentCategoryImages = _images.sublist(4, 6); // Last two images
+          _currentCategoryImages = _images.sublist(4, 6); // 마지막 두 개의 이미지
           break;
         default:
-          _currentCategoryImages = _images; // Default to all images
+          _currentCategoryImages = _images; // 기본적으로 모든 이미지
           break;
       }
     });
@@ -50,101 +51,94 @@ class _MainShopPageState extends State<MainShopPage> {
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: TabBar(
             onTap: _onCategorySelected,
+            indicatorColor: Colors.black,
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
             tabs: [
-              Tab(text: 'All'),
-              Tab(text: 'Category 1'),
-              Tab(text: 'Category 2'),
-              Tab(text: 'Category 3'),
+              Tab(text: '전체'),
+              Tab(text: '사료'),
+              Tab(text: '장난감'),
+              Tab(text: '액세서리'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            _buildCategoryPage(0),
-            _buildCategoryPage(1),
-            _buildCategoryPage(2),
-            _buildCategoryPage(3),
+            _buildCategoryPage(),
+            _buildCategoryPage(),
+            _buildCategoryPage(),
+            _buildCategoryPage(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCategoryPage(int index) {
-    return Center(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 500),
-        child: ListView.builder(
-          itemCount: _currentCategoryImages.length,
-          itemBuilder: (BuildContext context, int index) {
-            final int imageIndex =
-            _images.indexOf(_currentCategoryImages[index]);
-            return InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SecondPage(heroTag: imageIndex)));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Hero(
-                      tag: imageIndex,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          _currentCategoryImages[index],
-                          width: 200,
-                        ),
+  Widget _buildCategoryPage() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.builder(
+        itemCount: _currentCategoryImages.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 0.7,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          final int imageIndex = _images.indexOf(_currentCategoryImages[index]);
+          return InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ShopDetails(heroTag: imageIndex)));
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Hero(
+                    tag: imageIndex,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.network(
+                        _currentCategoryImages[index],
+                        fit: BoxFit.cover,
+                        width: double.infinity,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Title: $imageIndex',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '제품 이름 $imageIndex',
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '₩29,900',
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.grey),
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.yellow, size: 16),
+                        SizedBox(width: 4),
+                        Text(
+                          '4.0',
+                          style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.grey),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class SecondPage extends StatelessWidget {
-  final int heroTag;
-
-  const SecondPage({Key? key, required this.heroTag}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Hero ListView Page 2")),
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Hero(
-                tag: heroTag,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(_images[heroTag]),
-                ),
-              ),
+              ],
             ),
-          ),
-          Expanded(
-            child: Text(
-              "Content goes here",
-              style: Theme.of(context).textTheme.headline5,
-            ),
-          )
-        ],
+          );
+        },
       ),
     );
   }
