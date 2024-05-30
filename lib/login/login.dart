@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -111,7 +113,6 @@ Widget _buildSocialLoginButton({
       height: 36,
       decoration: BoxDecoration(
         color: color,
-
       ),
       child: Center(
         child: Text(
@@ -154,20 +155,6 @@ class __FormContentState extends State<_FormContent> {
           children: [
             TextFormField(
               controller: idCon,
-              // validator: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'Please enter some text';
-              //   }
-              //
-              //   bool idValid = RegExp(
-              //       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-              //       .hasMatch(value);
-              //   if (!idValid) {
-              //     return 'Please enter a valid email';
-              //   }
-              //
-              //   return null;
-              // },
               decoration: const InputDecoration(
                 labelText: 'ID',
                 hintText: 'Enter your ID',
@@ -226,9 +213,8 @@ class __FormContentState extends State<_FormContent> {
                   if (_formKey.currentState?.validate() ?? false) {
                     // 로그인 로직 처리
                     Users m = Users.login(id: idCon.text, pw: pwCon.text);
-                    loginMember(m,context);
+                    loginMember(m, context);
                   }
-
                 },
               ),
             ),
@@ -236,8 +222,10 @@ class __FormContentState extends State<_FormContent> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent), // 배경색
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.deepPurpleAccent), // 배경색
+                  foregroundColor:
+                  MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
@@ -246,7 +234,8 @@ class __FormContentState extends State<_FormContent> {
                 ),
                 onPressed: () {
                   // 추가적인 로직 처리
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => JoinPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => JoinPage()));
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -257,7 +246,6 @@ class __FormContentState extends State<_FormContent> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -267,37 +255,71 @@ class __FormContentState extends State<_FormContent> {
   Widget _gap() => const SizedBox(height: 16);
 }
 
-
-void loginMember(member, context) async {
+void loginMember(Users member, BuildContext context) async {
   final dio = Dio();
   final storage = FlutterSecureStorage();
 
   try {
     Response res = await dio.post(
       'http://59.0.236.149:8089/boot/login',
-      data: {'loginMember': member},
+      data: {
+        'loginMember': member.toJson(),
+      },
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ),
     );
-    print(res);
 
     // 응답이 성공적으로 받아졌을 때의 처리
-    if (res.toString() != '') {
-      // 스토리지에 로그인 한 회원 정보 저장하기 - write
-      await storage.write(key: 'member', value: res.data.toString());
+    if (res.statusCode == 200 && res.data != null && res.data.toString().isNotEmpty) {
+      // JSON 응답을 Users 객체로 변환
+      final responseData = res.data;
+      if (responseData is String) {
+        // 서버 응답이 문자열인 경우, 이를 Map으로 파싱
+        final Map<String, dynamic> userData = jsonDecode(responseData);
+        Users loggedInUser = Users.fromJson(userData);
 
-      // 로그인 성공 메시지 표시
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('로그인에 성공했습니다.'),
-          backgroundColor: Colors.green,
-        ),
-      );
+        // 스토리지에 로그인 한 회원의 uidx 저장하기
+        await storage.write(key: 'uidx', value: loggedInUser.uidx.toString());
 
-      // 메인 화면으로 이동 (이전 모든 화면 삭제)
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => MainPage_2()), // YourMainPage 대신에 이동할 페이지를 지정하세요.
-            (route) => false,
-      );
+        // 로그인 성공 메시지 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('로그인에 성공했습니다.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // 메인 화면으로 이동 (이전 모든 화면 삭제)
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => MainPage_2()),
+              (route) => false,
+        );
+      } else {
+        // 서버 응답이 이미 Map인 경우
+        Users loggedInUser = Users.fromJson(responseData);
+
+        // 스토리지에 로그인 한 회원의 uidx 저장하기
+        await storage.write(key: 'uidx', value: loggedInUser.uidx.toString());
+
+        // 로그인 성공 메시지 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('로그인에 성공했습니다.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // 메인 화면으로 이동 (이전 모든 화면 삭제)
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => MainPage_2()),
+              (route) => false,
+        );
+      }
     } else {
       // 로그인 실패 메시지 표시
       ScaffoldMessenger.of(context).showSnackBar(
@@ -307,17 +329,27 @@ void loginMember(member, context) async {
         ),
       );
     }
-  } catch (e) {
+  } on DioError catch (e) {
     // Dio 요청 중 예외 발생 시 오류 메시지 출력
+    print('DioError: $e');
+
+    // 예외에 따른 오류 메시지 표시
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('서버에 연결할 수 없습니다: ${e.message}'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  } catch (e) {
+    // 기타 예외 발생 시 오류 메시지 출력
     print('Error: $e');
 
     // 예외에 따른 오류 메시지 표시
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('서버에 연결할 수 없습니다.'),
+        content: Text('알 수 없는 오류가 발생했습니다: $e'),
         backgroundColor: Colors.red,
       ),
     );
   }
 }
-

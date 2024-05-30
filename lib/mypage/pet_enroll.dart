@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 
 class PetEnroll extends StatefulWidget {
@@ -12,15 +14,23 @@ class PetEnroll extends StatefulWidget {
 
 class _PetEnrollState extends State<PetEnroll> {
   final _formKey = GlobalKey<FormState>();
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
+
+  TextEditingController pnameCon = TextEditingController();
+  TextEditingController pkindCon = TextEditingController();
+  TextEditingController pageCon = TextEditingController();
+  TextEditingController pkgCon = TextEditingController();
+  TextEditingController pdiseaseinfCon = TextEditingController();
+
   final Map<String, String> _petData = {
-    'name': '',
-    'age': '',
-    'gender': '',
-    'breed': '',
-    'weight': '',
-    'neutered': '',
-    'disease': '',
-    'diseaseDetails': '',
+    'pname': '',
+    'page': '',
+    'pgender': '',
+    'pkind': '',
+    'pkg': '',
+    'psurgery': '',
+    'pdisease': '',
+    'pdiseaseinf': '',
   };
 
   bool _hasDisease = false;
@@ -31,11 +41,85 @@ class _PetEnrollState extends State<PetEnroll> {
   final Color selectedColor = Colors.deepPurpleAccent;
   final Color unselectedColor = Colors.grey[300]!;
 
-  void _submit() {
+  Future<void> enroll(Map<String, String> petData) async {
+    final dio = Dio();
+
+    try {
+      Response res = await dio.post(
+        'http://59.0.236.149:8089/boot/enroll',
+        data: {'enrollPet': petData},
+      );
+
+      if (res.statusCode == 200) {
+        print('Pet enrolled successfully!');
+      } else {
+        print('Failed to enroll pet. ${res.statusMessage}');
+        throw Exception('Failed to enroll pet');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      throw e;
+    }
+  }
+
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      widget.onEnroll(_petData);
-      Navigator.pop(context);
+      String? uidx = await _storage.read(key: 'uidx');
+
+      if (uidx != null) {
+        _petData['uidx'] = uidx;
+        _petData['pname'] = pnameCon.text;
+        _petData['page'] = pageCon.text;
+        _petData['pkind'] = pkindCon.text;
+        _petData['pkg'] = pkgCon.text;
+        _petData['pdiseaseinf'] = pdiseaseinfCon.text;
+        _petData['pgender'] = _selectedGender ?? '';
+        _petData['psurgery'] = _selectedNeutered ?? '';
+        _petData['pdisease'] = _selectedDisease ?? '';
+
+        try {
+          await enroll(_petData);
+          widget.onEnroll(_petData);
+          Navigator.pop(context);
+        } catch (e) {
+          print('Error during enrollment: $e');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Failed to enroll pet. Please try again later.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('로그인 정보가 없습니다. 다시 로그인 해주세요.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
@@ -46,7 +130,7 @@ class _PetEnrollState extends State<PetEnroll> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar : PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(56.0), // AppBar 높이 설정
         child: Container(
           decoration: BoxDecoration(
@@ -60,7 +144,6 @@ class _PetEnrollState extends State<PetEnroll> {
             ],
           ),
           child: AppBar(
-            //elevation: 0.0,
             backgroundColor: Colors.white,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -68,7 +151,6 @@ class _PetEnrollState extends State<PetEnroll> {
                 Navigator.pop(context); // 뒤로가기 동작
               },
             ),
-
             title: GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -159,7 +241,7 @@ class _PetEnrollState extends State<PetEnroll> {
                 width: 350,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                  border: Border.all(color: Colors.grey.withOpacity(0.3)),
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -177,35 +259,35 @@ class _PetEnrollState extends State<PetEnroll> {
                     child: ListView(
                       children: [
                         SizedBox(height: 16),
-                        _buildTextField('이름', 'name'),
+                        _buildTextField('이름', 'pname', pnameCon),
                         SizedBox(height: 16),
-                        _buildTextField('나이', 'age'),
+                        _buildTextField('나이', 'page', pageCon),
                         SizedBox(height: 16),
-                        _buildTextField('품종', 'breed'),
+                        _buildTextField('품종', 'pkind', pkindCon),
                         SizedBox(height: 16),
-                        _buildTextField('몸무게', 'weight'),
-                        Divider(height: 32, thickness: 1), // 성별 위에 라인 추가
+                        _buildTextField('몸무게', 'pkg', pkgCon),
+                        Divider(height: 32, thickness: 1),
                         _buildGenderButton(),
-                        SizedBox(height: 20), // 버튼과 중성화 여부 간격 추가
-                        _buildYesNoButton('중성화 여부', 'neutered', (isNeutered) {
+                        SizedBox(height: 20),
+                        _buildYesNoButton('중성화 여부', 'psurgery', (isNeutered) {
                           setState(() {
                             _selectedNeutered = isNeutered ? '예' : '아니오';
-                            _petData['neutered'] = _selectedNeutered!;
+                            _petData['psurgery'] = _selectedNeutered!;
                           });
                         }),
-                        SizedBox(height: 20), // 버튼과 질환 여부 간격 추가
-                        _buildYesNoButton('질환 여부', 'disease', (value) {
+                        SizedBox(height: 20),
+                        _buildYesNoButton('질환 여부', 'pdisease', (value) {
                           setState(() {
                             _selectedDisease = value ? '예' : '아니오';
                             _hasDisease = value;
-                            _petData['disease'] = _selectedDisease!;
+                            _petData['pdisease'] = _selectedDisease!;
                           });
                         }),
                         if (_hasDisease)
                           Column(
                             children: [
-                              SizedBox(height: 16), // 간격 추가
-                              _buildTextField('어떤 질환인지 작성해주세요', 'diseaseDetails'),
+                              SizedBox(height: 16),
+                              _buildTextField('어떤 질환인지 작성해주세요', 'pdiseaseinf', pdiseaseinfCon),
                             ],
                           ),
                         Divider(height: 32, thickness: 1),
@@ -236,7 +318,7 @@ class _PetEnrollState extends State<PetEnroll> {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
                               foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -266,8 +348,9 @@ class _PetEnrollState extends State<PetEnroll> {
     );
   }
 
-  Widget _buildTextField(String label, String key) {
+  Widget _buildTextField(String label, String key, TextEditingController controller) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         hintText: '$label 입력하세요',
@@ -312,19 +395,19 @@ class _PetEnrollState extends State<PetEnroll> {
         Row(
           children: [
             Expanded(
-              child: _buildSelectionBox('수컷', 'gender', _selectedGender == '수컷', onChanged: () {
+              child: _buildSelectionBox('수컷', 'pgender', _selectedGender == '수컷', onChanged: () {
                 setState(() {
                   _selectedGender = '수컷';
-                  _petData['gender'] = '수컷';
+                  _petData['pgender'] = '수컷';
                 });
               }),
             ),
             SizedBox(width: 10),
             Expanded(
-              child: _buildSelectionBox('암컷', 'gender', _selectedGender == '암컷', onChanged: () {
+              child: _buildSelectionBox('암컷', 'pgender', _selectedGender == '암컷', onChanged: () {
                 setState(() {
                   _selectedGender = '암컷';
-                  _petData['gender'] = '암컷';
+                  _petData['pgender'] = '암컷';
                 });
               }),
             ),
@@ -367,7 +450,7 @@ class _PetEnrollState extends State<PetEnroll> {
         decoration: BoxDecoration(
           color: isSelected ? selectedColor : unselectedColor,
           borderRadius: BorderRadius.circular(4),
-         border: Border.all(color: isSelected ? selectedColor : Colors.grey),
+          border: Border.all(color: isSelected ? selectedColor : Colors.grey),
         ),
         child: Center(
           child: Text(
@@ -384,9 +467,9 @@ class _PetEnrollState extends State<PetEnroll> {
 
   bool _getSelectedState(String key, bool isYes) {
     switch (key) {
-      case 'neutered':
+      case 'psurgery':
         return _selectedNeutered == (isYes ? '예' : '아니오');
-      case 'disease':
+      case 'pdisease':
         return _selectedDisease == (isYes ? '예' : '아니오');
       default:
         return false;
