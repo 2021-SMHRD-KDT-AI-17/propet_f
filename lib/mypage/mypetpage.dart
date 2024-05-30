@@ -306,9 +306,9 @@ class _PetInfoCard extends StatelessWidget {
                       Expanded(
                         child: Center(
                           child: Text(
-                            pet['name'] != null && pet['name']!.length > 6
-                                ? pet['name']!.substring(0, 6)
-                                : pet['name'] ?? '',
+                            pet['pname'] != null && pet['pname']!.length > 6
+                                ? pet['pname']!.substring(0, 6)
+                                : pet['pname'] ?? '',
                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[800]), // 강조된 스타일
                           ),
                         ),
@@ -316,9 +316,9 @@ class _PetInfoCard extends StatelessWidget {
                       Expanded(
                         child: Center(
                           child: Text(
-                            pet['age'] != null && pet['age']!.length > 2
-                                ? pet['age']!.substring(0, 2)
-                                : pet['age'] ?? '',
+                            pet['page'] != null && pet['page']!.length > 2
+                                ? pet['page']!.substring(0, 2)
+                                : pet['page'] ?? '',
                             style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                           ),
                         ),

@@ -27,9 +27,9 @@ class _PetEditState extends State<PetEdit> {
   void initState() {
     super.initState();
     _petData = Map<String, String>.from(widget.petData);
-    _selectedGender = _petData['gender'];
-    _selectedNeutered = _petData['neutered'];
-    _selectedDisease = _petData['disease'];
+    _selectedGender = _petData['pgender'];
+    _selectedNeutered = _petData['psurgery'];
+    _selectedDisease = _petData['pdisease'];
     _hasDisease = _selectedDisease == '예';
   }
 
@@ -176,35 +176,35 @@ class _PetEditState extends State<PetEdit> {
                     key: _formKey,
                     child: ListView(
                       children: [
-                        _buildTextField('이름', 'name'),
+                        _buildTextField('이름', 'pname'),
                         SizedBox(height: 16),
-                        _buildTextField('나이', 'age'),
+                        _buildTextField('나이', 'page'),
                         SizedBox(height: 16),
-                        _buildTextField('품종', 'breed'),
+                        _buildTextField('품종', 'pkind'),
                         SizedBox(height: 16),
-                        _buildTextField('몸무게', 'weight'),
+                        _buildTextField('몸무게', 'pkg'),
                         Divider(height: 32, thickness: 1), // 성별 위에 라인 추가
                         _buildGenderButton(),
                         SizedBox(height: 20), // 버튼과 중성화 여부 간격 추가
-                        _buildYesNoButton('중성화 여부', 'neutered', (isNeutered) {
+                        _buildYesNoButton('중성화 여부', 'psurgery', (isNeutered) {
                           setState(() {
                             _selectedNeutered = isNeutered ? '예' : '아니오';
-                            _petData['neutered'] = _selectedNeutered!;
+                            _petData['psurgery'] = _selectedNeutered!;
                           });
                         }),
                         SizedBox(height: 20), // 버튼과 질환 여부 간격 추가
-                        _buildYesNoButton('질환 여부', 'disease', (value) {
+                        _buildYesNoButton('질환 여부', 'pdisease', (value) {
                           setState(() {
                             _selectedDisease = value ? '예' : '아니오';
                             _hasDisease = value;
-                            _petData['disease'] = _selectedDisease!;
+                            _petData['pdisease'] = _selectedDisease!;
                           });
                         }),
                         if (_hasDisease)
                           Column(
                             children: [
                               SizedBox(height: 16), // 간격 추가
-                              _buildTextField('어떤 질환인지 작성해주세요', 'diseaseDetails'),
+                              _buildTextField('어떤 질환인지 작성해주세요', 'pdiseaseinf'),
                             ],
                           ),
                         Divider(height: 32, thickness: 1),
@@ -315,7 +315,7 @@ class _PetEditState extends State<PetEdit> {
               child: _buildSelectionBox('수컷', 'gender', _selectedGender == '수컷', onChanged: () {
                 setState(() {
                   _selectedGender = '수컷';
-                  _petData['gender'] = '수컷';
+                  _petData['pgender'] = '수컷';
                 });
               }),
             ),
@@ -324,7 +324,7 @@ class _PetEditState extends State<PetEdit> {
               child: _buildSelectionBox('암컷', 'gender', _selectedGender == '암컷', onChanged: () {
                 setState(() {
                   _selectedGender = '암컷';
-                  _petData['gender'] = '암컷';
+                  _petData['pgender'] = '암컷';
                 });
               }),
             ),
