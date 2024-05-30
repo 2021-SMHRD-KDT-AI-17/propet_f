@@ -34,8 +34,19 @@ dependencies:
   image_picker: ^1.1.1
   cherry_toast: ^1.10.1
   http: ^1.2.1 # 최신 버전으로 변경
-  intl: ^0.19.0
+  intl: ^0.17.0
   animated_text_kit: ^4.2.2
+  table_calendar: 3.0.7
+  drift: 2.1.0  # Drift
+
+  sqlite3_flutter_libs: 0.5.10  # SQLite
+  path_provider: 2.0.11  # 경로기능
+  path: 1.9.0  # 경로기능
+  get: ^4.6.5
+
+
+  provider: 6.0.3  # 상태 관리를 가능
+  uuid: 3.0.6  # UUID 생성용
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,7 +65,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
-
+  drift_dev: ^2.1.0  # Drift 코드 생성 기능 관련 플러그인
+  build_runner: ^2.2.0  # 코드 생성 기능을 제공해주는 플러그인
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
