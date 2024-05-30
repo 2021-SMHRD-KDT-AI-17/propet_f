@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:propetsor/calendar/calendar_1.dart';
 import 'package:propetsor/chatbot/chatbot.dart';
 import 'package:propetsor/mainPage/main_non.dart';
 import 'package:propetsor/mypage/mypage_1.dart';
@@ -23,6 +24,7 @@ class _GoogleBottomBarState extends State<MainPage_1> {
     MainNon(),
     ChatScreen(apiService: APIService()),
     MainShopPage(),
+    CalendarNon(),
     MyPage_1(),
   ];
 
@@ -144,6 +146,11 @@ final _navBarItems = [
   SalomonBottomBarItem(
     icon: const Icon(Icons.shopping_bag),
     title: const Text("Shop"),
+    selectedColor: Colors.purple,
+  ),
+  SalomonBottomBarItem(
+    icon: const Icon(Icons.calendar_month),
+    title: const Text("Calendar"),
     selectedColor: Colors.purple,
   ),
   SalomonBottomBarItem(
