@@ -29,7 +29,7 @@ class TodayBanner extends StatelessWidget {
               style: textStyle,
             ),
             Text(
-              '$count개',
+              '오늘의 일정   $count',
               style: textStyle,
             ),
           ],
