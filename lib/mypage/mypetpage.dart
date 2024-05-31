@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/main.dart';
 import 'package:propetsor/mypage/pet_edit.dart';
 import 'package:propetsor/mypage/pet_enroll.dart';
+
+import '../model/Pet.dart';
 
 class MyPetPage extends StatefulWidget {
   const MyPetPage({Key? key}) : super(key: key);
@@ -10,7 +16,39 @@ class MyPetPage extends StatefulWidget {
 }
 
 class _MyPetPageState extends State<MyPetPage> {
-  final List<Map<String, String>> pets = []; // 등록된 펫 목록을 저장할 리스트
+  List<Map<String, String>> pets = []; // 등록된 펫 목록을 저장할 리스트
+  void initState() {
+    super.initState();
+    // 페이지가 로드되기 전에 정보를 가져오는 작업
+    _loadPets();
+  }
+
+  // JSON 문자열을 List<Map<String, String>>로 변환하는 함수
+  List<Map<String, String>> petModelFromJson(String str) {
+    final jsonData = json.decode(str) as List;
+    return jsonData.map((e) => Pet.fromJson(e).toMap()).toList();
+  }
+
+  void _loadPets() async {
+    final dio = Dio();
+
+    String? uidx = await storage.read(key: 'uidx');
+
+    Response res = await dio.post(
+      "http://211.48.213.165:8089/boot/selectAllPet",
+      data: {"uidx": uidx},
+      options: Options(
+        headers: {
+          "Content-Type": "application/json",
+        },
+      ),
+    );
+    print(res);
+
+    setState(() {
+      pets = petModelFromJson(res.data.toString());
+    });
+  }
 
   void _addPet(Map<String, String> pet) {
     setState(() {

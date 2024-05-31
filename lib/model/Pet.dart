@@ -70,5 +70,19 @@ class Pet{
     this.pdiseaseinf,
     this.uidx,
   });
-
+  // Object -> Map<String, String> 변환 메서드
+  Map<String, String> toMap() {
+    return {
+      'pidx': pidx.toString(),
+      'pname': pname,
+      'pkind': pkind,
+      'page': page.toString(),
+      'pkg': pkg.toString(),
+      'pgender': pgender,
+      'psurgery': psurgery,
+      'pdisease': pdisease,
+      'pdiseaseinf': pdiseaseinf ?? '',
+      'uidx': uidx.toString(),
+    };
+  }
 }
