@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:propetsor/main.dart';
 import 'package:propetsor/model/Pet.dart';
-import 'package:propetsor/mypage/mypage_update.dart';
 
 class MainUser extends StatefulWidget {
   const MainUser();
