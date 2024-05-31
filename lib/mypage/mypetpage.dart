@@ -50,6 +50,8 @@ class _MyPetPageState extends State<MyPetPage> {
     });
   }
 
+
+
   void _addPet(Map<String, String> pet) {
     setState(() {
       pets.add(pet);
@@ -63,7 +65,18 @@ class _MyPetPageState extends State<MyPetPage> {
   }
 
   void _deletePet(int index) {
+    void deletePet() async{
+      final dio = Dio();
+      print("--------------------");
+      print(pets[index]["pidx"]);
+      Response res = await dio.post(
+          "http://localhost:8089/boot/deletePet",
+          data: {"p_idx" : pets[index]["pidx"]}
+      );
+    }
+
     setState(() {
+      deletePet();
       pets.removeAt(index);
     });
   }

@@ -39,7 +39,6 @@ class Pet{
     pdiseaseinf: json['pdiseaseinf'],
     uidx: json['uidx'],
 
-
   );
 
 //Object -> json으로 바꾸는 형태

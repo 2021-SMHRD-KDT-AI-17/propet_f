@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/main.dart';
+import 'package:propetsor/model/Pet.dart';
 import 'package:propetsor/mypage/mypage_update.dart';
 
 class MainUser extends StatefulWidget {
@@ -9,26 +14,57 @@ class MainUser extends StatefulWidget {
 }
 
 class _MainUserState extends State<MainUser> {
-  // 사용자의 반려동물 정보
-  String petName = '멍멍이';
-  String petBreed = '리트리버';
-  int petAge = 3;
+  List<Map<String, String>> pets = []; // 등록된 펫 목록을 저장할 리스트
+
+  @override
+  void initState() {
+    super.initState();
+    // 페이지가 로드되기 전에 정보를 가져오는 작업
+    _loadPets();
+  }
+
+  // JSON 문자열을 List<Map<String, String>>로 변환하는 함수
+  List<Map<String, String>> petModelFromJson(String str) {
+    final jsonData = json.decode(str) as List;
+    return jsonData.map((e) => Pet.fromJson(e).toMap()).toList();
+  }
+
+  void _loadPets() async {
+    final dio = Dio();
+
+    String? uidx = await storage.read(key: 'uidx');
+
+    Response res = await dio.post(
+      "http://211.48.213.165:8089/boot/selectAllPet",
+      data: {"uidx": uidx},
+      options: Options(
+        headers: {
+          "Content-Type": "application/json",
+        },
+      ),
+    );
+
+    setState(() {
+      pets = petModelFromJson(res.data.toString());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: PageView(
-        children: [
-          _buildPage(context),
-          _buildPage(context),
-          _buildPage(context), // 원하는 만큼 페이지를 추가할 수 있습니다.
-        ],
+        children: pets.map((pet) {
+          String petName = pet['pname'] as String;
+          String petBreed = pet['pkind'] as String;
+          int petAge = int.tryParse(pet['page'].toString()) ?? 0;
+          return _buildPage(context, petName, petBreed, petAge);
+        }).toList(),
       ),
     );
   }
 
-  Widget _buildPage(BuildContext context) {
+  Widget _buildPage(BuildContext context, String petName, String petBreed, int petAge) {
     return Center(
       child: Container(
         height: 500,
@@ -59,7 +95,7 @@ class _MainUserState extends State<MainUser> {
             SizedBox(height: 10),
             _buildCircleButton(context),
             SizedBox(height: 20),
-            _buildPetInfo(),
+            _buildPetInfo(petName, petBreed, petAge),
             SizedBox(height: 20),
           ],
         ),
@@ -93,7 +129,7 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
-  Widget _buildPetInfo() {
+  Widget _buildPetInfo(String petName, String petBreed, int petAge) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
       padding: EdgeInsets.all(20),
@@ -174,4 +210,3 @@ class _MainUserState extends State<MainUser> {
     );
   }
 }
-
