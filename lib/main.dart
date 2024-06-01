@@ -12,7 +12,7 @@ import 'package:propetsor/model/Users.dart';
 
 final storage = FlutterSecureStorage();
 
-void main() {
+void main() async{
   runApp(const MyApp());
 }
 
@@ -160,6 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void logout(context) async{
     //스토리지에 저장된 정보('member') 삭제
     await storage.delete(key: 'member');
+    await storage.delete(key: 'uidx');
+    await storage.delete(key: 'uname');
 
     CherryToast.success(
       title: Text('로그아웃 성공했습니다'),

@@ -180,7 +180,7 @@ void joinMember(member,context) async{
   // 비동기 통신 -> 회원가입 (boot로 요청)
   // 응답 올때까지 기다려야함(await)
   Response res =await dio.post(
-    'http://59.0.236.149:8089/boot/join', // 요청. url(경로)
+    'http://10.0.2.2:8089/boot/join', // 요청. url(경로)
     data: {'joinMember':member}, // 요쳥할 때 같이 보낼 데이터(json-key:value)
   );
 

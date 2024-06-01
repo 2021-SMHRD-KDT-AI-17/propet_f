@@ -35,7 +35,7 @@ class _PetEnrollState extends State<PetEnroll> {
 
     try {
       Response res = await dio.post(
-        'http://59.0.236.149:8089/boot/enroll',
+        'http://10.0.2.2:8089/boot/enroll',
         data: {'enrollPet': petData},
       );
 

@@ -261,7 +261,7 @@ void loginMember(Users member, BuildContext context) async {
 
   try {
     Response res = await dio.post(
-      'http://59.0.236.149:8089/boot/login',
+      'http://10.0.2.2:8089/boot/login',
       data: {
         'loginMember': member.toJson(),
       },
@@ -284,7 +284,7 @@ void loginMember(Users member, BuildContext context) async {
         // 스토리지에 로그인 한 회원의 uidx 저장하기
         await storage.write(key: 'uidx', value: loggedInUser.uidx.toString());
         await storage.write(key: 'uname', value: loggedInUser.uname.toString());
-
+        await storage.write(key: 'member', value: res.data.toString());
         // 로그인 성공 메시지 표시
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -306,6 +306,7 @@ void loginMember(Users member, BuildContext context) async {
         // 스토리지에 로그인 한 회원의 uidx 저장하기
         await storage.write(key: 'uidx', value: loggedInUser.uidx.toString());
         await storage.write(key: 'uname', value: loggedInUser.uname.toString());
+        await storage.write(key: 'member', value: res.data.toString());
 
 
         // 로그인 성공 메시지 표시

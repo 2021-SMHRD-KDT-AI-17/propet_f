@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:propetsor/chatbot/chatbot.dart';
 import 'package:propetsor/mainPage/main_2.dart';
+import 'package:propetsor/mypage/mypage_2.dart';
 import 'package:propetsor/mypage/prechat.dart';
 
 class MyChatPage extends StatefulWidget {
@@ -49,6 +50,12 @@ class _MyChatPageState extends State<MyChatPage> {
         builder: (context) => MainPage_2(initialIndex: 1),
       ),
     );
+  }
+
+  Future<String?> _getUsername() async {
+    String? username = await storage.read(key: 'uname');
+    print('Username from storage: $username'); // 값 출력
+    return username;
   }
 
   @override
@@ -132,9 +139,21 @@ class _MyChatPageState extends State<MyChatPage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            Text(
-              "'조세핀'님의 대화 목록",
-              style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.bold),
+            FutureBuilder<String?>(
+              future: _getUsername(),
+              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else {
+                  return Text(
+                    snapshot.hasData ? "'${snapshot.data}'님 안녕하세요!" : '사용자 이름을 불러올 수 없습니다.',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 16),
             Container(
