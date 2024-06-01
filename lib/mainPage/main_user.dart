@@ -35,7 +35,7 @@ class _MainUserState extends State<MainUser> {
     String? uidx = await storage.read(key: 'uidx');
 
     Response res = await dio.post(
-      "http://10.0.2.2:8089/boot/selectAllPet",
+      "http://211.48.213.165:8089/boot/selectAllPet",
       data: {"uidx": uidx},
       options: Options(
         headers: {
@@ -90,16 +90,26 @@ class _MainUserState extends State<MainUser> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.pets,
-              size: 80,
-              color: Colors.grey.withOpacity(0.7),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                color: Colors.deepPurpleAccent.withOpacity(0.1),
+              ),
+              child: Icon(
+                Icons.pets,
+                size: 60,
+                color: Colors.deepPurpleAccent,
+              ),
             ),
             SizedBox(height: 20),
             Text(
               '등록된 펫이 없습니다.',
               style: TextStyle(
                 fontSize: 18,
+                fontWeight: FontWeight.bold,
                 color: Colors.grey.withOpacity(0.8),
               ),
             ),
@@ -162,8 +172,9 @@ class _MainUserState extends State<MainUser> {
         width: 180,
         height: 180,
         decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey.withOpacity(0.3))),
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.grey.withOpacity(0.3)),
+        ),
         child: ClipOval(
           child: Image.asset(
             'assets/images/logo2.png',
@@ -254,21 +265,31 @@ class _MainUserState extends State<MainUser> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.add_circle,
-              size: 80,
-              color: Colors.grey.withOpacity(0.7),
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                color: Colors.deepPurpleAccent.withOpacity(0.1),
+              ),
+              child: Icon(
+                Icons.add,
+                size: 60,
+                color: Colors.deepPurpleAccent,
+              ),
             ),
             SizedBox(height: 20),
             Text(
               '추가 등록하기',
               style: TextStyle(
                 fontSize: 18,
+                fontWeight: FontWeight.bold,
                 color: Colors.grey.withOpacity(0.8),
               ),
             ),
             SizedBox(height: 20),
-            _buildRegisterButton(context, '등록'),
+            _buildRegisterButton(context, '등록 바로가기'),
           ],
         ),
       ),
@@ -284,17 +305,17 @@ class _MainUserState extends State<MainUser> {
         );
       },
       child: Container(
-        width: 200, // 크기 조절 가능
-        height: 60, // 크기 조절 가능
+        width: 200,
+        height: 60,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), // 버튼 모서리 둥글게
-          color: Colors.deepPurpleAccent, // 버튼 색상 설정
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.deepPurpleAccent,
           boxShadow: [
             BoxShadow(
               color: Colors.deepPurpleAccent.withOpacity(0.5),
               spreadRadius: 3,
               blurRadius: 8,
-              offset: Offset(0, 4), // 그림자의 위치 조정
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -304,7 +325,7 @@ class _MainUserState extends State<MainUser> {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white, // 텍스트 색상 설정
+              color: Colors.white,
             ),
           ),
         ),
