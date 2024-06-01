@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // 시간 포맷을 위해 사용
-import 'package:propetsor/mainPage/main_2.dart'; // animated_text_kit 패키지 추가
+import 'package:propetsor/mainPage/main_2.dart';
+import '../main.dart'; // animated_text_kit 패키지 추가
 
 class PreChat extends StatelessWidget {
   final Map<String, String> chatData;
@@ -105,8 +108,15 @@ class PreChat extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Future<List<Map<String, String>>> fetchAndAddQuestions() async {
+    final dio = Dio();
+    String? uidx = await storage.read(key: 'uidx');
+    Response res = await dio.post(
+        'http://10.0.2.2:8089/boot/getQuestionList',
+        data: {"uidx": uidx, "qtf": chatData['q_tf']}
+    );
+
+    List<Map<String, dynamic>> receivedData = List<Map<String, dynamic>>.from(json.decode(res.data));
     List<Map<String, String>> messages = [
       {
         'role': 'bot',
@@ -114,145 +124,183 @@ class PreChat extends StatelessWidget {
         'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
         'name': '프로펫서'
       },
-      {
-        'role': 'user',
-        'message': '사용자가 보낸 메시지 예시입니다.',
-        'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
-        'name': 'User'
-      },
-      {
-        'role': 'bot',
-        'message': chatData['content']!,
-        'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
-        'name': '프로펫서'
-      },
     ];
 
-    bool isNoAnswer = chatData['content'] == '챗봇이 아직 답변할 수 없습니다.';
+    receivedData.forEach((data) {
+      messages.add({
+        'role': 'user', // 챗봇의 역할
+        'message': data['qcontent'], // 질문 내용
+        'timestamp': DateFormat('hh:mm a').format(DateTime.now()), // 현재 시간
+        'name': 'User' // 챗봇의 이름
+      });
+      messages.add({
+        'role': 'bot', // 챗봇의 역할
+        'message': data['qanswer'], // 질문 내용
+        'timestamp': DateFormat('hh:mm a').format(DateTime.now()), // 현재 시간
+        'name': '프로펫서' // 챗봇의 이름
+      });
+    });
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(56.0),
-        child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+    return messages;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isNoAnswer = chatData['q_tf'] == 'N';
+
+    return FutureBuilder<List<Map<String, String>>>(
+      future: fetchAndAddQuestions(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('PreChat'),
             ),
-            backgroundColor: Colors.white,
-            title: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainPage_2()),
-                );
-              },
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('PreChat'),
+            ),
+            body: Center(child: Text('오류가 발생했습니다.')),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('PreChat'),
+            ),
+            body: Center(child: Text('데이터가 없습니다.')),
+          );
+        } else {
+          List<Map<String, String>> messages = snapshot.data!;
+
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(56.0),
               child: Container(
-                height: 30,
-                width: 120,
-                child: Image.asset(
-                  'assets/images/logo3.png',
-                  fit: BoxFit.contain,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: AppBar(
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  backgroundColor: Colors.white,
+                  title: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPage_2()),
+                      );
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 120,
+                      child: Image.asset(
+                        'assets/images/logo3.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  centerTitle: true,
+                  actions: [
+                    Stack(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.notifications),
+                          onPressed: () {
+                            // 알림 아이콘 클릭 시 동작
+                          },
+                        ),
+                        Positioned(
+                          right: 11,
+                          top: 11,
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 14,
+                              minHeight: 14,
+                            ),
+                            child: Text(
+                              '0',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            centerTitle: true,
-            actions: [
-              Stack(
+            body: SafeArea(
+              child: Column(
                 children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.notifications),
-                    onPressed: () {
-                      // 알림 아이콘 클릭 시 동작
-                    },
-                  ),
-                  Positioned(
-                    right: 11,
-                    top: 11,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 14,
-                        minHeight: 14,
-                      ),
-                      child: Text(
-                        '0',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                  SizedBox(height: 10), // 첫 멘트 위에 여백 추가
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(8.0),
+                      itemCount: messages.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: _buildMessage(messages[index]),
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 10), // 첫 멘트 위에 여백 추가
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8.0),
-                itemCount: messages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: _buildMessage(messages[index]),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: isNoAnswer
+                ? Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              width: 250, // 너비 줄이기
+              height: 50, // 높이 키우기
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MainPage_2(initialIndex: 1),
+                    ),
                   );
                 },
+                icon: Icon(Icons.chat, color: Colors.deepPurpleAccent),
+                label: Text('다시 물어보러 가기!', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: BorderSide(color: Colors.grey),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: isNoAnswer
-          ? Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        width: 250, // 너비 줄이기
-        height: 50, // 높이 키우기
-        child: ElevatedButton.icon(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MainPage_2(initialIndex: 1),
-              ),
-            );
-          },
-          icon: Icon(Icons.chat, color: Colors.deepPurpleAccent),
-          label: Text('다시 물어보러 가기!', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            side: BorderSide(color: Colors.grey),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        ),
-      )
-          : null,
+            )
+                : null,
+          );
+        }
+      },
     );
   }
 }

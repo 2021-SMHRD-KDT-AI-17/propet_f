@@ -16,12 +16,14 @@ class _MyChatPageState extends State<MyChatPage> {
     {
       'title': '기존 대화',
       'date': '2024-05-20',
-      'content': '이것은 정상적인 답변입니다.'
+      'content': '이것은 정상적인 답변입니다.',
+      'q_tf' : 'Y'
     },
     {
       'title': '기존 대화',
       'date': '2024-05-21',
-      'content': '챗봇이 아직 답변할 수 없습니다.'
+      'content': '챗봇이 아직 답변할 수 없습니다.',
+      'q_tf': 'N'
     },
   ];
 
