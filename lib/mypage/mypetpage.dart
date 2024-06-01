@@ -35,7 +35,7 @@ class _MyPetPageState extends State<MyPetPage> {
     String? uidx = await storage.read(key: 'uidx');
 
     Response res = await dio.post(
-      "http://211.48.213.165:8089/boot/selectAllPet",
+      "http://10.0.2.2:8089/boot/selectAllPet",
       data: {"uidx": uidx},
       options: Options(
         headers: {
