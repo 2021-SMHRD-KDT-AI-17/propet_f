@@ -81,6 +81,13 @@ class _MyPetPageState extends State<MyPetPage> {
     });
   }
 
+  Future<String?> _getUsername() async {
+    String? username = await storage.read(key: 'uname');
+    print('Username from storage: $username'); // 값 출력
+    return username;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,9 +173,21 @@ class _MyPetPageState extends State<MyPetPage> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Column(
                 children: [
-                  Text(
-                    "'조세핀'님의 등록된 마이 펫!",
-                    style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.bold),
+                  FutureBuilder<String?>(
+                    future: _getUsername(),
+                    builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else {
+                        return Text(
+                          snapshot.hasData ? "'${snapshot.data}'님 안녕하세요!" : '사용자 이름을 불러올 수 없습니다.',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 16),
                   Container(
