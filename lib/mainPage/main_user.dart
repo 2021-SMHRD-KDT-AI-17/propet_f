@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:propetsor/main.dart';
 import 'package:propetsor/model/Pet.dart';
+import 'package:propetsor/mypage/mypetpage.dart';
 
 class MainUser extends StatefulWidget {
   const MainUser();
@@ -34,7 +35,7 @@ class _MainUserState extends State<MainUser> {
     String? uidx = await storage.read(key: 'uidx');
 
     Response res = await dio.post(
-      "http://211.48.213.165:8089/boot/selectAllPet",
+      "http://10.0.2.2:8089/boot/selectAllPet",
       data: {"uidx": uidx},
       options: Options(
         headers: {
@@ -52,13 +53,60 @@ class _MainUserState extends State<MainUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: PageView(
-        children: pets.map((pet) {
-          String petName = pet['pname'] as String;
-          String petBreed = pet['pkind'] as String;
-          int petAge = int.tryParse(pet['page'].toString()) ?? 0;
-          return _buildPage(context, petName, petBreed, petAge);
-        }).toList(),
+      body: pets.isEmpty
+          ? _buildNoPetsPage(context)
+          : PageView(
+        children: [
+          ...pets.map((pet) {
+            String petName = pet['pname'] as String;
+            String petBreed = pet['pkind'] as String;
+            int petAge = int.tryParse(pet['page'].toString()) ?? 0;
+            return _buildPage(context, petName, petBreed, petAge);
+          }).toList(),
+          if (pets.length < 3) _buildAddPetPage(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoPetsPage(BuildContext context) {
+    return Center(
+      child: Container(
+        height: 500,
+        width: 350,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.withOpacity(0.3)),
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.pets,
+              size: 80,
+              color: Colors.grey.withOpacity(0.7),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '등록된 펫이 없습니다.',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey.withOpacity(0.8),
+              ),
+            ),
+            SizedBox(height: 20),
+            _buildRegisterButton(context, '등록 바로가기'),
+          ],
+        ),
       ),
     );
   }
@@ -181,6 +229,85 @@ class _MainUserState extends State<MainUser> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAddPetPage(BuildContext context) {
+    return Center(
+      child: Container(
+        height: 500,
+        width: 350,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.withOpacity(0.3)),
+          color: Colors.white,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add_circle,
+              size: 80,
+              color: Colors.grey.withOpacity(0.7),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '추가 등록하기',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey.withOpacity(0.8),
+              ),
+            ),
+            SizedBox(height: 20),
+            _buildRegisterButton(context, '등록'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterButton(BuildContext context, String text) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyPetPage()),
+        );
+      },
+      child: Container(
+        width: 200, // 크기 조절 가능
+        height: 60, // 크기 조절 가능
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20), // 버튼 모서리 둥글게
+          color: Colors.deepPurpleAccent, // 버튼 색상 설정
+          boxShadow: [
+            BoxShadow(
+              color: Colors.deepPurpleAccent.withOpacity(0.5),
+              spreadRadius: 3,
+              blurRadius: 8,
+              offset: Offset(0, 4), // 그림자의 위치 조정
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // 텍스트 색상 설정
+            ),
+          ),
+        ),
       ),
     );
   }
