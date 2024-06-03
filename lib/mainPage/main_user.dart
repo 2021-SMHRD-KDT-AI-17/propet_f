@@ -101,12 +101,20 @@ class _MainUserState extends State<MainUser> {
                 );
               },
               child: Container(
-                width: 180,
-                height: 180,
+                width: 200,
+                height: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                  color: Colors.deepPurpleAccent.withOpacity(0.1),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Icon(
                   Icons.pets,
@@ -133,7 +141,7 @@ class _MainUserState extends State<MainUser> {
               ),
             ),
             SizedBox(height: 30),
-            _buildRegisterButton(context, '마이펫 등록'),
+            _buildRegisterButton(context, '마이 펫 등록'),
           ],
         ),
       ),
@@ -169,9 +177,9 @@ class _MainUserState extends State<MainUser> {
                 SizedBox(width: 10),
               ],
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             _buildCircleButton(context),
-            SizedBox(height: 20),
+            SizedBox(height: 1),
             _buildPetInfo(petName, petBreed, petAge, petGender, petWeight),
             SizedBox(height: 20),
           ],
@@ -189,9 +197,17 @@ class _MainUserState extends State<MainUser> {
         // );
       },
       child: Container(
-        width: 180,
-        height: 180,
+        width: 200,
+        height: 200,
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
           shape: BoxShape.circle,
           border: Border.all(color: Colors.grey.withOpacity(0.3)),
         ),
@@ -214,7 +230,7 @@ class _MainUserState extends State<MainUser> {
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.grey.withOpacity(0.1),
+        color: Colors.grey.withOpacity(0.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -250,6 +266,7 @@ class _MainUserState extends State<MainUser> {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.withOpacity(0.3)),
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
         boxShadow: [
@@ -306,23 +323,31 @@ class _MainUserState extends State<MainUser> {
                 );
               },
               child: Container(
-                width: 180,
-                height: 180,
+                width: 200,
+                height: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                  color: Colors.deepPurpleAccent.withOpacity(0.1),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Icon(
                   Icons.add,
-                  size: 60,
+                  size: 80,
                   color: Colors.deepPurpleAccent,
                 ),
               ),
             ),
             SizedBox(height: 20),
             Text(
-              '마이펫 추가 등록하기',
+              '마이 펫 추가 등록하기',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -345,42 +370,44 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
+
   Widget _buildRegisterButton(BuildContext context, String text) {
-    return GestureDetector(
-      onTap: () {
+    return ElevatedButton(
+      onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => MyPetPage()),
         );
       },
-      child: Container(
-        width: 200,
-        height: 60,
-        decoration: BoxDecoration(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.deepPurpleAccent,
+        shadowColor: Colors.deepPurpleAccent.withOpacity(0.5),
+        elevation: 8,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.deepPurpleAccent,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.deepPurpleAccent.withOpacity(0.5),
-              spreadRadius: 3,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
         ),
-        child: Center(
-          child: Text(
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 24), // 패딩을 추가하여 버튼을 더 크고 터치하기 쉽게 만듭니다.
+        minimumSize: Size(200, 50), // 버튼의 최소 크기를 설정합니다.
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min, // 텍스트 길이에 따라 버튼 크기가 결정되도록 합니다.
+        children: [
+          Icon(Icons.favorite, size: 24), // 아이콘을 추가하여 버튼의 직관성을 높입니다.
+          SizedBox(width: 8), // 아이콘과 텍스트 사이에 여백을 추가합니다.
+          Text(
             text,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
             ),
           ),
-        ),
+        ],
       ),
     );
   }
+
+
 
   Widget _buildCustomWidget(BuildContext context) {
     return GestureDetector(
