@@ -43,13 +43,11 @@ class MainNon extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => MainPage_1(initialIndex: 1), // 초기 인덱스를 1로 설정
-                    ),
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
                 child: Text(
-                  '프로펫서 챗봇 이용하러 가기!',
+                  '마이펫 등록을 위해 로그인 해주세요!',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black.withOpacity(0.6),
@@ -128,7 +126,9 @@ class MainNon extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(
+            builder: (context) => MainPage_1(initialIndex: 1), // 초기 인덱스를 1로 설정
+          ),
         );
       },
       child: Container(
@@ -150,13 +150,13 @@ class MainNon extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.login_rounded,
+              Icons.chat,
               color: Colors.white, // 아이콘 색상
               size: 24, // 아이콘 크기
             ),
             SizedBox(width: 10), // 아이콘과 텍스트 사이 간격 조정
             Text(
-              '로그인 후 이용해 주세요.',
+              '챗봇만 이용하러 가기!',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
