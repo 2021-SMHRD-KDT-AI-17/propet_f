@@ -237,24 +237,25 @@ class _MainUserState extends State<MainUser> {
         children: [
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100)),
+              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100, 16)),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200)),
+              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200, 16)),
             ],
           ),
           SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100)),
+              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100, 14)),
               SizedBox(width: 10),
               Expanded(child: _buildPetDetailBox(
                 petGender == '수컷' ? Icons.male : Icons.female,
                 '성별',
                 petGender,
                 petGender == '수컷' ? Colors.blueAccent.shade100 : Colors.pinkAccent.shade100,
+                14,
               )),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200)),
+              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200, 14)),
             ],
           ),
         ],
@@ -262,7 +263,7 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
-  Widget _buildPetDetailBox(IconData icon, String title, String value, Color iconColor) {
+  Widget _buildPetDetailBox(IconData icon, String title, String value, Color iconColor, double fontSize) {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -285,7 +286,7 @@ class _MainUserState extends State<MainUser> {
           Text(
             value,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: fontSize,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -370,7 +371,6 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
-
   Widget _buildRegisterButton(BuildContext context, String text) {
     return ElevatedButton(
       onPressed: () {
@@ -406,8 +406,6 @@ class _MainUserState extends State<MainUser> {
       ),
     );
   }
-
-
 
   Widget _buildCustomWidget(BuildContext context) {
     return GestureDetector(
