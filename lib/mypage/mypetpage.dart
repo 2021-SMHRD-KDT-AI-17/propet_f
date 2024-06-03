@@ -70,7 +70,7 @@ class _MyPetPageState extends State<MyPetPage> {
       print("--------------------");
       print(pets[index]["pidx"]);
       Response res = await dio.post(
-          "http://localhost:8089/boot/deletePet",
+          "http://10.0.2.2:8089/boot/deletePet",
           data: {"p_idx" : pets[index]["pidx"]}
       );
     }
