@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:propetsor/main.dart';
+import 'package:propetsor/mainPage/main_2.dart';
 import 'package:propetsor/mypage/pet_edit.dart';
 import 'package:propetsor/mypage/pet_enroll.dart';
 
@@ -114,7 +115,10 @@ class _MyPetPageState extends State<MyPetPage> {
             backgroundColor: Colors.white,
             title: GestureDetector(
               onTap: () {
-                // 메인 페이지로 이동
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainPage_2()),
+                );
               },
               child: Container(
                 height: 30,
@@ -180,7 +184,7 @@ class _MyPetPageState extends State<MyPetPage> {
                         return CircularProgressIndicator();
                       } else {
                         return Text(
-                          snapshot.hasData ? "'${snapshot.data}'님 안녕하세요!" : '사용자 이름을 불러올 수 없습니다.',
+                          snapshot.hasData ? "'${snapshot.data}'님의 마이 펫!" : '사용자 이름을 불러올 수 없습니다.',
                           style: Theme.of(context)
                               .textTheme
                               .headline6
@@ -252,7 +256,7 @@ class _TopPortion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 50),
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: const BorderRadius.only(
@@ -260,13 +264,14 @@ class _TopPortion extends StatelessWidget {
           bottomRight: Radius.circular(50),
         ),
         image: const DecorationImage(
-          image: AssetImage('assets/images/back.jpg'), // 이미지 파일 경로로 변경
-          fit: BoxFit.cover, // 이미지가 컨테이너를 채우도록 설정
+          image: AssetImage('assets/images/pic.png'), // 이미지 파일 경로로 변경
+          fit: BoxFit.cover, // 이미지가 컨테이너 안에 맞추어져서 잘리지 않도록 설정
         ),
       ),
     );
   }
 }
+
 
 class _PetRegistrationCard extends StatelessWidget {
   final VoidCallback onTap;
@@ -299,7 +304,7 @@ class _PetRegistrationCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '등록하기',
+                '마이펫을 등록해 보세요!',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const Spacer(),

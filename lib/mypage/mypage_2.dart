@@ -191,7 +191,7 @@ class _TopPortion extends StatelessWidget {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage('assets/images/logo2.png'),
+                      image: AssetImage('assets/images/pic.png'),
                     ),
                     border: Border.all(color: Colors.grey), // 보더 추가
                   ),

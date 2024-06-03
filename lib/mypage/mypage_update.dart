@@ -67,9 +67,17 @@ class __LogoState extends State<_Logo> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        CircleAvatar(
-          radius: isSmallScreen ? 80 : 80,
-          backgroundImage: _image != null ? FileImage(_image!) : AssetImage('assets/images/logo1.png') as ImageProvider,
+        Container(
+          width: isSmallScreen ? 160 : 160,
+          height: isSmallScreen ? 160 : 160,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.grey, width: 1), // 회색 보더 추가
+          ),
+          child: CircleAvatar(
+            radius: isSmallScreen ? 76 : 76, // 보더 두께에 맞춰서 반지름 조정
+            backgroundImage: _image != null ? FileImage(_image!) : AssetImage('assets/images/pic.png') as ImageProvider,
+          ),
         ),
         Positioned(
           bottom: 0,
@@ -100,7 +108,7 @@ class __LogoState extends State<_Logo> {
   }
 }
 
-class _FormContent extends StatefulWidget {
+  class _FormContent extends StatefulWidget {
   const _FormContent({Key? key}) : super(key: key);
 
   @override

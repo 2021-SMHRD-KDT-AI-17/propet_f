@@ -86,7 +86,10 @@ class _MyChatPageState extends State<MyChatPage> {
             backgroundColor: Colors.white,
             title: GestureDetector(
               onTap: () {
-                // 메인 페이지로 이동
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainPage_2()),
+                );
               },
               child: Container(
                 height: 30,
@@ -148,7 +151,7 @@ class _MyChatPageState extends State<MyChatPage> {
                   return CircularProgressIndicator();
                 } else {
                   return Text(
-                    snapshot.hasData ? "'${snapshot.data}'님 안녕하세요!" : '사용자 이름을 불러올 수 없습니다.',
+                    snapshot.hasData ? "'${snapshot.data}'님의 마이 채팅!" : '사용자 이름을 불러올 수 없습니다.',
                     style: Theme.of(context)
                         .textTheme
                         .headline6
