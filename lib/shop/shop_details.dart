@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:propetsor/model/Goods.dart';
+
 
 class ShopDetails extends StatelessWidget {
-  final int heroTag;
+  final Goods goods;
 
-  const ShopDetails({Key? key, required this.heroTag}) : super(key: key);
+  const ShopDetails({Key? key, required this.goods}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +25,11 @@ class ShopDetails extends StatelessWidget {
           children: [
             Center(
               child: Hero(
-                tag: heroTag,
+                tag: goods.gidx,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    _images[heroTag],
+                    goods.glink,
                     width: 200,
                     height: 200,
                     fit: BoxFit.cover,
@@ -40,13 +42,13 @@ class ShopDetails extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "제품 이름 $heroTag",
+                    goods.gname,
                     style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "₩48,130 / 4kg",
+                    '₩${goods.gprice}',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   const SizedBox(height: 5),
@@ -56,7 +58,7 @@ class ShopDetails extends StatelessWidget {
                       Icon(Icons.star, color: Colors.yellow, size: 20),
                       const SizedBox(width: 5),
                       Text(
-                        "4.1 (523개 리뷰)",
+                        "4.1 (523개 리뷰)", // 이 부분은 실제 데이터로 수정 필요
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ],
@@ -69,7 +71,7 @@ class ShopDetails extends StatelessWidget {
               context,
               Icons.pets_outlined,
               "성분 분석",
-              "주요 성분: 닭고기, 쌀, 옥수수",
+              goods.gingre,
               [
                 _buildTag(context, "비타민 A", Colors.pink[200]!),
                 _buildTag(context, "비타민 D", Colors.blue[200]!),
@@ -255,7 +257,6 @@ class ShopDetails extends StatelessWidget {
                     ),
                   ],
                   semanticLabel: 'Rating Star',
-                  // Add a border to the star icon
                 );
               }),
             ),
@@ -278,12 +279,3 @@ class ShopDetails extends StatelessWidget {
     );
   }
 }
-
-final List<String> _images = [
-  'https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-  'https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/273935/pexels-photo-273935.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/462024/pexels-photo-462024.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-];

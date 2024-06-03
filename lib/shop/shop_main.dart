@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/model/Goods.dart';
 import 'shop_details.dart';
 
 class MainShopPage extends StatefulWidget {
@@ -9,34 +12,60 @@ class MainShopPage extends StatefulWidget {
 }
 
 class _MainShopPageState extends State<MainShopPage> {
-  late List<String> _currentCategoryImages;
+  late List<Goods> _goodsList = [];
+  late List<Goods> _currentCategoryGoods;
   int _selectedCategoryIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _currentCategoryImages = _images; // 초기 이미지
+    _fetchGoods();
+  }
+
+  Future<void> _fetchGoods() async {
+    final dio = Dio();
+
+    try {
+      Response res = await dio.get(
+        "http://10.0.2.2:8089/boot/selectAllGoods",
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      List<dynamic> data = res.data is String ? json.decode(res.data) : res.data;
+      List<Goods> goodsList = data.map((json) => Goods.fromJson(json)).toList();
+
+      setState(() {
+        _goodsList = goodsList;
+        _currentCategoryGoods = goodsList; // 초기 모든 상품
+      });
+    } catch (e) {
+      print("Error fetching goods: $e");
+    }
   }
 
   void _onCategorySelected(int index) {
     setState(() {
       _selectedCategoryIndex = index;
-      // 선택한 카테고리에 따라 이미지 업데이트
+      // 선택한 카테고리에 따라 상품 업데이트
       switch (index) {
         case 0:
-          _currentCategoryImages = _images; // 모든 이미지
+          _currentCategoryGoods = _goodsList; // 모든 상품
           break;
         case 1:
-          _currentCategoryImages = _images.sublist(0, 2); // 첫 두 개의 이미지
+          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 1 && goods.gidx <= 2).toList(); // 종합영양제
           break;
         case 2:
-          _currentCategoryImages = _images.sublist(2, 4); // 중간 두 개의 이미지
+          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 3 && goods.gidx <= 4).toList(); // 장/유산균
           break;
         case 3:
-          _currentCategoryImages = _images.sublist(4, 6); // 마지막 두 개의 이미지
+          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 5 && goods.gidx <= 6).toList(); // 피부/모질
           break;
         default:
-          _currentCategoryImages = _images; // 기본적으로 모든 이미지
+          _currentCategoryGoods = _goodsList; // 기본적으로 모든 상품
           break;
       }
     });
@@ -56,13 +85,15 @@ class _MainShopPageState extends State<MainShopPage> {
             unselectedLabelColor: Colors.grey,
             tabs: [
               Tab(text: '전체'),
-              Tab(text: '사료'),
-              Tab(text: '장난감'),
-              Tab(text: '액세서리'),
+              Tab(text: '종합영양제'),
+              Tab(text: '장/유산균'),
+              Tab(text: '피부/모질'),
             ],
           ),
         ),
-        body: TabBarView(
+        body: _goodsList.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : TabBarView(
           children: [
             _buildCategoryPage(),
             _buildCategoryPage(),
@@ -78,7 +109,7 @@ class _MainShopPageState extends State<MainShopPage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
-        itemCount: _currentCategoryImages.length,
+        itemCount: _currentCategoryGoods.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 10,
@@ -86,22 +117,23 @@ class _MainShopPageState extends State<MainShopPage> {
           childAspectRatio: 0.7,
         ),
         itemBuilder: (BuildContext context, int index) {
-          final int imageIndex = _images.indexOf(_currentCategoryImages[index]);
+          final goods = _currentCategoryGoods[index];
           return InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ShopDetails(heroTag: imageIndex)));
+                builder: (context) => ShopDetails(goods: goods),
+              ));
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Hero(
-                    tag: imageIndex,
+                    tag: goods.gidx,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.network(
-                        _currentCategoryImages[index],
+                        goods.glink,
                         fit: BoxFit.cover,
                         width: double.infinity,
                       ),
@@ -110,7 +142,7 @@ class _MainShopPageState extends State<MainShopPage> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  '제품 이름 $imageIndex',
+                  goods.gname,
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -120,7 +152,7 @@ class _MainShopPageState extends State<MainShopPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '₩29,900',
+                      '₩${goods.gprice}',
                       style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.grey),
                     ),
                     Row(
@@ -128,7 +160,7 @@ class _MainShopPageState extends State<MainShopPage> {
                         Icon(Icons.star, color: Colors.yellow, size: 16),
                         SizedBox(width: 4),
                         Text(
-                          '4.0',
+                          '4.0', // This rating is static, can be dynamic if needed
                           style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.grey),
                         ),
                       ],
@@ -143,12 +175,3 @@ class _MainShopPageState extends State<MainShopPage> {
     );
   }
 }
-
-final List<String> _images = [
-  'https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-  'https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/273935/pexels-photo-273935.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/462024/pexels-photo-462024.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-  'https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-];
