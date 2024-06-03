@@ -360,13 +360,13 @@ class _PetEnrollState extends State<PetEnroll> {
   Icon? _getPrefixIcon(String label) {
     switch (label) {
       case '이름':
-        return Icon(Icons.pets);
+        return Icon(Icons.drive_file_rename_outline);
       case '나이':
-        return Icon(Icons.cake);
+        return Icon(Icons.pets);
       case '품종':
         return Icon(Icons.category);
       case '몸무게':
-        return Icon(Icons.line_weight);
+        return Icon(Icons.monitor_weight);
       default:
         return null;
     }

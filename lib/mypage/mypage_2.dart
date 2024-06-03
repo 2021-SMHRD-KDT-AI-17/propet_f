@@ -211,14 +211,14 @@ class _TopPortion extends StatelessWidget {
                       height: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.grey), // Border added
+                        border: Border.all(color: Colors.grey, width: 1), // Border added
                       ),
                       child: Container(
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey), // Border added
+                          border: Border.all(color: Colors.grey, width: 1), // Border added
                           color: Colors.white, // Background color changed
                         ),
                         child: const Icon(Icons.edit, color: Colors.grey),

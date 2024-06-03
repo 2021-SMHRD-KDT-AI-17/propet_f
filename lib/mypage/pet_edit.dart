@@ -176,6 +176,7 @@ class _PetEditState extends State<PetEdit> {
                     key: _formKey,
                     child: ListView(
                       children: [
+                        SizedBox(height: 16),
                         _buildTextField('이름', 'pname'),
                         SizedBox(height: 16),
                         _buildTextField('나이', 'page'),
@@ -291,13 +292,13 @@ class _PetEditState extends State<PetEdit> {
   Icon? _getPrefixIcon(String label) {
     switch (label) {
       case '이름':
-        return Icon(Icons.pets);
+        return Icon(Icons.drive_file_rename_outline);
       case '나이':
         return Icon(Icons.cake);
       case '품종':
-        return Icon(Icons.category);
+        return Icon(Icons.pets);
       case '몸무게':
-        return Icon(Icons.line_weight);
+        return Icon(Icons.monitor_weight);
       default:
         return null;
     }
@@ -344,13 +345,17 @@ class _PetEditState extends State<PetEdit> {
           children: [
             Expanded(
               child: _buildSelectionBox('예', key, _getSelectedState(key, true), onChanged: () {
-                onChanged(true);
+                setState(() {
+                  onChanged(true);
+                });
               }),
             ),
             SizedBox(width: 10),
             Expanded(
               child: _buildSelectionBox('아니오', key, _getSelectedState(key, false), onChanged: () {
-                onChanged(false);
+                setState(() {
+                  onChanged(false);
+                });
               }),
             ),
           ],
@@ -384,9 +389,9 @@ class _PetEditState extends State<PetEdit> {
 
   bool _getSelectedState(String key, bool isYes) {
     switch (key) {
-      case 'neutered':
+      case 'psurgery':
         return _selectedNeutered == (isYes ? '예' : '아니오');
-      case 'disease':
+      case 'pdisease':
         return _selectedDisease == (isYes ? '예' : '아니오');
       default:
         return false;

@@ -61,7 +61,10 @@ class _MainUserState extends State<MainUser> {
             String petName = pet['pname'] as String;
             String petBreed = pet['pkind'] as String;
             int petAge = int.tryParse(pet['page'].toString()) ?? 0;
-            return _buildPage(context, petName, petBreed, petAge);
+            String petGender = pet['pgender'] as String;
+            String petWeight = pet['pkg'] as String;
+            return _buildPage(
+                context, petName, petBreed, petAge, petGender, petWeight);
           }).toList(),
           if (pets.length < 3) _buildAddPetPage(context),
         ],
@@ -90,38 +93,55 @@ class _MainUserState extends State<MainUser> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                color: Colors.deepPurpleAccent.withOpacity(0.1),
-              ),
-              child: Icon(
-                Icons.pets,
-                size: 60,
-                color: Colors.deepPurpleAccent,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyPetPage()),
+                );
+              },
+              child: Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                  color: Colors.deepPurpleAccent.withOpacity(0.1),
+                ),
+                child: Icon(
+                  Icons.pets,
+                  size: 80,
+                  color: Colors.deepPurpleAccent,
+                ),
               ),
             ),
             SizedBox(height: 20),
             Text(
               '등록된 펫이 없습니다.',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey.withOpacity(0.8),
+                color: Colors.grey.withOpacity(1.0),
               ),
             ),
             SizedBox(height: 20),
-            _buildRegisterButton(context, '등록 바로가기'),
+            Text(
+              '지금 바로 사랑스러운 펫을 등록해 보세요!',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black.withOpacity(0.6),
+              ),
+            ),
+            SizedBox(height: 30),
+            _buildRegisterButton(context, '마이펫 등록'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPage(BuildContext context, String petName, String petBreed, int petAge) {
+  Widget _buildPage(BuildContext context, String petName, String petBreed,
+      int petAge, String petGender, String petWeight) {
     return Center(
       child: Container(
         height: 500,
@@ -146,13 +166,13 @@ class _MainUserState extends State<MainUser> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 _buildCustomWidget(context),
-                SizedBox(width: 20),
+                SizedBox(width: 10),
               ],
             ),
             SizedBox(height: 10),
             _buildCircleButton(context),
             SizedBox(height: 20),
-            _buildPetInfo(petName, petBreed, petAge),
+            _buildPetInfo(petName, petBreed, petAge, petGender, petWeight),
             SizedBox(height: 20),
           ],
         ),
@@ -187,7 +207,8 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
-  Widget _buildPetInfo(String petName, String petBreed, int petAge) {
+  Widget _buildPetInfo(String petName, String petBreed, int petAge,
+      String petGender, String petWeight) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
       padding: EdgeInsets.all(20),
@@ -196,21 +217,38 @@ class _MainUserState extends State<MainUser> {
         color: Colors.grey.withOpacity(0.1),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildPetDetailBox('이름', petName),
+          Row(
+            children: [
+              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100)),
+              SizedBox(width: 10),
+              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200)),
+            ],
+          ),
           SizedBox(height: 10),
-          _buildPetDetailBox('품종', petBreed),
-          SizedBox(height: 10),
-          _buildPetDetailBox('나이', '$petAge살'),
+          Row(
+            children: [
+              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100)),
+              SizedBox(width: 10),
+              Expanded(child: _buildPetDetailBox(
+                petGender == '수컷' ? Icons.male : Icons.female,
+                '성별',
+                petGender,
+                petGender == '수컷' ? Colors.blueAccent.shade100 : Colors.pinkAccent.shade100,
+              )),
+              SizedBox(width: 10),
+              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200)),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildPetDetailBox(String title, String value) {
+  Widget _buildPetDetailBox(IconData icon, String title, String value, Color iconColor) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: Colors.white,
@@ -223,20 +261,15 @@ class _MainUserState extends State<MainUser> {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
         children: [
-          Text(
-            '$title: ',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(width: 5),
+          Icon(icon, size: 24, color: iconColor),
+          SizedBox(height: 8),
           Text(
             value,
             style: TextStyle(
               fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
@@ -265,31 +298,47 @@ class _MainUserState extends State<MainUser> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                color: Colors.deepPurpleAccent.withOpacity(0.1),
-              ),
-              child: Icon(
-                Icons.add,
-                size: 60,
-                color: Colors.deepPurpleAccent,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyPetPage()),
+                );
+              },
+              child: Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                  color: Colors.deepPurpleAccent.withOpacity(0.1),
+                ),
+                child: Icon(
+                  Icons.add,
+                  size: 60,
+                  color: Colors.deepPurpleAccent,
+                ),
               ),
             ),
             SizedBox(height: 20),
             Text(
-              '추가 등록하기',
+              '마이펫 추가 등록하기',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey.withOpacity(0.8),
+                color: Colors.grey.withOpacity(1.0),
               ),
             ),
             SizedBox(height: 20),
-            _buildRegisterButton(context, '등록 바로가기'),
+            Text(
+              '최대 3마리까지 등록 가능합니다!',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black.withOpacity(0.6),
+              ),
+            ),
+            SizedBox(height: 20),
+            _buildRegisterButton(context, '마이펫 등록'),
           ],
         ),
       ),
@@ -336,16 +385,17 @@ class _MainUserState extends State<MainUser> {
   Widget _buildCustomWidget(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => ProfileUpdate()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyPetPage()),
+        );
       },
       child: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(8),
           color: Colors.white,
           border: Border.all(color: Colors.grey.withOpacity(0.8)),
         ),
