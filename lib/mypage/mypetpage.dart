@@ -18,13 +18,13 @@ class MyPetPage extends StatefulWidget {
 
 class _MyPetPageState extends State<MyPetPage> {
   List<Map<String, String>> pets = []; // 등록된 펫 목록을 저장할 리스트
+
+  @override
   void initState() {
     super.initState();
-    // 페이지가 로드되기 전에 정보를 가져오는 작업
     _loadPets();
   }
 
-  // JSON 문자열을 List<Map<String, String>>로 변환하는 함수
   List<Map<String, String>> petModelFromJson(String str) {
     final jsonData = json.decode(str) as List;
     return jsonData.map((e) => Pet.fromJson(e).toMap()).toList();
@@ -51,8 +51,6 @@ class _MyPetPageState extends State<MyPetPage> {
     });
   }
 
-
-
   void _addPet(Map<String, String> pet) {
     setState(() {
       pets.add(pet);
@@ -66,13 +64,13 @@ class _MyPetPageState extends State<MyPetPage> {
   }
 
   void _deletePet(int index) {
-    void deletePet() async{
+    void deletePet() async {
       final dio = Dio();
       print("--------------------");
       print(pets[index]["pidx"]);
       Response res = await dio.post(
           "http://10.0.2.2:8089/boot/deletePet",
-          data: {"p_idx" : pets[index]["pidx"]}
+          data: {"p_idx": pets[index]["pidx"]}
       );
     }
 
@@ -84,10 +82,9 @@ class _MyPetPageState extends State<MyPetPage> {
 
   Future<String?> _getUsername() async {
     String? username = await storage.read(key: 'uname');
-    print('Username from storage: $username'); // 값 출력
+    print('Username from storage: $username');
     return username;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -170,9 +167,8 @@ class _MyPetPageState extends State<MyPetPage> {
       ),
       body: Column(
         children: [
-          const Expanded(flex: 2, child: _TopPortion()),
+          _TopPortion(),
           Expanded(
-            flex: 3,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Column(
@@ -183,13 +179,23 @@ class _MyPetPageState extends State<MyPetPage> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else {
-                        return Text(
-                          snapshot.hasData ? "'${snapshot.data}'님의 마이 펫!" : '사용자 이름을 불러올 수 없습니다.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.pets, color: Colors.deepPurpleAccent,), // 추가할 아이콘
+                            SizedBox(width: 8), // 아이콘과 텍스트 사이에 간격을 조정하기 위한 SizedBox
+                            Text(
+                              snapshot.hasData ? "${snapshot.data}님의 마이펫" : '사용자 이름을 불러올 수 없습니다.',
+                              style: TextStyle(
+                                fontFamily: 'Geekble',
+                                fontSize: 25,
+                              ),
+                            ),
+                            SizedBox(width: 8), // 아이콘과 텍스트 사이에 간격을 조정하기 위한 SizedBox
+                            Icon(Icons.pets, color: Colors.deepPurpleAccent,), // 추가할 아이콘
+                          ],
                         );
+
                       }
                     },
                   ),
@@ -240,6 +246,7 @@ class _MyPetPageState extends State<MyPetPage> {
                       },
                     ),
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -256,6 +263,7 @@ class _TopPortion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 175, // 변경된 높이
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -264,14 +272,13 @@ class _TopPortion extends StatelessWidget {
           bottomRight: Radius.circular(50),
         ),
         image: const DecorationImage(
-          image: AssetImage('assets/images/pic.png'), // 이미지 파일 경로로 변경
-          fit: BoxFit.cover, // 이미지가 컨테이너 안에 맞추어져서 잘리지 않도록 설정
+          image: AssetImage('assets/images/pic.png'),
+          fit: BoxFit.cover,
         ),
       ),
     );
   }
 }
-
 
 class _PetRegistrationCard extends StatelessWidget {
   final VoidCallback onTap;
@@ -283,29 +290,32 @@ class _PetRegistrationCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: Colors.white, // 박스 내부 색깔을 하얀색으로 설정
+        color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
           side: BorderSide(color: Colors.grey),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20.0), // 높이 증가
+          padding: const EdgeInsets.all(20.0),
           child: Row(
             children: [
               Container(
-                width: 48, // 아이콘이 들어가는 원의 크기
+                width: 48,
                 height: 48,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey), // 회색 테두리 추가
-                  color: Colors.white, // 배경을 흰색으로 설정
+                  border: Border.all(color: Colors.grey),
+                  color: Colors.white,
                 ),
-                child: Icon(Icons.add, color: Colors.deepPurpleAccent), // 아이콘 색깔을 퍼플로 설정
+                child: Icon(Icons.add, color: Colors.black),
               ),
               const Spacer(),
               Text(
                 '마이펫을 등록해 보세요!',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontFamily: 'Omyu',
+                  fontSize: 20,
+                ),
               ),
               const Spacer(),
             ],
@@ -336,18 +346,18 @@ class _PetInfoCard extends StatelessWidget {
         side: BorderSide(color: Colors.grey),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0), // 높이 증가
+        padding: const EdgeInsets.all(20.0),
         child: Row(
           children: [
             Container(
-              width: 48, // 아이콘이 들어가는 원의 크기
+              width: 48,
               height: 48,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey), // 회색 테두리 추가
-                color: Colors.white, // 배경을 흰색으로 설정
+                border: Border.all(color: Colors.grey),
+                color: Colors.white,
               ),
-              child: Icon(Icons.pets, color: Colors.deepPurpleAccent), // 아이콘 색깔을 퍼플로 설정
+              child: Icon(Icons.pets, color: Colors.deepPurpleAccent),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -360,7 +370,10 @@ class _PetInfoCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             '이름',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontFamily: 'Omyu',
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -368,7 +381,10 @@ class _PetInfoCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             '나이',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontFamily: 'Omyu',
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -384,7 +400,11 @@ class _PetInfoCard extends StatelessWidget {
                             pet['pname'] != null && pet['pname']!.length > 6
                                 ? pet['pname']!.substring(0, 6)
                                 : pet['pname'] ?? '',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[800]), // 강조된 스타일
+                            style: TextStyle(
+                              fontFamily: 'Omyu',
+                              fontSize: 16,
+                              color: Colors.grey[800],
+                            ),
                           ),
                         ),
                       ),
@@ -394,7 +414,11 @@ class _PetInfoCard extends StatelessWidget {
                             pet['page'] != null && pet['page']!.length > 2
                                 ? pet['page']!.substring(0, 2)
                                 : pet['page'] ?? '',
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            style: TextStyle(
+                              fontFamily: 'Omyu',
+                              fontSize: 16,
+                              color: Colors.grey[800],
+                            ),
                           ),
                         ),
                       ),

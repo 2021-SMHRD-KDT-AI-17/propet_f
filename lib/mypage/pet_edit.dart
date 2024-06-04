@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 
 class PetEdit extends StatefulWidget {
@@ -15,6 +18,8 @@ class PetEdit extends StatefulWidget {
 class _PetEditState extends State<PetEdit> {
   final _formKey = GlobalKey<FormState>();
   late Map<String, String> _petData;
+  final ImagePicker _picker = ImagePicker();
+  XFile? _petImage;
 
   late TextEditingController pnameCon;
   late TextEditingController pkindCon;
@@ -44,6 +49,13 @@ class _PetEditState extends State<PetEdit> {
     pageCon = TextEditingController(text: _petData['page']);
     pkgCon = TextEditingController(text: _petData['pkg']);
     pdiseaseinfCon = TextEditingController(text: _petData['pdiseaseinf']);
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _petImage = pickedFile;
+    });
   }
 
   void _submit() async {
@@ -187,25 +199,29 @@ class _PetEditState extends State<PetEdit> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                height: 60,
-                width: 350,
+                height: 50,
+                width: 220,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                  color: Colors.white,
+                  color: Color(0xFF7B68EE), // 더 진한 파스텔 보라색
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 5,
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
+                      color: Color(0xFF7B68EE).withOpacity(0.5), // 박스 쉐도우 색상
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Center(
                   child: Text(
-                    '마이펫 수정!',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    '마이펫 수정',
+                    style: TextStyle(
+                      fontFamily: 'Geekble',
+                      fontSize: 22,
+                      color: Colors.white, // 텍스트 색상을 흰색으로 변경
+                    ),
                   ),
                 ),
               ),
@@ -232,6 +248,52 @@ class _PetEditState extends State<PetEdit> {
                     key: _formKey,
                     child: ListView(
                       children: [
+                        Center(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.grey, // 테두리 색상
+                                    width: 1.0, // 테두리 두께
+                                  ),
+                                ),
+                                child: CircleAvatar(
+                                  radius: 100, // 테두리를 고려하여 약간 작은 반지름
+                                  backgroundImage: _petImage != null
+                                      ? FileImage(File(_petImage!.path))
+                                      : AssetImage('assets/images/pic.png')
+                                  as ImageProvider, // 기본 이미지 추가
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 8,
+                                right: 8,
+                                child: GestureDetector(
+                                  onTap: _pickImage,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.grey, // 테두리 색상
+                                        width: 1.0, // 테두리 두께
+                                      ),
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(height: 16),
                         _buildTextField('이름', pnameCon),
                         SizedBox(height: 16),
@@ -282,7 +344,10 @@ class _PetEditState extends State<PetEdit> {
                               padding: EdgeInsets.all(10.0),
                               child: Text(
                                 '수정하기',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontFamily: 'Geekble', // 폰트 지정
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
@@ -305,7 +370,10 @@ class _PetEditState extends State<PetEdit> {
                               padding: EdgeInsets.all(10.0),
                               child: Text(
                                 '취소하기',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontFamily: 'Geekble', // 폰트 지정
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
@@ -327,12 +395,23 @@ class _PetEditState extends State<PetEdit> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(
+          fontFamily: 'Omyu', // 폰트 지정
+          fontSize: 16,
+        ),
         hintText: '$label 입력하세요',
+        hintStyle: TextStyle(
+          fontFamily: 'Omyu', // 폰트 지정
+          fontSize: 16,
+        ),
         prefixIcon: _getPrefixIcon(label),
         border: OutlineInputBorder(),
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       ),
-      style: TextStyle(fontSize: 14),
+      style: TextStyle(
+        fontSize: 16,
+        fontFamily: 'Omyu', // 폰트 지정
+      ),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return '$label을(를) 입력하세요';
@@ -361,7 +440,14 @@ class _PetEditState extends State<PetEdit> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('성별', style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          '성별',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Omyu', // 폰트 지정
+            fontSize: 16,
+          ),
+        ),
         SizedBox(height: 10),
         Row(
           children: [
@@ -392,7 +478,14 @@ class _PetEditState extends State<PetEdit> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Omyu', // 폰트 지정
+            fontSize: 16,
+          ),
+        ),
         SizedBox(height: 10),
         Row(
           children: [
@@ -431,6 +524,7 @@ class _PetEditState extends State<PetEdit> {
           child: Text(
             label,
             style: TextStyle(
+              fontFamily: 'Omyu', // 폰트 지정
               color: isSelected ? Colors.white : Colors.black,
               fontWeight: FontWeight.bold,
             ),
