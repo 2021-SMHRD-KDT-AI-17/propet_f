@@ -27,8 +27,8 @@ class ShopDetails extends StatelessWidget {
                 tag: goods.gidx,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    goods.glink,
+                  child: Image.asset(
+                    _getImagePath(goods.gidx),
                     width: 200,
                     height: 200,
                     fit: BoxFit.cover,
@@ -101,6 +101,25 @@ class ShopDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getImagePath(int gidx) {
+    switch (gidx) {
+      case 1:
+        return 'assets/images/1.png';
+      case 2:
+        return 'assets/images/2.png';
+      case 3:
+        return 'assets/images/3.jpg';
+      case 4:
+        return 'assets/images/4.png';
+      case 5:
+        return 'assets/images/5.png';
+      case 6:
+        return 'assets/images/6.jpg';
+      default:
+        return 'assets/images/default.png'; // 기본 이미지 경로
+    }
   }
 
   Widget _buildDetailRow(BuildContext context, IconData icon, String title, String content, List<Widget> tags, {required Color iconColor}) {

@@ -71,6 +71,25 @@ class _MainShopPageState extends State<MainShopPage> {
     });
   }
 
+  String _getImagePath(int gidx) {
+    switch (gidx) {
+      case 1:
+        return 'assets/images/1.png';
+      case 2:
+        return 'assets/images/2.png';
+      case 3:
+        return 'assets/images/3.jpg';
+      case 4:
+        return 'assets/images/4.png';
+      case 5:
+        return 'assets/images/5.png';
+      case 6:
+        return 'assets/images/6.jpg';
+      default:
+        return 'assets/images/default.png'; // 기본 이미지 경로
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -152,8 +171,8 @@ class _MainShopPageState extends State<MainShopPage> {
                     tag: goods.gidx,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        goods.glink,
+                      child: Image.asset(
+                        _getImagePath(goods.gidx),
                         fit: BoxFit.cover,
                         width: double.infinity,
                       ),
