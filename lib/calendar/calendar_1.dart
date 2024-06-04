@@ -36,7 +36,7 @@ class _CalendarNonState extends State<CalendarNon> {
                   selectedDate: selectedDate,
                   count: 0
               ),
-          SizedBox(height: 100),
+          SizedBox(height: 30),
 
           InkWell(
             onTap: () {

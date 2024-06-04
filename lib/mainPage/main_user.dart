@@ -127,8 +127,8 @@ class _MainUserState extends State<MainUser> {
             Text(
               '등록된 펫이 없습니다.',
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                fontFamily: 'Geekble', // 폰트 변경
                 color: Colors.grey.withOpacity(1.0),
               ),
             ),
@@ -136,7 +136,8 @@ class _MainUserState extends State<MainUser> {
             Text(
               '지금 바로 사랑스러운 펫을 등록해 보세요!',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 20,
+                fontFamily: 'Omyu', // 폰트 변경
                 color: Colors.black.withOpacity(0.6),
               ),
             ),
@@ -237,25 +238,25 @@ class _MainUserState extends State<MainUser> {
         children: [
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100, 16)),
+              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100, 18, 'Omyu')),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200, 16)),
+              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200, 18, 'Omyu')),
             ],
           ),
           SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100, 14)),
+              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100, 15, 'Omyu')),
               SizedBox(width: 10),
               Expanded(child: _buildPetDetailBox(
                 petGender == '수컷' ? Icons.male : Icons.female,
                 '성별',
                 petGender,
                 petGender == '수컷' ? Colors.blueAccent.shade100 : Colors.pinkAccent.shade100,
-                14,
+                15, 'Omyu',
               )),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200, 14)),
+              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200, 15, 'Omyu')),
             ],
           ),
         ],
@@ -263,7 +264,7 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
-  Widget _buildPetDetailBox(IconData icon, String title, String value, Color iconColor, double fontSize) {
+  Widget _buildPetDetailBox(IconData icon, String title, String value, Color iconColor, double fontSize, String fontFamily) {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -287,7 +288,7 @@ class _MainUserState extends State<MainUser> {
             value,
             style: TextStyle(
               fontSize: fontSize,
-              fontWeight: FontWeight.bold,
+              fontFamily: fontFamily, // 폰트 변경
             ),
           ),
         ],
@@ -350,8 +351,8 @@ class _MainUserState extends State<MainUser> {
             Text(
               '마이 펫 추가 등록하기',
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                fontFamily: 'Geekble', // 폰트 변경
                 color: Colors.grey.withOpacity(1.0),
               ),
             ),
@@ -359,7 +360,8 @@ class _MainUserState extends State<MainUser> {
             Text(
               '최대 3마리까지 등록 가능합니다!',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 20,
+                fontFamily: 'Omyu', // 폰트 변경
                 color: Colors.black.withOpacity(0.6),
               ),
             ),
@@ -393,15 +395,18 @@ class _MainUserState extends State<MainUser> {
       child: Row(
         mainAxisSize: MainAxisSize.min, // 텍스트 길이에 따라 버튼 크기가 결정되도록 합니다.
         children: [
-          Icon(Icons.favorite, size: 24), // 아이콘을 추가하여 버튼의 직관성을 높입니다.
+          Icon(Icons.pets, size: 24), // 아이콘을 추가하여 버튼의 직관성을 높입니다.
           SizedBox(width: 8), // 아이콘과 텍스트 사이에 여백을 추가합니다.
           Text(
             text,
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontFamily: 'Geekble', // 폰트 변경
             ),
           ),
+          SizedBox(width: 8),
+          Icon(Icons.pets, size: 24), // 아이콘을 추가하여 버튼의 직관성을 높입니다.
+
         ],
       ),
     );
