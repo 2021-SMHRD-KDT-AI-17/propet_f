@@ -12,8 +12,13 @@ import 'package:propetsor/model/Users.dart';
 
 final storage = FlutterSecureStorage();
 
-void main() async{
-  runApp(const MyApp());
+void main() async {
+  runApp(MyApp());
+}
+
+Future<void> clearSecureStorage() async {
+  final storage = FlutterSecureStorage();
+  await storage.deleteAll();
 }
 
 class MyApp extends StatelessWidget {

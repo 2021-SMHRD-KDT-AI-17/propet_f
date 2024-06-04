@@ -1,8 +1,15 @@
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:propetsor/mainPage/main_2.dart';
-import 'package:propetsor/mainPage/main_user.dart';
+import 'package:propetsor/login/login.dart';
+import 'package:propetsor/mainPage/main_2.dart'; // Replace with actual login page import
+import 'dart:convert';
 import 'dart:io';
+
+final dio = Dio();
+final storage = FlutterSecureStorage();
 
 class ProfileUpdate extends StatelessWidget {
   const ProfileUpdate({Key? key}) : super(key: key);
@@ -37,6 +44,218 @@ class ProfileUpdate extends StatelessWidget {
       ),
     );
   }
+
+  void updateMember(Map<String, String> member, BuildContext context) async {
+    try {
+      Response res = await dio.patch(
+        'http://10.0.2.2:8089/boot/update', // 요청 URL
+        data: jsonEncode({'updateMember': member}), // 요청 데이터
+        options: Options(headers: {
+          "Content-Type": "application/json",
+        }),
+      );
+
+      if (res.data != null) {
+        await storage.write(key: 'member', value: jsonEncode(res.data));
+        CherryToast.success(
+          title: const Text('회원정보 수정에 성공했습니다'),
+        ).show(context);
+
+        // 로그아웃 처리
+        await storage.deleteAll();
+
+        // 로그인 페이지로 이동
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()), // Replace with your login page
+              (route) => false,
+        );
+      } else {
+        CherryToast.info(
+          title: const Text('회원정보 수정에 실패했습니다'),
+        ).show(context);
+      }
+    } catch (e) {
+      CherryToast.error(
+        title: const Text('오류가 발생했습니다'),
+        description: Text(e.toString()),
+      ).show(context);
+    }
+  }
+}
+
+class _FormContent extends StatefulWidget {
+  const _FormContent({Key? key}) : super(key: key);
+
+  @override
+  State<_FormContent> createState() => __FormContentState();
+}
+
+class __FormContentState extends State<_FormContent> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController pwController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    String? memberJson = await storage.read(key: 'member');
+    if (memberJson != null) {
+      Map<String, dynamic> member = jsonDecode(memberJson);
+      setState(() {
+        pwController.text = member['pw'];
+        nameController.text = member['uname'];
+        phoneController.text = member['uphone'];
+      });
+    }
+  }
+
+  void _submit() async {
+    if (_formKey.currentState!.validate()) {
+      String? memberJson = await storage.read(key: 'member');
+      if (memberJson != null) {
+        Map<String, dynamic> member = jsonDecode(memberJson);
+        final updatedMemberData = {
+          'uidx': member['uidx'].toString(),
+          'pw': pwController.text,
+          'uname': nameController.text,
+          'uphone': phoneController.text,
+        };
+
+        ProfileUpdate().updateMember(updatedMemberData, context);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _gap(),
+            TextFormField(
+              readOnly: true,
+              decoration: const InputDecoration(
+                labelText: 'Id',
+                hintText: 'ID',
+                prefixIcon: Icon(Icons.perm_identity),
+                border: OutlineInputBorder(),
+              ),
+              initialValue: '변경할 수 없습니다', // 기본값을 설정합니다.
+            ),
+            _gap(),
+            TextFormField(
+              controller: pwController,
+              decoration: const InputDecoration(
+                labelText: 'Pw',
+                hintText: 'Enter your PW',
+                prefixIcon: Icon(Icons.lock_outline_rounded),
+                border: OutlineInputBorder(),
+              ),
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'PW를 입력하세요';
+                }
+                return null;
+              },
+            ),
+            _gap(),
+            TextFormField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                hintText: 'Enter your Name',
+                prefixIcon: Icon(Icons.drive_file_rename_outline),
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '이름을 입력하세요';
+                }
+                return null;
+              },
+            ),
+            _gap(),
+            TextFormField(
+              controller: phoneController,
+              decoration: const InputDecoration(
+                labelText: 'Phone',
+                hintText: 'Enter your Phone',
+                prefixIcon: Icon(Icons.phone),
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '전화번호를 입력하세요';
+                }
+                return null;
+              },
+            ),
+            _gap(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+                onPressed: _submit,
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    '업데이트!',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    '취소',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _gap() => const SizedBox(height: 16);
 }
 
 class _Logo extends StatefulWidget {
@@ -106,123 +325,4 @@ class __LogoState extends State<_Logo> {
       ],
     );
   }
-}
-
-  class _FormContent extends StatefulWidget {
-  const _FormContent({Key? key}) : super(key: key);
-
-  @override
-  State<_FormContent> createState() => __FormContentState();
-}
-
-class __FormContentState extends State<_FormContent> {
-  bool _isPasswordVisible = false;
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 300),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _gap(),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Id',
-                hintText: 'Enter your ID',
-                prefixIcon: Icon(Icons.perm_identity),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            _gap(),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Pw',
-                hintText: 'Enter your PW',
-                prefixIcon: Icon(Icons.lock_outline_rounded),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            _gap(),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                hintText: 'Enter your Name',
-                prefixIcon: Icon(Icons.drive_file_rename_outline),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            _gap(),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Phone',
-                hintText: 'Enter your Phone',
-                prefixIcon: Icon(Icons.phone),
-                border: OutlineInputBorder(),
-              ),
-            ),
-            _gap(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainPage_2()),
-                  );
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    '업데이트!',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    '취소',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _gap() => const SizedBox(height: 16);
 }
