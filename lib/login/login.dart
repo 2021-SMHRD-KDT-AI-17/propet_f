@@ -170,8 +170,8 @@ class __FormContentState extends State<_FormContent> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some text';
                 }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
+                if (value.length < 0) {
+                  return 'Password must be at least 0 characters';
                 }
                 return null;
               },
