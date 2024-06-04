@@ -135,7 +135,7 @@ class _PetEnrollState extends State<PetEnroll> {
           return MaterialApp(
             theme: ThemeData(
               textTheme: TextTheme(
-                bodyText2: TextStyle(fontFamily: 'Omyu', fontSize: 16), // 전역 텍스트 스타일
+                  bodyMedium: TextStyle(fontFamily: 'Omyu', fontSize: 16), // 전역 텍스트 스타일
               ),
             ),
             home: Scaffold(
