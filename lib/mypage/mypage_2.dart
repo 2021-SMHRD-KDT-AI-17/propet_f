@@ -53,11 +53,11 @@ class MyPage_2 extends StatelessWidget {
                         return CircularProgressIndicator();
                       } else {
                         return Text(
-                          snapshot.hasData ? "'${snapshot.data}'님 안녕하세요!" : '사용자 이름을 불러올 수 없습니다.',
+                          snapshot.hasData ? "${snapshot.data}님 안녕하세요!" : '사용자 이름을 불러올 수 없습니다.',
                           style: Theme.of(context)
                               .textTheme
                               .headline6
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                              ?.copyWith(fontFamily: 'Geekble', fontSize: 25 ,color: Colors.black.withOpacity(0.7),), // 'Geekble'로 변경
                         );
                       }
                     },
@@ -116,9 +116,8 @@ class MyPage_2 extends StatelessWidget {
                                     title: Text(
                                       "구현 예정입니다!",
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
                                         fontSize: 14,
+                                        fontFamily: 'Geekble',
                                       ),
                                     ),
                                   ).show(context);
@@ -206,13 +205,6 @@ class _TopPortion extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => ProfileUpdate()),
                       );
                     },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.grey, width: 1), // Border added
-                      ),
                       child: Container(
                         width: 40,
                         height: 40,
@@ -225,7 +217,6 @@ class _TopPortion extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -259,8 +250,8 @@ Widget _buildButton(BuildContext context, String text, IconData icon, VoidCallba
       Text(
         text,
         style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          fontFamily: 'Omyu', // 'Omyu'로 변경
         ),
       ),
     ],

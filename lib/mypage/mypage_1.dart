@@ -20,8 +20,13 @@ class MyPage_1 extends StatelessWidget {
                 children: [
                   const SizedBox(height: 16),
                   Text(
-                    "로그인 후 이용해 주세요!",
-                    style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.bold),
+                    "로그인 후 이용해 주세요.",
+                    style: TextStyle(
+                      fontSize: 25, // 폰트 크기 변경
+                      fontFamily: 'Geekble', // 폰트 변경
+                      color: Colors.black.withOpacity(0.7),
+
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Column(
@@ -176,6 +181,18 @@ class _TopPortion extends StatelessWidget {
 }
 
 Widget _buildButton(BuildContext context, String text, IconData icon, VoidCallback onPressed) {
+  Color iconColor = Colors.deepPurpleAccent; // 아이콘 색상 변경
+
+  if (text == "마이 펫 관리") {
+    iconColor = Color(0xFFB0E2FF); // 마이 펫 관리 아이콘 색상
+  } else if (text == "마이 채팅 관리") {
+    iconColor = Color(0xFFB0E2FF); // 마이 채팅 관리 아이콘 색상
+  } else if (text == "찜 목록") {
+    iconColor = Color(0xFFDDA0DD); // 찜 목록 아이콘 색상
+  } else if (text == "로그인") {
+    iconColor = Color(0xFFB0C4DE); // 로그인 아이콘 색상
+  }
+
   return Column(
     children: [
       IconButton(
@@ -187,20 +204,25 @@ Widget _buildButton(BuildContext context, String text, IconData icon, VoidCallba
             );
           } else if (text == "마이 펫 관리" || text == "마이 채팅 관리" || text == "찜 목록") {
             CherryToast.error(
-              title: Text("로그인 후 이용해 주세요!"),
+              title: Text(
+                "로그인 후 이용해 주세요!",
+                style: TextStyle(
+                  fontFamily: 'Geekble',
+                ),
+              ),
             ).show(context);
+
           }
         },
-        icon: Icon(icon),
+        icon: Icon(icon, color: iconColor), // 아이콘 색상 설정
         iconSize: 40, // Icon size increased
-        color: Colors.deepPurpleAccent, // Icon color
       ),
       const SizedBox(height: 8), // Added spacing
       Text(
         text,
         style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          fontFamily: 'Omyu', // 'Omyu'로 변경
         ),
       ),
     ],

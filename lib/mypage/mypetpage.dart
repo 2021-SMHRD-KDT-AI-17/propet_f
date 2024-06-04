@@ -189,6 +189,7 @@ class _MyPetPageState extends State<MyPetPage> {
                               style: TextStyle(
                                 fontFamily: 'Geekble',
                                 fontSize: 25,
+                                color: Colors.black.withOpacity(0.7),
                               ),
                             ),
                             SizedBox(width: 8), // 아이콘과 텍스트 사이에 간격을 조정하기 위한 SizedBox

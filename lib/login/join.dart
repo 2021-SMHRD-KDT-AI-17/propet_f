@@ -42,14 +42,8 @@ class JoinPage extends StatelessWidget {
 class _Logo extends StatelessWidget {
   const _Logo({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
-
-
     final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
 
     return Column(
@@ -77,17 +71,13 @@ class __FormContentState extends State<_FormContent> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController idCon=TextEditingController();
-  TextEditingController pwCon=TextEditingController();
-  TextEditingController nameCon=TextEditingController();
-  TextEditingController phoneCon=TextEditingController();
+  TextEditingController idCon = TextEditingController();
+  TextEditingController pwCon = TextEditingController();
+  TextEditingController nameCon = TextEditingController();
+  TextEditingController phoneCon = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
     return Container(
       constraints: const BoxConstraints(maxWidth: 300),
       child: Form(
@@ -98,41 +88,53 @@ class __FormContentState extends State<_FormContent> {
           children: [
             TextFormField(
               controller: idCon,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Id',
+                labelStyle: TextStyle(fontFamily: 'Omyu'),
                 hintText: 'Enter your ID',
+                hintStyle: TextStyle(fontFamily: 'Omyu'),
                 prefixIcon: Icon(Icons.perm_identity),
                 border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               ),
             ),
             _gap(),
             TextFormField(
               controller: pwCon,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Pw',
+                labelStyle: TextStyle(fontFamily: 'Omyu'),
                 hintText: 'Enter your PW',
+                hintStyle: TextStyle(fontFamily: 'Omyu'),
                 prefixIcon: Icon(Icons.lock_outline_rounded),
                 border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               ),
             ),
             _gap(),
             TextFormField(
               controller: nameCon,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Name',
+                labelStyle: TextStyle(fontFamily: 'Omyu'),
                 hintText: 'Enter your Name',
+                hintStyle: TextStyle(fontFamily: 'Omyu'),
                 prefixIcon: Icon(Icons.drive_file_rename_outline),
                 border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               ),
             ),
             _gap(),
             TextFormField(
               controller: phoneCon,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Phone',
+                labelStyle: TextStyle(fontFamily: 'Omyu'),
                 hintText: 'Enter your Phone',
+                hintStyle: TextStyle(fontFamily: 'Omyu'),
                 prefixIcon: Icon(Icons.phone),
                 border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               ),
             ),
             _gap(),
@@ -149,20 +151,48 @@ class __FormContentState extends State<_FormContent> {
                   ),
                 ),
                 onPressed: () {
-                  // 추가적인 로직 처리
-                  Users m = Users.join(id: idCon.text, uname: nameCon.text, uphone: phoneCon.text, pw: pwCon.text);
-                  joinMember(m,context);
+                  Users m = Users.join(
+                    id: idCon.text,
+                    uname: nameCon.text,
+                    uphone: phoneCon.text,
+                    pw: pwCon.text,
+                  );
+                  joinMember(m, context);
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
                     '회원가입 완료',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
                   ),
                 ),
               ),
             ),
-
+            const SizedBox(height: 5),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // 배경색
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // 취소 버튼 눌렀을 때 이전 화면으로 돌아가기
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    '취소',
+                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -172,32 +202,34 @@ class __FormContentState extends State<_FormContent> {
   Widget _gap() => const SizedBox(height: 16);
 }
 
-void joinMember(member,context) async{
-
-  //boot 서버로 member 객체 보내기!(비동기 통신->dio라이브러리)
+void joinMember(member, context) async {
   final dio = Dio();
 
-  // 비동기 통신 -> 회원가입 (boot로 요청)
-  // 응답 올때까지 기다려야함(await)
-  Response res =await dio.post(
+  Response res = await dio.post(
     'http://10.0.2.2:8089/boot/join', // 요청. url(경로)
-    data: {'joinMember':member}, // 요쳥할 때 같이 보낼 데이터(json-key:value)
+    data: {'joinMember': member}, // 요쳥할 때 같이 보낼 데이터(json-key:value)
   );
 
-  if(int.parse(res.toString())==1){ // 회원가입 성공
+  if (int.parse(res.toString()) == 1) {
+    // 회원가입 성공
     CherryToast.success(
-      title: Text('회원가입에 성공했습니다'),
+      title: Text(
+        '회원가입에 성공했습니다',
+        style: TextStyle(fontFamily: 'Geekble'),
+      ),
     ).show(context);
-    // main -> login_view -> join_view
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => LoginPage()), // YourMainPage 대신에 이동할 페이지를 지정하세요.
           (route) => false,
     );
-  }else{ //0 회원가입 실패
+  } else {
+    //0 회원가입 실패
     CherryToast.info(
-      title: Text('회원가입에 실패했습니다'),
+      title: Text(
+        '회원가입에 실패했습니다',
+        style: TextStyle(fontFamily: 'Geekble'),
+      ),
     ).show(context);
   }
-
 }

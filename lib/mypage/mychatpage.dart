@@ -151,11 +151,12 @@ class _MyChatPageState extends State<MyChatPage> {
                   return CircularProgressIndicator();
                 } else {
                   return Text(
-                    snapshot.hasData ? "'${snapshot.data}'님의 마이 채팅!" : '사용자 이름을 불러올 수 없습니다.',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    snapshot.hasData ? "${snapshot.data}님의 마이 채팅!" : '사용자 이름을 불러올 수 없습니다.',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontFamily: 'Geekble', // Geekble 폰트로 변경
+                      color: Colors.black.withOpacity(0.7),
+                    ),
                   );
                 }
               },
@@ -237,12 +238,12 @@ class _ChatRegistrationCard extends StatelessWidget {
                   border: Border.all(color: Colors.grey), // 회색 테두리 추가
                   color: Colors.white, // 배경을 흰색으로 설정
                 ),
-                child: Icon(Icons.add, color: Colors.deepPurpleAccent), // 아이콘 색깔을 퍼플로 설정
+                child: Icon(Icons.add, color: Colors.black), // 아이콘 색깔을 퍼플로 설정
               ),
               const Spacer(),
               Text(
                 '새 대화 시작하기',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontFamily: 'Omyu'), // Omyu 폰트로 변경
               ),
               const Spacer(),
             ],
@@ -288,7 +289,7 @@ class _ChatInfoCard extends StatelessWidget {
               ),
               child: Icon(
                 isBotNoAnswerMessage ? Icons.error : Icons.chat,
-                color: isBotNoAnswerMessage ? Colors.red : Colors.deepPurpleAccent,
+                color: isBotNoAnswerMessage ? Color(0xFFEF6F6C) : Color(0xFF6D6875),
               ), // 아이콘 색깔 설정
             ),
             const SizedBox(width: 16),
@@ -302,7 +303,7 @@ class _ChatInfoCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             '대화 제목',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 20, fontFamily: 'Omyu'), // Omyu 폰트로 변경
                           ),
                         ),
                       ),
@@ -310,7 +311,7 @@ class _ChatInfoCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             '날짜',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 20, fontFamily: 'Omyu'), // Omyu 폰트로 변경
                           ),
                         ),
                       ),
@@ -324,7 +325,7 @@ class _ChatInfoCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             chat['title'] ?? '',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[800]), // 강조된 스타일
+                            style: TextStyle(fontSize: 16, color: Colors.grey[800], fontFamily: 'Omyu'), // 강조된 스타일 및 Omyu 폰트로 변경
                           ),
                         ),
                       ),
@@ -332,7 +333,7 @@ class _ChatInfoCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             chat['date'] ?? '',
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            style: TextStyle(fontSize: 16, color: Colors.grey[800], fontFamily: 'Omyu'), // Omyu 폰트로 변경
                           ),
                         ),
                       ),

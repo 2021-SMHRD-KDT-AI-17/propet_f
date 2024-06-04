@@ -84,10 +84,30 @@ class _MainShopPageState extends State<MainShopPage> {
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,
             tabs: [
-              Tab(text: '전체'),
-              Tab(text: '종합영양제'),
-              Tab(text: '장/유산균'),
-              Tab(text: '피부/모질'),
+              Tab(
+                child: Text(
+                  '전체',
+                  style: TextStyle(fontFamily: 'Geekble'),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  '종합영양제',
+                  style: TextStyle(fontFamily: 'Geekble'),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  '장/유산균',
+                  style: TextStyle(fontFamily: 'Geekble'),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  '피부/모질',
+                  style: TextStyle(fontFamily: 'Geekble'),
+                ),
+              ),
             ],
           ),
         ),
@@ -143,7 +163,7 @@ class _MainShopPageState extends State<MainShopPage> {
                 SizedBox(height: 8),
                 Text(
                   goods.gname,
-                  style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(fontFamily: 'Geekble'), // 카테고리와 상품명 글꼴 변경
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -153,7 +173,7 @@ class _MainShopPageState extends State<MainShopPage> {
                   children: [
                     Text(
                       '₩${goods.gprice}',
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.grey),
+                      style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.black.withOpacity(0.8), fontFamily: 'Omyu'), // 나머지 글꼴 변경
                     ),
                     Row(
                       children: [
@@ -161,7 +181,7 @@ class _MainShopPageState extends State<MainShopPage> {
                         SizedBox(width: 4),
                         Text(
                           '4.0', // This rating is static, can be dynamic if needed
-                          style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.grey),
+                          style: Theme.of(context).textTheme.bodyText2?.copyWith(color: Colors.black.withOpacity(0.8), fontFamily: 'Omyu'), // 나머지 글꼴 변경
                         ),
                       ],
                     ),

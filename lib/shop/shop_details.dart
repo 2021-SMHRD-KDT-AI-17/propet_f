@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:propetsor/model/Goods.dart';
 
-
 class ShopDetails extends StatelessWidget {
   final Goods goods;
 
@@ -14,8 +13,8 @@ class ShopDetails extends StatelessWidget {
         title: Text(
           "제품 상세 정보",
           style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            fontFamily: 'Geekble', // 상품 상세 정보 제목 글꼴 변경
           ),
         ),
       ),
@@ -43,13 +42,13 @@ class ShopDetails extends StatelessWidget {
                 children: [
                   Text(
                     goods.gname,
-                    style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headline6?.copyWith(fontFamily: 'Geekble'), // 상품명 글꼴 변경
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
                   Text(
                     '₩${goods.gprice}',
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.subtitle1?.copyWith(fontFamily: 'Geekble'), // 가격 글꼴 변경
                   ),
                   const SizedBox(height: 5),
                   Row(
@@ -59,7 +58,7 @@ class ShopDetails extends StatelessWidget {
                       const SizedBox(width: 5),
                       Text(
                         "4.1 (523개 리뷰)", // 이 부분은 실제 데이터로 수정 필요
-                        style: Theme.of(context).textTheme.bodyText2,
+                        style: Theme.of(context).textTheme.bodyText2?.copyWith(fontFamily: 'Geekble', color: Colors.black.withOpacity(0.6)), // 리뷰 글꼴 변경
                       ),
                     ],
                   ),
@@ -80,6 +79,7 @@ class ShopDetails extends StatelessWidget {
                 _buildTag(context, "인", Colors.yellow[200]!),
                 _buildTag(context, "철", Colors.orange[200]!),
               ],
+              iconColor: Colors.brown, // 성분 분석 아이콘 색상
             ),
             const SizedBox(height: 20),
             _buildDetailRow(
@@ -91,6 +91,7 @@ class ShopDetails extends StatelessWidget {
                 _buildTag(context, "아침", Colors.pink[200]!),
                 _buildTag(context, "저녁", Colors.blue[200]!),
               ],
+              iconColor: Colors.blue, // 추천 사용법 아이콘 색상
             ),
             const SizedBox(height: 20),
             _buildReviewSection(context),
@@ -102,7 +103,7 @@ class ShopDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, IconData icon, String title, String content, List<Widget> tags) {
+  Widget _buildDetailRow(BuildContext context, IconData icon, String title, String content, List<Widget> tags, {required Color iconColor}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       padding: const EdgeInsets.all(16.0),
@@ -123,7 +124,7 @@ class ShopDetails extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: Theme.of(context).primaryColor, size: 30),
+              Icon(icon, color: iconColor, size: 30), // 아이콘 색상 변경
               const SizedBox(width: 10),
               Container(
                 height: 24,
@@ -133,7 +134,10 @@ class ShopDetails extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 title,
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  fontFamily: 'Geekble', // 세부 항목 제목 글꼴 변경
+                  fontSize: 18, // 글씨 크기 키움
+                ),
               ),
             ],
           ),
@@ -142,7 +146,7 @@ class ShopDetails extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             content,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyText2?.copyWith(fontFamily: 'Omyu', fontSize: 16),
           ),
           const SizedBox(height: 10),
           Wrap(
@@ -161,8 +165,8 @@ class ShopDetails extends StatelessWidget {
         text,
         style: TextStyle(
           color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
+          fontSize: 14,
+          fontFamily: 'Omyu', // 동그란 칸 안의 글씨는 12로 유지
           shadows: [
             Shadow(
               blurRadius: 3.0,
@@ -200,7 +204,7 @@ class ShopDetails extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.rate_review_outlined, color: Colors.deepPurpleAccent, size: 30),
+              Icon(Icons.rate_review_outlined, color: Colors.redAccent, size: 30), // 상품 리뷰 아이콘 색상
               const SizedBox(width: 10),
               Container(
                 height: 24,
@@ -210,7 +214,10 @@ class ShopDetails extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 "상품 리뷰",
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                  fontFamily: 'Geekble', // 리뷰 섹션 제목 글꼴 변경
+                  fontSize: 18, // 글씨 크기 키움
+                ),
               ),
             ],
           ),
@@ -229,10 +236,9 @@ class ShopDetails extends StatelessWidget {
 
   Widget _buildReviewCard(BuildContext context, String review, String user, double rating) {
     return Card(
-      color: Colors.grey[100],
+      color: Colors.white, // 카드 색상 변경
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: Colors.grey.withOpacity(0.5)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -249,28 +255,20 @@ class ShopDetails extends StatelessWidget {
                       : Icons.star_border,
                   color: Colors.yellow,
                   size: 16,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 1.0,
-                      color: Colors.black,
-                      offset: Offset(1.0, 1.0),
-                    ),
-                  ],
-                  semanticLabel: 'Rating Star',
                 );
               }),
             ),
             const SizedBox(height: 5),
             Text(
               review,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyText2?.copyWith(fontFamily: 'Omyu', fontSize: 16),
             ),
             const SizedBox(height: 5),
             Align(
               alignment: Alignment.bottomRight,
               child: Text(
                 "- $user",
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.caption?.copyWith(fontFamily: 'Omyu', fontSize: 16),
               ),
             ),
           ],

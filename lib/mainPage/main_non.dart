@@ -33,8 +33,8 @@ class MainNon extends StatelessWidget {
               Text(
                 '환영합니다!',
                 style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                  fontFamily: 'Geekble',
                   color: Colors.deepPurpleAccent,
                 ),
               ),
@@ -49,7 +49,8 @@ class MainNon extends StatelessWidget {
                 child: Text(
                   '마이펫 등록을 위해 로그인 해주세요!',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 20,
+                    fontFamily: 'Omyu',
                     color: Colors.black.withOpacity(0.6),
                     decoration: TextDecoration.underline, // 밑줄 추가
                   ),
@@ -93,8 +94,8 @@ class MainNon extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Positioned(
-              bottom: 10,
-              right: 10,
+              bottom: 5,
+              right: 5,
               child: Container(
                 width: 50, // 추가 원의 크기 조절
                 height: 50, // 추가 원의 크기 조절
@@ -156,10 +157,10 @@ class MainNon extends StatelessWidget {
             ),
             SizedBox(width: 10), // 아이콘과 텍스트 사이 간격 조정
             Text(
-              '챗봇만 이용하러 가기!',
+              '챗봇만 이용하러 가기',
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontFamily: 'Geekble',
                 color: Colors.white, // 텍스트 색상
               ),
             ),

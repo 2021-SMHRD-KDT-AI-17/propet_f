@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,7 +6,6 @@ import 'package:propetsor/login/join.dart';
 import 'package:propetsor/mainPage/main_1.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 import 'package:propetsor/mainPage/start.dart';
-
 import 'package:propetsor/model/Users.dart';
 
 class LoginPage extends StatelessWidget {
@@ -157,9 +155,12 @@ class __FormContentState extends State<_FormContent> {
               controller: idCon,
               decoration: const InputDecoration(
                 labelText: 'ID',
+                labelStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
                 hintText: 'Enter your ID',
+                hintStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
                 prefixIcon: Icon(Icons.perm_identity),
                 border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               ),
             ),
             _gap(),
@@ -169,28 +170,29 @@ class __FormContentState extends State<_FormContent> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some text';
                 }
-
-                if (value.length < 0) {
+                if (value.length < 6) {
                   return 'Password must be at least 6 characters';
                 }
                 return null;
               },
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  prefixIcon: const Icon(Icons.lock_outline_rounded),
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: Icon(_isPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )),
+                labelText: 'Password',
+                labelStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
+                hintText: 'Enter your password',
+                hintStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
+                prefixIcon: const Icon(Icons.lock_outline_rounded),
+                border: const OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                suffixIcon: IconButton(
+                  icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                ),
+              ),
             ),
             _gap(),
             _buildSocialLoginButtons(), // SNS 로그인 버튼 추가
@@ -198,15 +200,20 @@ class __FormContentState extends State<_FormContent> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent), // 배경색
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
                     '로그인',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
                   ),
                 ),
                 onPressed: () {
@@ -218,14 +225,13 @@ class __FormContentState extends State<_FormContent> {
                 },
               ),
             ),
+            SizedBox(height: 5), // 로그인 버튼과 회원가입 버튼 사이 간격 추가
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.deepPurpleAccent), // 배경색
-                  foregroundColor:
-                  MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // 배경색
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black), // 텍스트 색상
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
@@ -234,14 +240,13 @@ class __FormContentState extends State<_FormContent> {
                 ),
                 onPressed: () {
                   // 추가적인 로직 처리
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => JoinPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => JoinPage()));
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
                     '회원가입',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble', color: Colors.white),
                   ),
                 ),
               ),
@@ -288,7 +293,7 @@ void loginMember(Users member, BuildContext context) async {
         // 로그인 성공 메시지 표시
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('로그인에 성공했습니다.'),
+            content: Text('로그인에 성공했습니다.', style: TextStyle(fontFamily: 'Omyu')),
             backgroundColor: Colors.green,
           ),
         );
@@ -308,11 +313,10 @@ void loginMember(Users member, BuildContext context) async {
         await storage.write(key: 'uname', value: loggedInUser.uname.toString());
         await storage.write(key: 'member', value: res.data.toString());
 
-
         // 로그인 성공 메시지 표시
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('로그인에 성공했습니다.'),
+            content: Text('로그인에 성공했습니다.', style: TextStyle(fontFamily: 'Omyu')),
             backgroundColor: Colors.green,
           ),
         );
@@ -328,7 +332,7 @@ void loginMember(Users member, BuildContext context) async {
       // 로그인 실패 메시지 표시
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('로그인에 실패했습니다.'),
+          content: Text('로그인에 실패했습니다.', style: TextStyle(fontFamily: 'Omyu')),
           backgroundColor: Colors.red,
         ),
       );
@@ -340,7 +344,7 @@ void loginMember(Users member, BuildContext context) async {
     // 예외에 따른 오류 메시지 표시
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('서버에 연결할 수 없습니다: ${e.message}'),
+        content: Text('서버에 연결할 수 없습니다: ${e.message}', style: TextStyle(fontFamily: 'Omyu')),
         backgroundColor: Colors.red,
       ),
     );
@@ -351,7 +355,7 @@ void loginMember(Users member, BuildContext context) async {
     // 예외에 따른 오류 메시지 표시
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('알 수 없는 오류가 발생했습니다: $e'),
+        content: Text('알 수 없는 오류가 발생했습니다: $e', style: TextStyle(fontFamily: 'Omyu')),
         backgroundColor: Colors.red,
       ),
     );
