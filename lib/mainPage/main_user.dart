@@ -238,25 +238,25 @@ class _MainUserState extends State<MainUser> {
         children: [
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100, 18, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100, 20, 'Omyu')),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200, 18, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200, 20, 'Omyu')),
             ],
           ),
           SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100, 15, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100, 16, 'Omyu')),
               SizedBox(width: 10),
               Expanded(child: _buildPetDetailBox(
                 petGender == '수컷' ? Icons.male : Icons.female,
                 '성별',
                 petGender,
                 petGender == '수컷' ? Colors.blueAccent.shade100 : Colors.pinkAccent.shade100,
-                15, 'Omyu',
+                16, 'Omyu',
               )),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200, 15, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200, 16, 'Omyu')),
             ],
           ),
         ],

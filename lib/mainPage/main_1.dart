@@ -135,27 +135,22 @@ class _GoogleBottomBarState extends State<MainPage_1> {
 final _navBarItems = [
   SalomonBottomBarItem(
     icon: const Icon(Icons.home),
-    title: const Text("Home"),
-    selectedColor: Colors.purple,
+    title: const Text("Home" , style: TextStyle(fontFamily: 'Geekble'),),
   ),
   SalomonBottomBarItem(
     icon: const Icon(Icons.chat),
-    title: const Text("ChatBot"),
-    selectedColor: Colors.purple,
+    title: const Text("ChatBot", style: TextStyle(fontFamily: 'Geekble')),
   ),
   SalomonBottomBarItem(
     icon: const Icon(Icons.shopping_bag),
-    title: const Text("Shop"),
-    selectedColor: Colors.purple,
+    title: const Text("Shop", style: TextStyle(fontFamily: 'Geekble')),
   ),
   SalomonBottomBarItem(
     icon: const Icon(Icons.calendar_month),
-    title: const Text("Calendar"),
-    selectedColor: Colors.purple,
+    title: const Text("Calendar", style: TextStyle(fontFamily: 'Geekble')),
   ),
   SalomonBottomBarItem(
     icon: const Icon(Icons.person),
-    title: const Text("MyPage"),
-    selectedColor: Colors.purple,
+    title: const Text("MyPage", style: TextStyle(fontFamily: 'Geekble')),
   ),
 ];

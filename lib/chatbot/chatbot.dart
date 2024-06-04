@@ -127,7 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   style: TextStyle(
                     fontFamily: 'Omyu', // 메시지 내용 글꼴 변경
                     color: isUserMessage ? Colors.white : Colors.black,
-                    fontSize: 16,
+                    fontSize: 18,
                   ),
                 )
                     : AnimatedTextKit(
@@ -137,7 +137,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       textStyle: TextStyle(
                         fontFamily: 'Omyu', // 애니메이션 메시지 내용 글꼴 변경
                         color: Colors.black,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                       speed: Duration(milliseconds: 100),
                     ),
@@ -200,7 +200,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     TyperAnimatedText(
                       '잠시만 기다려주세요..!!',
                       textStyle: TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontFamily: 'Omyu', // 힌트 텍스트 글꼴 변경
                         fontStyle: FontStyle.italic,
                         color: Colors.black,
@@ -221,7 +221,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       textStyle: TextStyle(
                         fontFamily: 'Omyu', // 애니메이션 메시지 내용 글꼴 변경
                         color: Colors.black,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                       speed: Duration(milliseconds: 100),
                     ),
@@ -255,7 +255,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         hintText: '프로펫서에게 지금 바로 질문해 보세요!',
                         hintStyle: TextStyle(
                           fontFamily: 'Omyu', // 힌트 텍스트 글꼴 변경
-                          fontSize: 16,
+                          fontSize: 18,
                           decoration: TextDecoration.underline, // 밑줄 추가
                           decorationColor: Colors.grey, // 밑줄 색상 설정
                         ),

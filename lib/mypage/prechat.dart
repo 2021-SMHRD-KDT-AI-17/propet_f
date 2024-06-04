@@ -69,7 +69,7 @@ class PreChat extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Omyu', // 메시지 내용 글꼴 변경
                           color: isUserMessage ? Colors.white : Colors.black,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                       ),
                     ),
