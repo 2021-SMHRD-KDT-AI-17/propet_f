@@ -63,22 +63,26 @@ class _MyPetPageState extends State<MyPetPage> {
     });
   }
 
-  void _deletePet(int index) {
-    void deletePet() async {
-      final dio = Dio();
-      print("--------------------");
-      print(pets[index]["pidx"]);
-      Response res = await dio.post(
-          "http://10.0.2.2:8089/boot/deletePet",
-          data: {"p_idx": pets[index]["pidx"]}
-      );
-    }
+  void _deletePet(int index) async {
+    final dio = Dio();
+    print("--------------------");
+    print(pets[index]["pidx"]);
+    Response res = await dio.delete(
+      "http://10.0.2.2:8089/boot/deletePet",
+      data: jsonEncode({"pidx": pets[index]["pidx"]}),
+      options: Options(headers: {
+        "Content-Type": "application/json",
+      }),
+    );
 
-    setState(() {
-      deletePet();
-      pets.removeAt(index);
-    });
+    if (res.statusCode == 200) {
+      setState(() {
+        pets.removeAt(index);
+      });
+    }
   }
+
+
 
   Future<String?> _getUsername() async {
     String? username = await storage.read(key: 'uname');
