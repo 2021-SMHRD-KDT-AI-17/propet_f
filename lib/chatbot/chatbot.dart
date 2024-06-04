@@ -109,7 +109,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Text(
                   message['name']!,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    fontFamily: 'Geekble', // 이름 글꼴 변경
                     color: Colors.grey[700],
                   ),
                 ),
@@ -124,6 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ? Text(
                   formattedMessage,
                   style: TextStyle(
+                    fontFamily: 'Omyu', // 메시지 내용 글꼴 변경
                     color: isUserMessage ? Colors.white : Colors.black,
                     fontSize: 16,
                   ),
@@ -132,7 +134,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   animatedTexts: [
                     TyperAnimatedText(
                       formattedMessage,
-                      textStyle: TextStyle(color: Colors.black, fontSize: 16),
+                      textStyle: TextStyle(
+                        fontFamily: 'Omyu', // 애니메이션 메시지 내용 글꼴 변경
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
                       speed: Duration(milliseconds: 100),
                     ),
                   ],
@@ -144,6 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Text(
                   message['timestamp']!,
                   style: TextStyle(
+                    fontFamily: 'Omyu', // 타임스탬프 글꼴 변경
                     color: Colors.grey,
                     fontSize: 12,
                   ),
@@ -192,7 +199,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   animatedTexts: [
                     TyperAnimatedText(
                       '잠시만 기다려주세요..!!',
-                      textStyle: TextStyle(fontStyle: FontStyle.italic, color: Colors.black),
+                      textStyle: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Omyu', // 힌트 텍스트 글꼴 변경
+                        fontStyle: FontStyle.italic,
+                        color: Colors.black,
+                      ),
                       speed: Duration(milliseconds: 100),
                     ),
                   ],
@@ -206,7 +218,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   animatedTexts: [
                     TyperAnimatedText(
                       _botResponse,
-                      textStyle: TextStyle(color: Colors.black, fontSize: 16),
+                      textStyle: TextStyle(
+                        fontFamily: 'Omyu', // 애니메이션 메시지 내용 글꼴 변경
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
                       speed: Duration(milliseconds: 100),
                     ),
                   ],
@@ -238,7 +254,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         fillColor: Colors.grey[100],
                         hintText: '프로펫서에게 지금 바로 질문해 보세요!',
                         hintStyle: TextStyle(
-                          fontSize: 14,
+                          fontFamily: 'Omyu', // 힌트 텍스트 글꼴 변경
+                          fontSize: 16,
                           decoration: TextDecoration.underline, // 밑줄 추가
                           decorationColor: Colors.grey, // 밑줄 색상 설정
                         ),
@@ -250,7 +267,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                   ),
-
                   SizedBox(width: 8),
                   ElevatedButton(
                     onPressed: _sendMessage,

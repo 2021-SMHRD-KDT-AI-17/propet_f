@@ -48,7 +48,8 @@ class PreChat extends StatelessWidget {
                 child: Text(
                   message['name']!,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    fontFamily: 'Geekble', // 이름 글꼴 변경
                     color: Colors.grey[700],
                   ),
                 ),
@@ -66,6 +67,7 @@ class PreChat extends StatelessWidget {
                       child: Text(
                         formattedMessage,
                         style: TextStyle(
+                          fontFamily: 'Omyu', // 메시지 내용 글꼴 변경
                           color: isUserMessage ? Colors.white : Colors.black,
                           fontSize: 16,
                         ),
@@ -87,6 +89,7 @@ class PreChat extends StatelessWidget {
                 child: Text(
                   message['timestamp']!,
                   style: TextStyle(
+                    fontFamily: 'Omyu', // 타임스탬프 글꼴 변경
                     color: Colors.grey,
                     fontSize: 12,
                   ),
@@ -287,7 +290,7 @@ class PreChat extends StatelessWidget {
                   );
                 },
                 icon: Icon(Icons.chat, color: Colors.deepPurpleAccent),
-                label: Text('다시 물어보러 가기!', style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)),
+                label: Text('다시 물어보러 가기!', style: TextStyle(fontFamily: 'Geekble', color: Colors.black, fontSize: 16)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   side: BorderSide(color: Colors.grey),
