@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 
 class PetEdit extends StatefulWidget {
@@ -14,6 +15,12 @@ class PetEdit extends StatefulWidget {
 class _PetEditState extends State<PetEdit> {
   final _formKey = GlobalKey<FormState>();
   late Map<String, String> _petData;
+
+  late TextEditingController pnameCon;
+  late TextEditingController pkindCon;
+  late TextEditingController pageCon;
+  late TextEditingController pkgCon;
+  late TextEditingController pdiseaseinfCon;
 
   bool _hasDisease = false;
   String? _selectedGender;
@@ -31,13 +38,54 @@ class _PetEditState extends State<PetEdit> {
     _selectedNeutered = _petData['psurgery'];
     _selectedDisease = _petData['pdisease'];
     _hasDisease = _selectedDisease == '예';
+
+    pnameCon = TextEditingController(text: _petData['pname']);
+    pkindCon = TextEditingController(text: _petData['pkind']);
+    pageCon = TextEditingController(text: _petData['page']);
+    pkgCon = TextEditingController(text: _petData['pkg']);
+    pdiseaseinfCon = TextEditingController(text: _petData['pdiseaseinf']);
   }
 
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      widget.onEdit(_petData);
-      Navigator.pop(context);
+      _petData['pname'] = pnameCon.text;
+      _petData['pkind'] = pkindCon.text;
+      _petData['page'] = pageCon.text;
+      _petData['pkg'] = pkgCon.text;
+      _petData['pdiseaseinf'] = pdiseaseinfCon.text;
+
+      try {
+        Response res = await Dio().post(
+          'http://10.0.2.2:8089/boot/updatePet',
+          data: {'updatePet': _petData},
+        );
+
+        if (res.statusCode == 200) {
+          widget.onEdit(_petData);
+          Navigator.pop(context);
+        } else {
+          throw Exception('Failed to update pet');
+        }
+      } catch (e) {
+        print('Error occurred: $e');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Failed to update pet. Please try again later.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
@@ -46,10 +94,20 @@ class _PetEditState extends State<PetEdit> {
   }
 
   @override
+  void dispose() {
+    pnameCon.dispose();
+    pkindCon.dispose();
+    pageCon.dispose();
+    pkgCon.dispose();
+    pdiseaseinfCon.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(56.0), // AppBar 높이 설정
+        preferredSize: Size.fromHeight(56.0),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -57,7 +115,7 @@ class _PetEditState extends State<PetEdit> {
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(0, 2), // 그림자의 위치 조정
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -65,7 +123,7 @@ class _PetEditState extends State<PetEdit> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(context); // 뒤로가기 동작
+                Navigator.pop(context);
               },
             ),
             backgroundColor: Colors.white,
@@ -77,23 +135,21 @@ class _PetEditState extends State<PetEdit> {
                 );
               },
               child: Container(
-                height: 30, // 이미지 높이
-                width: 120, // 이미지 너비, 가로 직사각형 형태로 길게
+                height: 30,
+                width: 120,
                 child: Image.asset(
-                  'assets/images/logo3.png', // 이미지 경로
-                  fit: BoxFit.contain, // 이미지 크기 조절
+                  'assets/images/logo3.png',
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
-            centerTitle: true, // 타이틀 중앙 정렬
+            centerTitle: true,
             actions: [
               Stack(
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.notifications),
-                    onPressed: () {
-                      // 알림 아이콘 클릭 시 동작
-                    },
+                    onPressed: () {},
                   ),
                   Positioned(
                     right: 11,
@@ -109,7 +165,7 @@ class _PetEditState extends State<PetEdit> {
                         minHeight: 14,
                       ),
                       child: Text(
-                        '0', // 알림 갯수
+                        '0',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 8,
@@ -177,23 +233,23 @@ class _PetEditState extends State<PetEdit> {
                     child: ListView(
                       children: [
                         SizedBox(height: 16),
-                        _buildTextField('이름', 'pname'),
+                        _buildTextField('이름', pnameCon),
                         SizedBox(height: 16),
-                        _buildTextField('나이', 'page'),
+                        _buildTextField('나이', pageCon),
                         SizedBox(height: 16),
-                        _buildTextField('품종', 'pkind'),
+                        _buildTextField('품종', pkindCon),
                         SizedBox(height: 16),
-                        _buildTextField('몸무게', 'pkg'),
-                        Divider(height: 32, thickness: 1), // 성별 위에 라인 추가
+                        _buildTextField('몸무게', pkgCon),
+                        Divider(height: 32, thickness: 1),
                         _buildGenderButton(),
-                        SizedBox(height: 20), // 버튼과 중성화 여부 간격 추가
+                        SizedBox(height: 20),
                         _buildYesNoButton('중성화 여부', 'psurgery', (isNeutered) {
                           setState(() {
                             _selectedNeutered = isNeutered ? '예' : '아니오';
                             _petData['psurgery'] = _selectedNeutered!;
                           });
                         }),
-                        SizedBox(height: 20), // 버튼과 질환 여부 간격 추가
+                        SizedBox(height: 20),
                         _buildYesNoButton('질환 여부', 'pdisease', (value) {
                           setState(() {
                             _selectedDisease = value ? '예' : '아니오';
@@ -204,8 +260,8 @@ class _PetEditState extends State<PetEdit> {
                         if (_hasDisease)
                           Column(
                             children: [
-                              SizedBox(height: 16), // 간격 추가
-                              _buildTextField('어떤 질환인지 작성해주세요', 'pdiseaseinf'),
+                              SizedBox(height: 16),
+                              _buildTextField('어떤 질환인지 작성해주세요', pdiseaseinfCon),
                             ],
                           ),
                         Divider(height: 32, thickness: 1),
@@ -266,20 +322,17 @@ class _PetEditState extends State<PetEdit> {
     );
   }
 
-  Widget _buildTextField(String label, String key) {
+  Widget _buildTextField(String label, TextEditingController controller) {
     return TextFormField(
-      initialValue: _petData[key],
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         hintText: '$label 입력하세요',
         prefixIcon: _getPrefixIcon(label),
         border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10), // 높이 조절
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       ),
-      style: TextStyle(fontSize: 14), // 폰트 사이즈 줄이기
-      onSaved: (value) {
-        _petData[key] = value ?? '';
-      },
+      style: TextStyle(fontSize: 14),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return '$label을(를) 입력하세요';
@@ -313,7 +366,7 @@ class _PetEditState extends State<PetEdit> {
         Row(
           children: [
             Expanded(
-              child: _buildSelectionBox('수컷', 'gender', _selectedGender == '수컷', onChanged: () {
+              child: _buildSelectionBox('수컷', 'pgender', _selectedGender == '수컷', onChanged: () {
                 setState(() {
                   _selectedGender = '수컷';
                   _petData['pgender'] = '수컷';
@@ -322,7 +375,7 @@ class _PetEditState extends State<PetEdit> {
             ),
             SizedBox(width: 10),
             Expanded(
-              child: _buildSelectionBox('암컷', 'gender', _selectedGender == '암컷', onChanged: () {
+              child: _buildSelectionBox('암컷', 'pgender', _selectedGender == '암컷', onChanged: () {
                 setState(() {
                   _selectedGender = '암컷';
                   _petData['pgender'] = '암컷';
