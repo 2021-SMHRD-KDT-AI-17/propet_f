@@ -1,10 +1,10 @@
 class Pet{
   int? pidx; // 펫 index
-  String pname; //펫이름
-  String pkind; //종
+  String? pname; //펫이름
+  String? pkind; //종
   int page; // 나이
   double pkg; //몸무게
-  String pgender; // 성별
+  String? pgender; // 성별
   String psurgery; //중성화 여부
   String pdisease; //질환 여부
   String? pdiseaseinf; //질환정보
@@ -69,19 +69,45 @@ class Pet{
     this.pdiseaseinf,
     this.uidx,
   });
+
+  Pet.update({
+    required this.page,
+    required this.pkg,
+    required this.psurgery,
+    required this.pdisease,
+    this.pdiseaseinf,
+    this.uidx,
+});
+
   // Object -> Map<String, String> 변환 메서드
   Map<String, String> toMap() {
     return {
       'pidx': pidx.toString(),
-      'pname': pname,
-      'pkind': pkind,
+      'pname': pname.toString(),
+      'pkind': pkind.toString(),
       'page': page.toString(),
       'pkg': pkg.toString(),
-      'pgender': pgender,
+      'pgender': pgender.toString(),
       'psurgery': psurgery,
       'pdisease': pdisease,
       'pdiseaseinf': pdiseaseinf ?? '',
       'uidx': uidx.toString(),
     };
   }
+
+  factory Pet.fromMap(Map<String, String> map) {
+    return Pet(
+      pidx: int.tryParse(map['pidx'] ?? ''),
+      pname: map['pname'],
+      pkind: map['pkind'],
+      page: int.parse(map['page'] ?? '0'),
+      pkg: double.parse(map['pkg'] ?? '0'),
+      pgender: map['pgender'],
+      psurgery: map['psurgery']!,
+      pdisease: map['pdisease']!,
+      pdiseaseinf: map['pdiseaseinf'],
+      uidx: int.tryParse(map['uidx'] ?? ''),
+    );
+  }
+
 }
