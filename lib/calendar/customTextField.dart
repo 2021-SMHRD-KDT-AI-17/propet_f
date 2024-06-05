@@ -25,10 +25,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
         Text(
           widget.label,
           style: TextStyle(
-            color: Colors.deepPurple,
-            fontWeight: FontWeight.w600,
+            fontFamily: 'Omyu',
+            fontSize: 16,
+            color: Colors.black,
           ),
         ),
+        SizedBox(height: 5.0), // 라벨과 텍스트 필드 사이의 공간 추가
         Expanded(
           flex: widget.isTime ? 0 : 1,
           child: widget.isTime
@@ -39,8 +41,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6.0),
                 border: Border.all(
-                  color: Colors.deepPurple,
-                  width: 2.0,
+                  color: Colors.black,
+                  width: 1.0,
                 ),
               ),
               child: Row(
@@ -51,23 +53,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
                         ? _selectedTime!.format(context)
                         : '시간 선택',
                     style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.deepPurple,
+                      fontFamily: 'Omyu',
+                      fontSize: 16,
+                      color: Colors.black,
                     ),
                   ),
                   Icon(
                     Icons.access_time,
-                    color: Colors.deepPurple,
+                    color: Colors.black,
                   ),
                 ],
               ),
             ),
           )
               : TextFormField(
-            cursorColor: Colors.yellowAccent,
+            cursorColor: Colors.black,
             maxLines: widget.isTime ? 1 : null,
             expands: !widget.isTime,
-            keyboardType: widget.isTime ? TextInputType.number : TextInputType.multiline,
+            keyboardType:
+            widget.isTime ? TextInputType.number : TextInputType.multiline,
             inputFormatters: widget.isTime
                 ? [
               FilteringTextInputFormatter.digitsOnly,
@@ -77,27 +81,32 @@ class _CustomTextFieldState extends State<CustomTextField> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
                 borderSide: BorderSide(
-                  color: Colors.deepPurple, // 보더 색상 설정
-                  width: 2.0, // 보더 두께 설정
+                  color: Colors.black, // 보더 색상 설정
+                  width: 1.0, // 보더 두께 설정
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
                 borderSide: BorderSide(
-                  color: Colors.deepPurple, // 비활성화 상태의 보더 색상 설정
-                  width: 2.0, // 보더 두께 설정
+                  color: Colors.black, // 비활성화 상태의 보더 색상 설정
+                  width: 1.0, // 보더 두께 설정
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
                 borderSide: BorderSide(
-                  color: Colors.deepPurple, // 포커스 상태의 보더 색상 설정
-                  width: 2.0, // 보더 두께 설정
+                  color: Colors.black, // 포커스 상태의 보더 색상 설정
+                  width: 1.0, // 보더 두께 설정
                 ),
               ),
               filled: true,
               fillColor: Colors.white,
               suffixText: widget.isTime ? '시' : null,
+            ),
+            style: TextStyle(
+              fontFamily: 'Omyu',
+              fontSize: 16,
+              color: Colors.black,
             ),
           ),
         ),

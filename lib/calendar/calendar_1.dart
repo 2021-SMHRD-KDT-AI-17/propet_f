@@ -42,32 +42,32 @@ class _CalendarNonState extends State<CalendarNon> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(
+                  builder: (context) => LoginPage(), // 초기 인덱스를 1로 설정
+                ),
               );
             },
-
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 50), // 좌우 마진 추가
+              margin: EdgeInsets.symmetric(horizontal: 60), // 좌우 마진 추가
               padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.deepPurpleAccent,
+                color: Colors.grey,
                 borderRadius: BorderRadius.circular(30),
-
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.login_rounded,
+                    Icons.login,
                     color: Colors.white, // 아이콘 색상
                     size: 24, // 아이콘 크기
                   ),
                   SizedBox(width: 10), // 아이콘과 텍스트 사이 간격 조정
                   Text(
-                    '로그인 후 일정 관리',
+                    '로그인 후 이용해 주세요.',
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      fontFamily: 'Geekble',
                       color: Colors.white, // 텍스트 색상
                     ),
                   ),
