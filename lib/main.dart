@@ -1,8 +1,12 @@
 import 'dart:convert';
 
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:propetsor/FCM/fcm_service.dart';
 import 'package:propetsor/login/join.dart';
 import 'package:propetsor/login/login.dart';
 import 'package:propetsor/mainPage/main_1.dart';
@@ -13,6 +17,19 @@ import 'package:propetsor/model/Users.dart';
 final storage = FlutterSecureStorage();
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+  AndroidInitializationSettings('@mipmap/ic_launcher');
+  final InitializationSettings initializationSettings =
+  InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   runApp(MyApp());
 }
 
@@ -28,6 +45,39 @@ class MyApp extends StatelessWidget {
     return await storage.read(key: 'member');
   }
 
+  Future<void> initializeFCM() async {
+
+    FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+    // 사용자 권한 요청
+    await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // FCM 토큰 가져오기
+    String? token = await _messaging.getToken();
+    String? u_idx = await storage.read(key: 'uidx');
+    if (token != null) {
+      print('FCM Token: $token');
+      // 서버로 FCM 토큰과 u_idx 전송
+      await sendTokenToServer(token, u_idx ?? ""); // u_idx 전달
+    }
+
+    // 포그라운드 메시지 처리
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Message received in foreground: ${message.messageId}');
+      showNotification(message); // 포그라운드에서 메시지를 받았을 때 알림을 표시합니다.
+    });
+
+    // 백그라운드 메시지 처리
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Message opened from background: ${message.messageId}');
+      showNotification(message); // 백그라운드에서 앱이 열렸을 때 알림을 표시합니다.
+    });
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -36,6 +86,7 @@ class MyApp extends StatelessWidget {
       builder: (context, snapshot) {
 
         if(snapshot.data!=null){ //로그인후
+          initializeFCM();
           Map<String,dynamic> jsonMember = jsonDecode(snapshot.data!);
 
           Users member = Users.fromJson(jsonMember);
