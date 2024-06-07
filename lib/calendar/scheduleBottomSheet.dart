@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:propetsor/calendar/customTextField.dart';
 
 class ScheduleBottomSheet extends StatefulWidget {
-  const ScheduleBottomSheet({Key? key}) : super(key: key);
+  final Function(Map<String, dynamic>) onSave;
+
+  const ScheduleBottomSheet({Key? key, required this.onSave}) : super(key: key);
 
   @override
   State<ScheduleBottomSheet> createState() => _ScheduleBottomSheetState();
 }
 
 class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
+  final TextEditingController _startTimeController = TextEditingController();
+  final TextEditingController _endTimeController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
@@ -38,6 +44,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                     child: CustomTextField(
                       label: '시작 시간',
                       isTime: true,
+                      controller: _startTimeController,
                     ),
                   ),
                   const SizedBox(width: 16.0),
@@ -45,6 +52,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                     child: CustomTextField(
                       label: '종료 시간',
                       isTime: true,
+                      controller: _endTimeController,
                     ),
                   ),
                 ],
@@ -54,13 +62,14 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                 child: CustomTextField(
                   label: '내용',
                   isTime: false,
+                  controller: _contentController,
                 ),
               ),
               SizedBox(height: 16.0),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: onSavePressed,
+                  onPressed: _onSavePressed,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey,
                     shape: RoundedRectangleBorder(
@@ -84,7 +93,13 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     );
   }
 
-  void onSavePressed() {
-    print('저장버튼 클릭');
+  void _onSavePressed() {
+    final schedule = {
+      'startTime': _startTimeController.text,
+      'endTime': _endTimeController.text,
+      'content': _contentController.text,
+    };
+    widget.onSave(schedule);
+    Navigator.pop(context);
   }
 }

@@ -4,9 +4,12 @@ import 'package:flutter/services.dart';
 class CustomTextField extends StatefulWidget {
   final String label;
   final bool isTime;
+  final TextEditingController controller;
+
   const CustomTextField({
     required this.label,
     required this.isTime,
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
@@ -30,7 +33,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             color: Colors.black,
           ),
         ),
-        SizedBox(height: 5.0), // 라벨과 텍스트 필드 사이의 공간 추가
+        SizedBox(height: 5.0),
         Expanded(
           flex: widget.isTime ? 0 : 1,
           child: widget.isTime
@@ -67,11 +70,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           )
               : TextFormField(
+            controller: widget.controller,
             cursorColor: Colors.black,
             maxLines: widget.isTime ? 1 : null,
             expands: !widget.isTime,
-            keyboardType:
-            widget.isTime ? TextInputType.number : TextInputType.multiline,
+            keyboardType: widget.isTime
+                ? TextInputType.number
+                : TextInputType.multiline,
             inputFormatters: widget.isTime
                 ? [
               FilteringTextInputFormatter.digitsOnly,
@@ -81,22 +86,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
                 borderSide: BorderSide(
-                  color: Colors.black, // 보더 색상 설정
-                  width: 1.0, // 보더 두께 설정
+                  color: Colors.black,
+                  width: 1.0,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
                 borderSide: BorderSide(
-                  color: Colors.black, // 비활성화 상태의 보더 색상 설정
-                  width: 1.0, // 보더 두께 설정
+                  color: Colors.black,
+                  width: 1.0,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
                 borderSide: BorderSide(
-                  color: Colors.black, // 포커스 상태의 보더 색상 설정
-                  width: 1.0, // 보더 두께 설정
+                  color: Colors.black,
+                  width: 1.0,
                 ),
               ),
               filled: true,
@@ -130,6 +135,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       setState(() {
         _selectedTime = picked;
       });
+      widget.controller.text = _selectedTime!.format(context);
     }
   }
 }

@@ -2,29 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:propetsor/calendar/main_calendar.dart';
 import 'package:propetsor/calendar/scheduleBottomSheet.dart';
 import 'package:propetsor/calendar/scheduleCard.dart';
+import 'package:propetsor/calendar/schedule_service.dart';
 import 'package:propetsor/calendar/todayBanner.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:propetsor/model/Schedules.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CalendarUser extends StatefulWidget {
   const CalendarUser({super.key});
 
   @override
-  State<CalendarUser> createState() => _CalendarNonState();
+  State<CalendarUser> createState() => _CalendarUserState();
 }
 
-class _CalendarNonState extends State<CalendarUser> {
+class _CalendarUserState extends State<CalendarUser> {
   DateTime selectedDate = DateTime.utc(
     DateTime.now().year,
     DateTime.now().month,
     DateTime.now().day,
   );
 
+  final ScheduleService _scheduleService = ScheduleService();
+  List<Schedules> schedules = [];
+  final storage = FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSchedules();
+  }
+
+  Future<void> _loadSchedules() async {
+    String? uidx = await storage.read(key: 'uidx');
+    if (uidx != null) {
+      final data = await _scheduleService.getSchedulesByUserId(int.parse(uidx));
+      setState(() {
+        schedules = data;
+      });
+    }
+  }
+
+  void _createSchedule(Map<String, dynamic> scheduleData) async {
+    Schedules schedule = Schedules(
+      startTime: scheduleData['startTime'],
+      endTime: scheduleData['endTime'],
+      content: scheduleData['content'],
+      uidx: 0,
+    );
+    await _scheduleService.createSchedule(schedule);
+    _loadSchedules();
+  }
+
+  void _deleteSchedule(int sidx) async {
+    await _scheduleService.deleteSchedule(sidx);
+    _loadSchedules();
+  }
+
+  void onDaySelected(DateTime selectedDate, DateTime focusedDate) {
+    setState(() {
+      this.selectedDate = selectedDate;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.white, // 배경색을 흰색으로 설정
+          color: Colors.white,
           child: Column(
             children: [
               MainCalendar(
@@ -33,28 +77,28 @@ class _CalendarNonState extends State<CalendarUser> {
               ),
               TodayBanner(
                 selectedDate: selectedDate,
-                count: 0,
+                count: schedules.length,
               ),
-              SizedBox(
-                height: 6,
-              ),
+              SizedBox(height: 6),
               Expanded(
                 child: Stack(
                   children: [
-                    ListView(
-                      children: [
-                        ScheduleCard(
-                          startTime: 12,
-                          endTime: 15,
-                          content: "하루 산책 시간",
-                        ),
-                        // Add more ScheduleCard widgets here if needed
-                      ],
+                    ListView.builder(
+                      itemCount: schedules.length,
+                      itemBuilder: (context, index) {
+                        final schedule = schedules[index];
+                        return ScheduleCard(
+                          startTime: schedule.startTime,
+                          endTime: schedule.endTime,
+                          content: schedule.content,
+                          onDelete: () => _deleteSchedule(schedule.sidx!),
+                        );
+                      },
                     ),
                     Positioned(
                       right: 0,
                       child: Container(
-                        width: 60, // 원하는 너비로 설정
+                        width: 60,
                         margin: EdgeInsets.only(right: 5.0, top: 3.0),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -69,13 +113,13 @@ class _CalendarNonState extends State<CalendarUser> {
                           onPressed: () {
                             showModalBottomSheet(
                               context: context,
-                              builder: (context) => ScheduleBottomSheet(),
+                              builder: (context) => ScheduleBottomSheet(onSave: _createSchedule),
                               isScrollControlled: true,
                             );
                           },
                           child: Icon(
                             Icons.add,
-                            color: Colors.black, // 아이콘 색상을 검은색으로 설정
+                            color: Colors.black,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
@@ -91,11 +135,5 @@ class _CalendarNonState extends State<CalendarUser> {
         ),
       ),
     );
-  }
-
-  void onDaySelected(DateTime selectedDate, DateTime focusedDate) {
-    setState(() {
-      this.selectedDate = selectedDate;
-    });
   }
 }

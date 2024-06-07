@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 
 class ScheduleCard extends StatelessWidget {
-  final int startTime;
-  final int endTime;
+  final String startTime;
+  final String endTime;
   final String content;
+  final Function onDelete;
 
   const ScheduleCard({
     required this.startTime,
     required this.endTime,
     required this.content,
+    required this.onDelete,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft, // 왼쪽 정렬
+      alignment: Alignment.centerLeft,
       child: Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(left: 5.0, top: 3.0, bottom: 5.0), // 마진 설정
-            width: MediaQuery.of(context).size.width * 0.8, // 박스의 너비를 줄입니다.
+            margin: const EdgeInsets.only(left: 5.0, top: 3.0, bottom: 5.0),
+            width: MediaQuery.of(context).size.width * 0.8,
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
                 width: 1.0,
-                color: Colors.black, // 테두리 색상을 검은색으로 변경
+                color: Colors.black,
               ),
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -40,19 +42,23 @@ class ScheduleCard extends StatelessWidget {
                       endTime: endTime,
                     ),
                     VerticalDivider(
-                      color: Colors.black, // 세로줄 색상을 검은색으로 설정
+                      color: Colors.black,
                       thickness: 1.0,
-                      width: 16.0, // 세로줄의 여유 공간
+                      width: 16.0,
                     ),
                     _Content(
                       content: content,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => onDelete(),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          SizedBox(height: 5), // 박스 끝에 10px 간격을 추가
+          SizedBox(height: 5),
         ],
       ),
     );
@@ -60,8 +66,8 @@ class ScheduleCard extends StatelessWidget {
 }
 
 class _Time extends StatelessWidget {
-  final int startTime;
-  final int endTime;
+  final String startTime;
+  final String endTime;
 
   const _Time({
     required this.startTime,
@@ -81,7 +87,7 @@ class _Time extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${startTime.toString().padLeft(2, '0')}:00 ~ ${endTime.toString().padLeft(2, '0')}:00',
+          '$startTime ~ $endTime',
           style: textStyle,
         ),
       ],
