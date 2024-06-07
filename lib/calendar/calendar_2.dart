@@ -5,6 +5,7 @@ import 'package:propetsor/calendar/scheduleCard.dart';
 import 'package:propetsor/calendar/schedule_service.dart';
 import 'package:propetsor/calendar/todayBanner.dart';
 import 'package:propetsor/model/Schedules.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CalendarUser extends StatefulWidget {
   const CalendarUser({super.key});
@@ -22,6 +23,7 @@ class _CalendarUserState extends State<CalendarUser> {
 
   final ScheduleService _scheduleService = ScheduleService();
   List<Schedules> schedules = [];
+  final storage = FlutterSecureStorage();
 
   @override
   void initState() {
@@ -30,10 +32,13 @@ class _CalendarUserState extends State<CalendarUser> {
   }
 
   Future<void> _loadSchedules() async {
-    final data = await _scheduleService.getAllSchedules();
-    setState(() {
-      schedules = data;
-    });
+    String? uidx = await storage.read(key: 'uidx');
+    if (uidx != null) {
+      final data = await _scheduleService.getSchedulesByUserId(int.parse(uidx));
+      setState(() {
+        schedules = data;
+      });
+    }
   }
 
   void _createSchedule(Map<String, dynamic> scheduleData) async {
@@ -41,7 +46,7 @@ class _CalendarUserState extends State<CalendarUser> {
       startTime: scheduleData['startTime'],
       endTime: scheduleData['endTime'],
       content: scheduleData['content'],
-      uidx: 0, // This will be set in createSchedule method of ScheduleService
+      uidx: 0,
     );
     await _scheduleService.createSchedule(schedule);
     _loadSchedules();

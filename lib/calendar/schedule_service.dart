@@ -30,6 +30,18 @@ class ScheduleService {
         .toList();
   }
 
+  Future<List<Schedules>> getSchedulesByUserId(int uidx) async {
+    final response = await dio.get(
+      'http://10.0.2.2:8089/boot/getSchedules/user/$uidx',
+      options: Options(headers: {
+        "Content-Type": "application/json",
+      }),
+    );
+    return (response.data as List)
+        .map((json) => Schedules.fromJson(json))
+        .toList();
+  }
+
   Future<void> deleteSchedule(int id) async {
     await dio.delete(
       'http://10.0.2.2:8089/boot/deleteSchedules/$id',
