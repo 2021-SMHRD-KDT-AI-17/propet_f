@@ -4,9 +4,12 @@ import 'package:flutter/services.dart';
 class CustomTextField extends StatefulWidget {
   final String label;
   final bool isTime;
+  final TextEditingController controller;
+
   const CustomTextField({
     required this.label,
     required this.isTime,
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
@@ -67,11 +70,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           )
               : TextFormField(
+            controller: widget.controller,
             cursorColor: Colors.black,
             maxLines: widget.isTime ? 1 : null,
             expands: !widget.isTime,
-            keyboardType:
-            widget.isTime ? TextInputType.number : TextInputType.multiline,
+            keyboardType: widget.isTime
+                ? TextInputType.number
+                : TextInputType.multiline,
             inputFormatters: widget.isTime
                 ? [
               FilteringTextInputFormatter.digitsOnly,
@@ -130,6 +135,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       setState(() {
         _selectedTime = picked;
       });
+      widget.controller.text = _selectedTime!.format(context);
     }
   }
 }

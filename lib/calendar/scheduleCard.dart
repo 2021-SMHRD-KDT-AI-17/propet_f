@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ScheduleCard extends StatelessWidget {
-  final int startTime;
-  final int endTime;
+  final String startTime;
+  final String endTime;
   final String content;
+  final Function onDelete;
 
   const ScheduleCard({
     required this.startTime,
     required this.endTime,
     required this.content,
+    required this.onDelete,
     Key? key,
   }) : super(key: key);
 
@@ -47,6 +49,10 @@ class ScheduleCard extends StatelessWidget {
                     _Content(
                       content: content,
                     ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => onDelete(),
+                    ),
                   ],
                 ),
               ),
@@ -60,8 +66,8 @@ class ScheduleCard extends StatelessWidget {
 }
 
 class _Time extends StatelessWidget {
-  final int startTime;
-  final int endTime;
+  final String startTime;
+  final String endTime;
 
   const _Time({
     required this.startTime,
@@ -81,7 +87,7 @@ class _Time extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${startTime.toString().padLeft(2, '0')}:00 ~ ${endTime.toString().padLeft(2, '0')}:00',
+          '$startTime ~ $endTime',
           style: textStyle,
         ),
       ],

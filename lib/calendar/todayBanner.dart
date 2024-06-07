@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class TodayBanner extends StatelessWidget {
   final DateTime selectedDate;
   final int count;
+
   const TodayBanner({
     required this.selectedDate,
     required this.count,
