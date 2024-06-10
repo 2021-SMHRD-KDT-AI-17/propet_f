@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "448279408098",
+    "firebase_url": "https://propet-c1737-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "propet-c1737",
+    "storage_bucket": "propet-c1737.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448279408098:android:7117352b4ebc2d72faddbb",
+        "android_client_info": {
+          "package_name": "com.example.fcm1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBASZu1j9KB0RNI7KynSaTGfv5XzEEcqfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448279408098:android:959846bee55e1d64faddbb",
+        "android_client_info": {
+          "package_name": "com.example.propetsor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBASZu1j9KB0RNI7KynSaTGfv5XzEEcqfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448279408098:android:4a66ea117cea75b1faddbb",
+        "android_client_info": {
+          "package_name": "com.flutter.propet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBASZu1j9KB0RNI7KynSaTGfv5XzEEcqfk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
