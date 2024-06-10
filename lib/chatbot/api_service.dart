@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class APIService {
-  Future<String> sendMessage(String message) async {
+  Future<String> sendMessage(String message, String breed, String age) async {
     final response = await http.post(
       Uri.parse('http://211.48.213.165:5000/chat'),
       headers: <String, String>{
@@ -10,6 +10,8 @@ class APIService {
       },
       body: jsonEncode(<String, String>{
         'query': message,
+        'breed': breed,
+        'age': age,
       }),
     );
 

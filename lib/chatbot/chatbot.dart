@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'api_service.dart';
-import 'package:intl/intl.dart'; // 시간 포맷을 위해 사용
-import 'package:animated_text_kit/animated_text_kit.dart'; // animated_text_kit 패키지 추가
+import 'package:intl/intl.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ChatScreen extends StatefulWidget {
   final APIService apiService;
@@ -18,7 +18,10 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
   bool _isWaitingForResponse = false;
-  String _botResponse = ''; // 챗봇의 응답을 저장하는 변수
+  String _botResponse = '';
+  String? _breed;
+  String? _age;
+  String _currentStep = 'initial';
 
   FocusNode _focusNode = FocusNode();
 
@@ -27,9 +30,9 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _messages.add({
       'role': 'bot',
-      'message': '안녕하세요! 프로펫서 입니다!',
-      'timestamp': DateFormat('hh:mm a').format(DateTime.now()), // 초기 메시지의 시간 추가
-      'name': '프로펫서' // 봇의 이름
+      'message': '안녕하세요! 프로펫서 입니다! 질문을 입력해주세요.',
+      'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
+      'name': '프로펫서',
     });
   }
 
@@ -46,29 +49,69 @@ class _ChatScreenState extends State<ChatScreen> {
         _messages.add({
           'role': 'user',
           'message': message,
-          'timestamp': DateFormat('hh:mm a').format(DateTime.now()), // 사용자가 보낸 메시지의 시간 추가
-          'name': 'User' // 사용자의 이름
+          'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
+          'name': 'User',
         });
-        _isWaitingForResponse = true;
-        _botResponse = ''; // 챗봇의 응답 초기화
         _controller.clear();
         _focusNode.unfocus();
       });
 
-      try {
-        String response = await widget.apiService.sendMessage(message);
-        response = response.replaceAll(RegExp(r'- (참조|출처)\s*:\s*.*$|wiki'), '').trim();
+      switch (_currentStep) {
+        case 'initial':
+          setState(() {
+            _currentStep = 'awaiting_breed';
+          });
+          _addBotMessage('견종을 입력해주세요.');
+          break;
+        case 'awaiting_breed':
+          setState(() {
+            _breed = message;
+            _currentStep = 'awaiting_age';
+          });
+          _addBotMessage('나이를 입력해주세요.');
+          break;
+        case 'awaiting_age':
+          setState(() {
+            _age = message;
+            _currentStep = 'awaiting_message';
+          });
+          _isWaitingForResponse = true;
+          _botResponse = '';
 
-        setState(() {
-          _botResponse = response;
-          _isWaitingForResponse = false;
-        });
-      } catch (e) {
-        setState(() {
-          _isWaitingForResponse = false;
-        });
+          try {
+            String response = await widget.apiService.sendMessage(message, _breed!, _age!);
+            response = response.replaceAll(RegExp(r'- (참조|출처)\s*:\s*.*$|wiki'), '').trim();
+
+            setState(() {
+              _botResponse = response;
+              _isWaitingForResponse = false;
+              _messages.add({
+                'role': 'bot',
+                'message': _botResponse,
+                'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
+                'name': '프로펫서',
+              });
+              _botResponse = '';
+            });
+          } catch (e) {
+            setState(() {
+              _isWaitingForResponse = false;
+            });
+          }
+          break;
       }
     }
+  }
+
+  void _addBotMessage(String message) {
+    setState(() {
+      _messages.add({
+        'role': 'bot',
+        'message': message,
+        'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
+        'name': '프로펫서',
+      });
+    });
   }
 
   String _formatMessage(String message) {
@@ -110,7 +153,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   message['name']!,
                   style: TextStyle(
                     fontSize: 14,
-                    fontFamily: 'Geekble', // 이름 글꼴 변경
+                    fontFamily: 'Geekble',
                     color: Colors.grey[700],
                   ),
                 ),
@@ -125,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ? Text(
                   formattedMessage,
                   style: TextStyle(
-                    fontFamily: 'Omyu', // 메시지 내용 글꼴 변경
+                    fontFamily: 'Omyu',
                     color: isUserMessage ? Colors.white : Colors.black,
                     fontSize: 18,
                   ),
@@ -135,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     TyperAnimatedText(
                       formattedMessage,
                       textStyle: TextStyle(
-                        fontFamily: 'Omyu', // 애니메이션 메시지 내용 글꼴 변경
+                        fontFamily: 'Omyu',
                         color: Colors.black,
                         fontSize: 18,
                       ),
@@ -150,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Text(
                   message['timestamp']!,
                   style: TextStyle(
-                    fontFamily: 'Omyu', // 타임스탬프 글꼴 변경
+                    fontFamily: 'Omyu',
                     color: Colors.grey,
                     fontSize: 12,
                   ),
@@ -179,7 +222,7 @@ class _ChatScreenState extends State<ChatScreen> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 10), // 첫 멘트 위에 여백 추가
+            SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(8.0),
@@ -201,43 +244,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       '잠시만 기다려주세요..!!',
                       textStyle: TextStyle(
                         fontSize: 18,
-                        fontFamily: 'Omyu', // 힌트 텍스트 글꼴 변경
+                        fontFamily: 'Omyu',
                         fontStyle: FontStyle.italic,
                         color: Colors.black,
                       ),
                       speed: Duration(milliseconds: 100),
                     ),
                   ],
-                  repeatForever: true, // 애니메이션을 무한 반복
-                ),
-              ),
-            if (_botResponse.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AnimatedTextKit(
-                  animatedTexts: [
-                    TyperAnimatedText(
-                      _botResponse,
-                      textStyle: TextStyle(
-                        fontFamily: 'Omyu', // 애니메이션 메시지 내용 글꼴 변경
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
-                      speed: Duration(milliseconds: 100),
-                    ),
-                  ],
-                  totalRepeatCount: 1,
-                  onFinished: () {
-                    setState(() {
-                      _messages.add({
-                        'role': 'bot',
-                        'message': _botResponse,
-                        'timestamp': DateFormat('hh:mm a').format(DateTime.now()), // 봇이 보낸 메시지의 시간 추가
-                        'name': '프로펫서' // 봇의 이름
-                      });
-                      _botResponse = '';
-                    });
-                  },
+                  repeatForever: true,
                 ),
               ),
             Padding(
@@ -254,10 +268,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         fillColor: Colors.grey[100],
                         hintText: '프로펫서에게 지금 바로 질문해 보세요!',
                         hintStyle: TextStyle(
-                          fontFamily: 'Omyu', // 힌트 텍스트 글꼴 변경
+                          fontFamily: 'Omyu',
                           fontSize: 18,
-                          decoration: TextDecoration.underline, // 밑줄 추가
-                          decorationColor: Colors.grey, // 밑줄 색상 설정
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.grey,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
