@@ -36,8 +36,6 @@ void showNotification(RemoteMessage message) async {
   );
 }
 
-// FCM 토큰과 u_idx를 서버에 전송하는 함수
-// FCM 토큰과 u_idx를 서버에 전송하는 함수
 Future<void> sendTokenToServer(String token, String uIdx) async {
 
   print("token : " + token);
@@ -52,7 +50,7 @@ Future<void> sendTokenToServer(String token, String uIdx) async {
     },
     body: jsonEncode(<String, dynamic>{
       'token': token,
-      'u_idx': int.parse(uIdx),
+      'uidx': int.parse(uIdx),
     }),
   );
 
