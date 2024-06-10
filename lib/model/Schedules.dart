@@ -1,10 +1,10 @@
-class Schedules{
-
+class Schedules {
   int? sidx;
   String startTime;
   String endTime;
   String content;
   int uidx;
+  String ndate; // 수정된 부분
 
   Schedules({
     this.sidx,
@@ -12,9 +12,9 @@ class Schedules{
     required this.endTime,
     required this.content,
     required this.uidx,
+    required this.ndate,
   });
 
-  // JSON을 Users 객체로 변환하는 factory 생성자
   factory Schedules.fromJson(Map<String, dynamic> json) {
     return Schedules(
       sidx: json['sidx'],
@@ -22,17 +22,18 @@ class Schedules{
       endTime: json['endTime'],
       content: json['content'],
       uidx: json['uidx'],
+      ndate: json['ndate'],
     );
   }
 
-  // Object -> json으로 바꾸는 형태
-  Map<String, dynamic> toJson() => {
-    'sidx': sidx,
-    'startTime': startTime,
-    'endTime': endTime,
-    'content': content,
-    'uidx': uidx,
-  };
-
-
+  Map<String, dynamic> toJson() {
+    return {
+      'sidx': sidx,
+      'startTime': startTime,
+      'endTime': endTime,
+      'content': content,
+      'uidx': uidx,
+      'ndate': ndate,
+    };
+  }
 }

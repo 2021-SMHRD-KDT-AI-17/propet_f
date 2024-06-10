@@ -28,13 +28,14 @@ class _CalendarUserState extends State<CalendarUser> {
   @override
   void initState() {
     super.initState();
-    _loadSchedules();
+    _loadSchedulesByDate(selectedDate); // 초기 로드 시 현재 날짜의 일정 로드
   }
 
-  Future<void> _loadSchedules() async {
+  Future<void> _loadSchedulesByDate(DateTime date) async {
     String? uidx = await storage.read(key: 'uidx');
     if (uidx != null) {
-      final data = await _scheduleService.getSchedulesByUserId(int.parse(uidx));
+      final data = await _scheduleService.getSchedulesByDateAndUser(
+          int.parse(uidx), date.toIso8601String().split('T')[0]);
       setState(() {
         schedules = data;
       });
@@ -47,20 +48,22 @@ class _CalendarUserState extends State<CalendarUser> {
       endTime: scheduleData['endTime'],
       content: scheduleData['content'],
       uidx: 0,
+      ndate: DateTime.parse(scheduleData['ndate']).toIso8601String().split('T')[0], // ndate 필드 수정
     );
     await _scheduleService.createSchedule(schedule);
-    _loadSchedules();
+    _loadSchedulesByDate(selectedDate);
   }
 
   void _deleteSchedule(int sidx) async {
     await _scheduleService.deleteSchedule(sidx);
-    _loadSchedules();
+    _loadSchedulesByDate(selectedDate);
   }
 
   void onDaySelected(DateTime selectedDate, DateTime focusedDate) {
     setState(() {
       this.selectedDate = selectedDate;
     });
+    _loadSchedulesByDate(selectedDate);
   }
 
   @override

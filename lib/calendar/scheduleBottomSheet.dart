@@ -11,6 +11,7 @@ class ScheduleBottomSheet extends StatefulWidget {
 }
 
 class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
+  final TextEditingController _dateController = TextEditingController();
   final TextEditingController _startTimeController = TextEditingController();
   final TextEditingController _endTimeController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
@@ -38,6 +39,17 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
           ),
           child: Column(
             children: [
+              GestureDetector(
+                onTap: _selectDate,
+                child: AbsorbPointer(
+                  child: CustomTextField(
+                    label: '날짜',
+                    isTime: false,
+                    controller: _dateController,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.0),
               Row(
                 children: [
                   Expanded(
@@ -58,12 +70,10 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                 ],
               ),
               SizedBox(height: 16.0),
-              Expanded(
-                child: CustomTextField(
-                  label: '내용',
-                  isTime: false,
-                  controller: _contentController,
-                ),
+              CustomTextField(
+                label: '내용',
+                isTime: false,
+                controller: _contentController,
               ),
               SizedBox(height: 16.0),
               SizedBox(
@@ -93,8 +103,24 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     );
   }
 
+  void _selectDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _dateController.text = "${pickedDate.toLocal()}".split(' ')[0];
+      });
+    }
+  }
+
   void _onSavePressed() {
     final schedule = {
+      'ndate': _dateController.text,
       'startTime': _startTimeController.text,
       'endTime': _endTimeController.text,
       'content': _contentController.text,

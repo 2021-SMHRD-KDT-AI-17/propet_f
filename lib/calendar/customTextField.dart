@@ -34,8 +34,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
         ),
         SizedBox(height: 5.0),
-        Expanded(
-          flex: widget.isTime ? 0 : 1,
+        Container(
+          height: widget.isTime ? 60.0 : null,
           child: widget.isTime
               ? GestureDetector(
             onTap: _selectTime,
@@ -73,7 +73,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
             controller: widget.controller,
             cursorColor: Colors.black,
             maxLines: widget.isTime ? 1 : null,
-            expands: !widget.isTime,
             keyboardType: widget.isTime
                 ? TextInputType.number
                 : TextInputType.multiline,
