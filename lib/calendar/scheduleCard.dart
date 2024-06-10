@@ -33,28 +33,26 @@ class ScheduleCard extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _Time(
-                      startTime: startTime,
-                      endTime: endTime,
-                    ),
-                    VerticalDivider(
-                      color: Colors.black,
-                      thickness: 1.0,
-                      width: 16.0,
-                    ),
-                    _Content(
-                      content: content,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => onDelete(),
-                    ),
-                  ],
-                ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _Time(
+                    startTime: startTime,
+                    endTime: endTime,
+                  ),
+                  VerticalDivider(
+                    color: Colors.black,
+                    thickness: 1.0,
+                    width: 16.0,
+                  ),
+                  _Content(
+                    content: content,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => onDelete(),
+                  ),
+                ],
               ),
             ),
           ),
@@ -80,17 +78,19 @@ class _Time extends StatelessWidget {
     final textStyle = TextStyle(
       fontFamily: 'Omyu',
       color: Colors.black,
-      fontSize: 18.0,
+      fontSize: 14.0,
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$startTime ~ $endTime',
-          style: textStyle,
-        ),
-      ],
+    return Flexible(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$startTime ~ $endTime',
+            style: textStyle,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -105,7 +105,7 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Flexible(
       child: Center(
         child: Text(
           content,

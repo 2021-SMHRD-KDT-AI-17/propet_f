@@ -21,7 +21,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     return SafeArea(
       child: Container(
-        height: MediaQuery.of(context).size.height / 2 + bottomInset,
+        height: MediaQuery.of(context).size.height / 2 + 60,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(16)),

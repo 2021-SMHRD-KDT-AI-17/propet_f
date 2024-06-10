@@ -101,6 +101,7 @@ class _CalendarUserState extends State<CalendarUser> {
                     Positioned(
                       right: 0,
                       child: Container(
+                        height: 120,
                         width: 60,
                         margin: EdgeInsets.only(right: 5.0, top: 3.0),
                         decoration: BoxDecoration(
