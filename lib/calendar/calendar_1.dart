@@ -28,6 +28,7 @@ class _CalendarNonState extends State<CalendarNon> {
               MainCalendar(
                 selectedDate: selectedDate,
                 onDaySelected: onDaySelected,
+                events: {}, // 비회원일 때는 빈 이벤트 리스트 전달
               ),
               SizedBox(height: 30),
               TodayBanner(

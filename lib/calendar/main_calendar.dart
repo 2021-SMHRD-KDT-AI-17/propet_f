@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:propetsor/model/Schedules.dart';
 
 class MainCalendar extends StatelessWidget {
   final OnDaySelected onDaySelected;
   final DateTime selectedDate;
+  final Map<DateTime, List<Schedules>> events;
 
   MainCalendar({
     required this.onDaySelected,
     required this.selectedDate,
+    required this.events,
   });
 
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now();
-
     return Container(
       color: Colors.white,
       child: TableCalendar(
@@ -22,9 +23,12 @@ class MainCalendar extends StatelessWidget {
         date.year == selectedDate.year &&
             date.month == selectedDate.month &&
             date.day == selectedDate.day,
-        focusedDay: today,
+        focusedDay: selectedDate,
         firstDay: DateTime(2023, 1, 1),
         lastDay: DateTime(2026, 1, 1),
+        eventLoader: (date) {
+          return events[date] ?? [];
+        },
         headerStyle: HeaderStyle(
           titleCentered: true,
           formatButtonVisible: false,
