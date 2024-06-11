@@ -56,13 +56,13 @@ class _MainShopPageState extends State<MainShopPage> {
           _currentCategoryGoods = _goodsList; // 모든 상품
           break;
         case 1:
-          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 1 && goods.gidx <= 2).toList(); // 종합영양제
+          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 1 && goods.gidx <= 4).toList(); // 종합영양제
           break;
         case 2:
-          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 3 && goods.gidx <= 4).toList(); // 장/유산균
+          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 5 && goods.gidx <= 6).toList(); // 장/유산균
           break;
         case 3:
-          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 5 && goods.gidx <= 6).toList(); // 피부/모질
+          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 7 && goods.gidx <= 8).toList(); // 피부/모질
           break;
         default:
           _currentCategoryGoods = _goodsList; // 기본적으로 모든 상품
@@ -78,13 +78,17 @@ class _MainShopPageState extends State<MainShopPage> {
       case 2:
         return 'assets/images/2.png';
       case 3:
-        return 'assets/images/3.jpg';
+        return 'assets/images/3.png';
       case 4:
         return 'assets/images/4.png';
       case 5:
-        return 'assets/images/5.png';
+        return 'assets/images/5.jpg';
       case 6:
-        return 'assets/images/6.jpg';
+        return 'assets/images/6.png';
+      case 7:
+        return 'assets/images/7.png';
+      case 8:
+        return 'assets/images/8.jpg';
       default:
         return 'assets/images/default.png'; // 기본 이미지 경로
     }

@@ -22,13 +22,36 @@ class _CalendarUserState extends State<CalendarUser> {
   );
 
   final ScheduleService _scheduleService = ScheduleService();
-  List<Schedules> schedules = [];
+  Map<DateTime, List<Schedules>> schedules = {};
   final storage = FlutterSecureStorage();
 
   @override
   void initState() {
     super.initState();
-    _loadSchedulesByDate(selectedDate); // 초기 로드 시 현재 날짜의 일정 로드
+    _loadAllSchedules(); // 초기 로드 시 모든 일정 로드
+  }
+
+  Future<void> _loadAllSchedules() async {
+    String? uidx = await storage.read(key: 'uidx');
+    if (uidx != null) {
+      final data = await _scheduleService.getSchedulesByUserId(int.parse(uidx));
+      setState(() {
+        schedules = _groupSchedulesByDate(data);
+      });
+    }
+  }
+
+  Map<DateTime, List<Schedules>> _groupSchedulesByDate(List<Schedules> allSchedules) {
+    Map<DateTime, List<Schedules>> groupedSchedules = {};
+    for (var schedule in allSchedules) {
+      DateTime date = DateTime.parse(schedule.ndate);
+      date = DateTime(date.year, date.month, date.day); // 시간을 제거하여 날짜만 사용
+      if (groupedSchedules[date] == null) {
+        groupedSchedules[date] = [];
+      }
+      groupedSchedules[date]!.add(schedule);
+    }
+    return groupedSchedules;
   }
 
   Future<void> _loadSchedulesByDate(DateTime date) async {
@@ -37,7 +60,7 @@ class _CalendarUserState extends State<CalendarUser> {
       final data = await _scheduleService.getSchedulesByDateAndUser(
           int.parse(uidx), date.toIso8601String().split('T')[0]);
       setState(() {
-        schedules = data;
+        schedules[date] = data;
       });
     }
   }
@@ -48,15 +71,15 @@ class _CalendarUserState extends State<CalendarUser> {
       endTime: scheduleData['endTime'],
       content: scheduleData['content'],
       uidx: 0,
-      ndate: DateTime.parse(scheduleData['ndate']).toIso8601String().split('T')[0], // ndate 필드 수정
+      ndate: DateTime.parse(scheduleData['ndate']).toIso8601String().split('T')[0],
     );
     await _scheduleService.createSchedule(schedule);
-    _loadSchedulesByDate(selectedDate);
+    _loadAllSchedules(); // 새 일정을 추가한 후 모든 일정을 다시 로드
   }
 
   void _deleteSchedule(int sidx) async {
     await _scheduleService.deleteSchedule(sidx);
-    _loadSchedulesByDate(selectedDate);
+    _loadAllSchedules(); // 일정을 삭제한 후 모든 일정을 다시 로드
   }
 
   void onDaySelected(DateTime selectedDate, DateTime focusedDate) {
@@ -77,19 +100,20 @@ class _CalendarUserState extends State<CalendarUser> {
               MainCalendar(
                 selectedDate: selectedDate,
                 onDaySelected: onDaySelected,
+                events: schedules,
               ),
               TodayBanner(
                 selectedDate: selectedDate,
-                count: schedules.length,
+                count: schedules[selectedDate]?.length ?? 0,
               ),
               SizedBox(height: 6),
               Expanded(
                 child: Stack(
                   children: [
                     ListView.builder(
-                      itemCount: schedules.length,
+                      itemCount: schedules[selectedDate]?.length ?? 0,
                       itemBuilder: (context, index) {
-                        final schedule = schedules[index];
+                        final schedule = schedules[selectedDate]![index];
                         return ScheduleCard(
                           startTime: schedule.startTime,
                           endTime: schedule.endTime,
@@ -101,7 +125,7 @@ class _CalendarUserState extends State<CalendarUser> {
                     Positioned(
                       right: 0,
                       child: Container(
-                        height: 120,
+                        height: 82,
                         width: 60,
                         margin: EdgeInsets.only(right: 5.0, top: 3.0),
                         decoration: BoxDecoration(
