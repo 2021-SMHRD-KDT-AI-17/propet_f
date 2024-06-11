@@ -110,13 +110,17 @@ class ShopDetails extends StatelessWidget {
       case 2:
         return 'assets/images/2.png';
       case 3:
-        return 'assets/images/3.jpg';
+        return 'assets/images/3.png';
       case 4:
         return 'assets/images/4.png';
       case 5:
-        return 'assets/images/5.png';
+        return 'assets/images/5.jpg';
       case 6:
-        return 'assets/images/6.jpg';
+        return 'assets/images/6.png';
+      case 7:
+        return 'assets/images/7.png';
+      case 8:
+        return 'assets/images/8.jpg';
       default:
         return 'assets/images/default.png'; // 기본 이미지 경로
     }
