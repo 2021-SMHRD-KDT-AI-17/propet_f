@@ -113,7 +113,8 @@ class MyApp extends StatelessWidget {
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 useMaterial3: true,
               ),
-              home: const MainPage_2()
+              home: const MainPage_2(),
+            debugShowCheckedModeBanner: false, // 배너 숨기기
           );
         }else{//로그인전
           return MaterialApp(
@@ -123,7 +124,8 @@ class MyApp extends StatelessWidget {
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 useMaterial3: true,
               ),
-              home: StartScreen()
+              home: StartScreen(),
+              debugShowCheckedModeBanner: false, // 배너 숨기기
           );
         }
 

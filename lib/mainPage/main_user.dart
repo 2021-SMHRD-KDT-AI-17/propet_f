@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/main.dart';
 import 'package:propetsor/model/Pet.dart';
 import 'package:propetsor/mypage/mypetpage.dart';
@@ -35,7 +36,7 @@ class _MainUserState extends State<MainUser> {
     String? uidx = await storage.read(key: 'uidx');
 
     Response res = await dio.post(
-      "http://10.0.2.2:8089/boot/selectAllPet",
+      "${Config.chatUrl}/boot/selectAllPet",
       data: {"uidx": uidx},
       options: Options(
         headers: {

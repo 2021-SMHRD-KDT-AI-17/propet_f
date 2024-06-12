@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 
 class PetEnroll extends StatefulWidget {
@@ -40,7 +41,7 @@ class _PetEnrollState extends State<PetEnroll> {
 
     try {
       Response res = await dio.post(
-        'http://10.0.2.2:8089/boot/enroll',
+        '${Config.chatUrl}/boot/enroll',
         data: {'enrollPet': petData},
       );
 

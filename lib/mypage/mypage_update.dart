@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/login/login.dart';
 import 'package:propetsor/mainPage/main_2.dart'; // Replace with actual login page import
 import 'dart:convert';
@@ -48,7 +49,7 @@ class ProfileUpdate extends StatelessWidget {
   void updateMember(Map<String, String> member, BuildContext context) async {
     try {
       Response res = await dio.patch(
-        'http://10.0.2.2:8089/boot/update', // 요청 URL
+        '${Config.chatUrl}/boot/update', // 요청 URL
         data: jsonEncode({'updateMember': member}), // 요청 데이터
         options: Options(headers: {
           "Content-Type": "application/json",

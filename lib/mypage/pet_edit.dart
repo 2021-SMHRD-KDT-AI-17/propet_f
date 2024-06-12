@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 
 class PetEdit extends StatefulWidget {
@@ -68,7 +69,7 @@ class _PetEditState extends State<PetEdit> {
 
       try {
         Response res = await Dio().post(
-          'http://10.0.2.2:8089/boot/updatePet',
+          '${Config.chatUrl}/boot/updatePet',
           data: {'updatePet': _petData},
         );
 

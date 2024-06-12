@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/main.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class APIService {
     }
 
     final response = await http.post(
-      Uri.parse('http://192.168.219.49:5001/chat'),
+      Uri.parse('${Config.chatUrl}/chat'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -27,16 +28,10 @@ class APIService {
         'uidx': u_idx,
       }),
     );
-    print("답변 보냄------------------------------------");
-    print(response);
     if (response.statusCode == 200) {
-      print("respon------------------------------------");
-      print(response.body);
       return jsonDecode(response.body)['response'];
     } else {
       throw Exception('Failed to load response');
     }
-
-    print (response.body);
   }
 }

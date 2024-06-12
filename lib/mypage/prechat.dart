@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // 시간 포맷을 위해 사용
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 import '../main.dart'; // animated_text_kit 패키지 추가
 
@@ -115,7 +116,7 @@ class PreChat extends StatelessWidget {
     final dio = Dio();
     String? uidx = await storage.read(key: 'uidx');
     Response res = await dio.post(
-        'http://10.0.2.2:8089/boot/getQuestionList',
+        '${Config.chatUrl}/boot/getQuestionList',
         data: {"uidx": uidx, "qtf": chatData['q_tf']}
     );
 

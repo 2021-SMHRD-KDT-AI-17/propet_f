@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/model/Goods.dart';
 import 'shop_details.dart';
 
@@ -27,7 +28,7 @@ class _MainShopPageState extends State<MainShopPage> {
 
     try {
       Response res = await dio.get(
-        "http://10.0.2.2:8089/boot/selectAllGoods",
+        "${Config.chatUrl}/boot/selectAllGoods",
         options: Options(
           headers: {
             "Content-Type": "application/json",

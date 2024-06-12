@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/main.dart';
 import 'package:propetsor/mainPage/main_2.dart';
 import 'package:propetsor/mypage/pet_edit.dart';
@@ -36,7 +37,7 @@ class _MyPetPageState extends State<MyPetPage> {
     String? uidx = await storage.read(key: 'uidx');
 
     Response res = await dio.post(
-      "http://10.0.2.2:8089/boot/selectAllPet",
+      "${Config.chatUrl}/boot/selectAllPet",
       data: {"uidx": uidx},
       options: Options(
         headers: {
@@ -68,7 +69,7 @@ class _MyPetPageState extends State<MyPetPage> {
     print("--------------------");
     print(pets[index]["pidx"]);
     Response res = await dio.delete(
-      "http://10.0.2.2:8089/boot/deletePet",
+      "${Config.chatUrl}/boot/deletePet",
       data: jsonEncode({"pidx": pets[index]["pidx"]}),
       options: Options(headers: {
         "Content-Type": "application/json",

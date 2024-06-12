@@ -4,6 +4,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:propetsor/config/config.dart';
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -41,7 +43,7 @@ Future<void> sendTokenToServer(String token, String uIdx) async {
   print("token : " + token);
   print("u_idx: " + uIdx);
 
-  final url = Uri.parse('http://10.0.2.2:8089/boot/api/token');
+  final url = Uri.parse('${Config.chatUrl}/boot/api/token');
 
   final response = await http.post(
     url,

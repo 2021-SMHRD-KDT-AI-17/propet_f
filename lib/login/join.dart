@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/login/login.dart';
 import 'package:propetsor/model/Users.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -206,7 +207,7 @@ void joinMember(member, context) async {
   final dio = Dio();
 
   Response res = await dio.post(
-    'http://10.0.2.2:8089/boot/join', // 요청. url(경로)
+    '${Config.chatUrl}/boot/join', // 요청. url(경로)
     data: {'joinMember': member}, // 요쳥할 때 같이 보낼 데이터(json-key:value)
   );
 
