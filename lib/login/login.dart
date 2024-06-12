@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/login/join.dart';
 import 'package:propetsor/mainPage/main_1.dart';
 import 'package:propetsor/mainPage/main_2.dart';
@@ -266,7 +267,7 @@ void loginMember(Users member, BuildContext context) async {
 
   try {
     Response res = await dio.post(
-      'http://192.168.219.48:8089/boot/login',
+      '${Config.baseUrl}/boot/login',
       data: {
         'loginMember': member.toJson(),
       },

@@ -15,7 +15,7 @@ class APIService {
     }
 
     final response = await http.post(
-      Uri.parse('http://192.168.219.48:5001/chat'),
+      Uri.parse('http://192.168.219.49:5001/chat'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
