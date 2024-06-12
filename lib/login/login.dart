@@ -266,7 +266,7 @@ void loginMember(Users member, BuildContext context) async {
 
   try {
     Response res = await dio.post(
-      'http://10.0.2.2:8089/boot/login',
+      'http://192.168.219.48:8089/boot/login',
       data: {
         'loginMember': member.toJson(),
       },

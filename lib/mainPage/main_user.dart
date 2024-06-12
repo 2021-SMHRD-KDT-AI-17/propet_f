@@ -216,7 +216,7 @@ class _MainUserState extends State<MainUser> {
         ),
         child: ClipOval(
           child: Image.asset(
-            'assets/images/logo2.png',
+            'assets/images/여름.jpg',
             width: 150,
             height: 150,
             fit: BoxFit.cover,
