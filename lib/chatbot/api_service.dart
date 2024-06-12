@@ -4,7 +4,7 @@ import 'package:propetsor/main.dart';
 import 'package:provider/provider.dart';
 
 class APIService {
-  Future<String> sendMessage(String message, String breed, String age) async {
+  Future<String> sendMessage(String choose, String message, String breed, String age) async {
     String? uidx = await storage.read(key:"uidx");
     String u_idx;
 
@@ -15,22 +15,28 @@ class APIService {
     }
 
     final response = await http.post(
-      Uri.parse('http://211.48.213.165:5001/chat'),
+      Uri.parse('http://192.168.219.48:5001/chat'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, String>{
+        'choose':choose,
         'query': message,
         'breed': breed,
         'age': age,
         'uidx': u_idx,
       }),
     );
-
+    print("답변 보냄------------------------------------");
+    print(response);
     if (response.statusCode == 200) {
+      print("respon------------------------------------");
+      print(response.body);
       return jsonDecode(response.body)['response'];
     } else {
       throw Exception('Failed to load response');
     }
+
+    print (response.body);
   }
 }

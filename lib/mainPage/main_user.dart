@@ -47,6 +47,8 @@ class _MainUserState extends State<MainUser> {
     setState(() {
       pets = petModelFromJson(res.data.toString());
     });
+    String petsJson = jsonEncode(pets); // List<Map<String, String>>를 JSON 문자열로 변환
+    await storage.write(key: "pets", value: petsJson); // 변환된 JSON 문자열을 storage에 저장
   }
 
   @override
