@@ -28,7 +28,7 @@ class _CalendarUserState extends State<CalendarUser> {
   @override
   void initState() {
     super.initState();
-    _loadAllSchedules(); // 초기 로드 시 모든 일정 로드
+    _loadAllSchedules();
   }
 
   Future<void> _loadAllSchedules() async {
@@ -37,6 +37,9 @@ class _CalendarUserState extends State<CalendarUser> {
       final data = await _scheduleService.getSchedulesByUserId(int.parse(uidx));
       setState(() {
         schedules = _groupSchedulesByDate(data);
+        // 로그를 추가하여 데이터가 잘 로드되었는지 확인
+        print("전체 일정 데이터: $schedules");
+        _loadSchedulesByDate(selectedDate); // 선택된 날짜의 일정을 로드
       });
     }
   }
@@ -66,15 +69,18 @@ class _CalendarUserState extends State<CalendarUser> {
   }
 
   void _createSchedule(Map<String, dynamic> scheduleData) async {
-    Schedules schedule = Schedules(
-      startTime: scheduleData['startTime'],
-      endTime: scheduleData['endTime'],
-      content: scheduleData['content'],
-      uidx: 0,
-      ndate: DateTime.parse(scheduleData['ndate']).toIso8601String().split('T')[0],
-    );
-    await _scheduleService.createSchedule(schedule);
-    _loadAllSchedules(); // 새 일정을 추가한 후 모든 일정을 다시 로드
+    String? uidx = await storage.read(key: 'uidx');
+    if (uidx != null) {
+      Schedules schedule = Schedules(
+        startTime: scheduleData['startTime'],
+        endTime: scheduleData['endTime'],
+        content: scheduleData['content'],
+        uidx: int.parse(uidx),
+        ndate: DateTime.parse(scheduleData['ndate']).toIso8601String().split('T')[0],
+      );
+      await _scheduleService.createSchedule(schedule);
+      _loadAllSchedules(); // 새 일정을 추가한 후 모든 일정을 다시 로드
+    }
   }
 
   void _deleteSchedule(int sidx) async {

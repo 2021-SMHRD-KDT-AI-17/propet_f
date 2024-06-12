@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:propetsor/calendar/calendar_2.dart';
+
 import 'package:propetsor/chatbot/api_service.dart';
 import 'package:propetsor/chatbot/chatbot.dart';
 import 'package:propetsor/mainPage/main_user.dart';
@@ -23,7 +24,7 @@ class _GoogleBottomBarState extends State<MainPage_2> {
     MainUser(),
     ChatScreen(apiService: APIService()),
     MainShopPage(),
-    CalendarUser(),
+    CalendarUser(), // CalendarUser를 사용
     MyPage_2(),
   ];
 

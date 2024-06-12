@@ -86,6 +86,36 @@ class MainCalendar extends StatelessWidget {
             fontWeight: FontWeight.w600,
             color: Colors.black,
           ),
+          markersMaxCount: 1, // 각 날짜에 최대 1개의 마커만 표시
+          markerDecoration: BoxDecoration(
+            color: Colors.blue,
+            shape: BoxShape.circle,
+          ),
+        ),
+        calendarBuilders: CalendarBuilders(
+          markerBuilder: (context, date, events) {
+            if (events.isNotEmpty) {
+              return Positioned(
+                right: 1,
+                bottom: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all(6.0),
+                  child: Text(
+                    '${events.length}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              );
+            }
+            return SizedBox.shrink();
+          },
         ),
       ),
     );
