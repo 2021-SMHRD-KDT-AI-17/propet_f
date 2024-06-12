@@ -37,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _messages.add({
       'role': 'bot',
-      'message': '안녕하세요! 프로펫서 입니다! 질문을 입력해주세요.',
+      'message': '안녕하세요! 프로펫서 입니다! 질문을 입력해주세요. ',
       'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
       'name': '프로펫서',
     });
@@ -196,122 +196,163 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return buffer.toString().trim();
   }
-
   Widget _buildMessage(Map<String, String> message) {
     bool isUserMessage = message['role'] == 'user';
     bool isFirstMessage = message == _messages.first;
     String formattedMessage = _formatMessage(message['message']!);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment:
-          isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+    return Column(
+      crossAxisAlignment:
+      isUserMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        if (!isUserMessage)
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: CircleAvatar(
-              backgroundColor: Colors.deepPurple,
-              backgroundImage: AssetImage('assets/images/logo2.png'),
-              radius: 20,
-            ),
-          ),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: isUserMessage
-                ? CrossAxisAlignment.end
-                : CrossAxisAlignment.start,
-            children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment:
+          isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: [
+            if (!isUserMessage)
               Padding(
-                padding: const EdgeInsets.only(bottom: 2.0),
-                child: Text(
-                  message['name']!,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'Geekble',
-                    color: Colors.grey[700],
-                  ),
+                padding: const EdgeInsets.only(right: 8.0),
+                child: CircleAvatar(
+                  backgroundColor: Colors.deepPurple,
+                  backgroundImage: AssetImage('assets/images/logo2.png'),
+                  radius: 20,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color:
-                      isUserMessage ? Colors.deepPurple[300] : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: isFirstMessage || isUserMessage
-                    ? Text(
-                        formattedMessage,
-                        style: TextStyle(
-                          fontFamily: 'Omyu',
-                          color: isUserMessage ? Colors.white : Colors.black,
-                          fontSize: 18,
-                        ),
-                      )
-                    : AnimatedTextKit(
-                        animatedTexts: [
-                          TyperAnimatedText(
-                            formattedMessage,
-                            textStyle: TextStyle(
-                              fontFamily: 'Omyu',
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-                            speed: Duration(milliseconds: 100),
-                          ),
-                        ],
-                        totalRepeatCount: 1,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: isUserMessage
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2.0),
+                    child: Text(
+                      message['name']!,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Geekble',
+                        color: Colors.grey[700],
                       ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text(
-                  message['timestamp']!,
-                  style: TextStyle(
-                    fontFamily: 'Omyu',
-                    color: Colors.grey,
-                    fontSize: 12,
+                    ),
                   ),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isUserMessage ? Colors.deepPurple[300] : Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: isFirstMessage || isUserMessage
+                        ? Text(
+                      formattedMessage,
+                      style: TextStyle(
+                        fontFamily: 'Omyu',
+                        color: isUserMessage ? Colors.white : Colors.black,
+                        fontSize: 18,
+                      ),
+                    )
+                        : AnimatedTextKit(
+                      animatedTexts: [
+                        TyperAnimatedText(
+                          formattedMessage,
+                          textStyle: TextStyle(
+                            fontFamily: 'Omyu',
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                          speed: Duration(milliseconds: 100),
+                        ),
+                      ],
+                      totalRepeatCount: 1,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      message['timestamp']!,
+                      style: TextStyle(
+                        fontFamily: 'Omyu',
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isUserMessage)
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: CircleAvatar(
+                  backgroundColor: Colors.deepPurple,
+                  backgroundImage: AssetImage('assets/images/user_avatar.png'),
+                  radius: 20,
                 ),
               ),
-              if (_showInitialButtons ) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        _handleButtonPress(); // 첫 번째 버튼 클릭 시 동작
-                        _choose = "1";
-                      },
-                      child: Text('정보'),
+          ],
+        ),
+        if (_showInitialButtons)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 100, // 원하는 가로 크기 설정
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _handleButtonPress(); // 첫 번째 버튼 클릭 시 동작
+                      _choose = "1";
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        _handleButtonPress(); // 두 번째 버튼 클릭 시 동작
-                        _choose = "2";
-                      },
-                      child: Text('추천'),
+                    child: Text(
+                      '애견정보',
+                      style: TextStyle(
+                        fontFamily: 'Omyu', // 폰트 패밀리 설정
+                        fontSize: 16, // 폰트 크기 설정
+                      ),
                     ),
-                  ],
+                  ),
+                ),
+                SizedBox(width: 5),
+                SizedBox(
+                  width: 100, // 원하는 가로 크기 설정
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _handleButtonPress(); // 두 번째 버튼 클릭 시 동작
+                      _choose = "2";
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: Text(
+                      '상품추천',
+                      style: TextStyle(
+                        fontFamily: 'Omyu', // 폰트 패밀리 설정
+                        fontSize: 16, // 폰트 크기 설정
+                      ),
+                    ),
+                  ),
                 ),
               ],
-            ],
-          ),
-        ),
-        if (isUserMessage)
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: CircleAvatar(
-              backgroundColor: Colors.deepPurple,
-              backgroundImage: AssetImage('assets/images/user_avatar.png'),
-              radius: 20,
             ),
           ),
       ],
     );
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
