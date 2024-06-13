@@ -6,36 +6,36 @@ import 'package:provider/provider.dart';
 
 class APIService {
   Future<String> sendMessage(String choose, String message, String breed, String age) async {
-    String? uidx = await storage.read(key:"uidx");
-    String u_idx;
+    String? uidx = await storage.read(key: "uidx");
+    String u_idx = uidx ?? "1";
 
-    if (uidx != null){
-      u_idx = uidx;
-    }else{
-      u_idx = "1";
-    }
+    print("메서드 실행은 됨ㅋ-------------------------------");
 
+    print(choose + "message" + message+"breed" + breed + "age" +age);
     final response = await http.post(
       Uri.parse('${Config.chatUrl}'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Connection': 'keep-alive',
       },
       body: jsonEncode(<String, String>{
-        'choose':choose,
+        'choose': choose,
         'query': message,
         'breed': breed,
         'age': age,
         'uidx': u_idx,
       }),
-    );
+    ).timeout(Duration(seconds: 30));  // 타임아웃 설정
 
     print("*-*-*-*-*-*-*-*-*-*-*-*-");
-    print(jsonDecode(response.body));
+    print(response.body);
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      // JSON 응답을 문자열로 변환
+      var jsonResponse = jsonDecode(response.body);
+      return jsonResponse; // 서버에서 "response" 키에 해당하는 값을 반환
     } else {
-      throw Exception('Failed to load response');
+      throw Exception('Failed to load response with status code: ${response.statusCode}');
     }
   }
 }
