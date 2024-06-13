@@ -41,7 +41,7 @@ class _PetEnrollState extends State<PetEnroll> {
 
     try {
       Response res = await dio.post(
-        '${Config.chatUrl}/boot/enroll',
+        '${Config.baseUrl}/boot/enroll',
         data: {'enrollPet': petData},
       );
 

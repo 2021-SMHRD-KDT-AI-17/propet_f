@@ -69,7 +69,7 @@ class _PetEditState extends State<PetEdit> {
 
       try {
         Response res = await Dio().post(
-          '${Config.chatUrl}/boot/updatePet',
+          '${Config.baseUrl}/boot/updatePet',
           data: {'updatePet': _petData},
         );
 

@@ -43,7 +43,7 @@ Future<void> sendTokenToServer(String token, String uIdx) async {
   print("token : " + token);
   print("u_idx: " + uIdx);
 
-  final url = Uri.parse('${Config.chatUrl}/boot/api/token');
+  final url = Uri.parse('${Config.baseUrl}/boot/api/token');
 
   final response = await http.post(
     url,

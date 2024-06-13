@@ -28,7 +28,7 @@ class _MainShopPageState extends State<MainShopPage> {
 
     try {
       Response res = await dio.get(
-        "${Config.chatUrl}/boot/selectAllGoods",
+        "${Config.baseUrl}/boot/selectAllGoods",
         options: Options(
           headers: {
             "Content-Type": "application/json",

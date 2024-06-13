@@ -11,7 +11,7 @@ class ScheduleService {
     final uidx = await storage.read(key: 'uidx');
     schedule.uidx = int.parse(uidx!);
     await dio.post(
-      '${Config.chatUrl}/boot/schedulesCreate',
+      '${Config.baseUrl}/boot/schedulesCreate',
       data: schedule.toJson(),
       options: Options(headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ class ScheduleService {
 
   Future<List<Schedules>> getAllSchedules() async {
     final response = await dio.get(
-      '${Config.chatUrl}/boot/getAllSchedules',
+      '${Config.baseUrl}/boot/getAllSchedules',
       options: Options(headers: {
         "Content-Type": "application/json",
       }),
@@ -33,7 +33,7 @@ class ScheduleService {
 
   Future<List<Schedules>> getSchedulesByUserId(int uidx) async {
     final response = await dio.get(
-      '${Config.chatUrl}/boot/getSchedules/user/$uidx',
+      '${Config.baseUrl}/boot/getSchedules/user/$uidx',
       options: Options(headers: {
         "Content-Type": "application/json",
       }),
@@ -45,7 +45,7 @@ class ScheduleService {
 
   Future<List<Schedules>> getSchedulesByDateAndUser(int uidx, String ndate) async {
     final response = await dio.get(
-      '${Config.chatUrl}/boot/getSchedulesByDateAndUser/$uidx',
+      '${Config.baseUrl}/boot/getSchedulesByDateAndUser/$uidx',
       queryParameters: {'ndate': ndate},
       options: Options(headers: {
         "Content-Type": "application/json",
@@ -58,7 +58,7 @@ class ScheduleService {
 
   Future<void> deleteSchedule(int id) async {
     await dio.delete(
-      '${Config.chatUrl}/boot/deleteSchedules/$id',
+      '${Config.baseUrl}/boot/deleteSchedules/$id',
       options: Options(headers: {
         "Content-Type": "application/json",
       }),

@@ -207,7 +207,7 @@ void joinMember(member, context) async {
   final dio = Dio();
 
   Response res = await dio.post(
-    '${Config.chatUrl}/boot/join', // 요청. url(경로)
+    '${Config.baseUrl}/boot/join', // 요청. url(경로)
     data: {'joinMember': member}, // 요쳥할 때 같이 보낼 데이터(json-key:value)
   );
 

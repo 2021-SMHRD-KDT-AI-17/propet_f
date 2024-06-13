@@ -116,7 +116,7 @@ class PreChat extends StatelessWidget {
     final dio = Dio();
     String? uidx = await storage.read(key: 'uidx');
     Response res = await dio.post(
-        '${Config.chatUrl}/boot/getQuestionList',
+        '${Config.baseUrl}/boot/getQuestionList',
         data: {"uidx": uidx, "qtf": chatData['q_tf']}
     );
 

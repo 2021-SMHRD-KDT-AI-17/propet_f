@@ -37,7 +37,7 @@ class _MyPetPageState extends State<MyPetPage> {
     String? uidx = await storage.read(key: 'uidx');
 
     Response res = await dio.post(
-      "${Config.chatUrl}/boot/selectAllPet",
+      "${Config.baseUrl}/boot/selectAllPet",
       data: {"uidx": uidx},
       options: Options(
         headers: {
@@ -69,7 +69,7 @@ class _MyPetPageState extends State<MyPetPage> {
     print("--------------------");
     print(pets[index]["pidx"]);
     Response res = await dio.delete(
-      "${Config.chatUrl}/boot/deletePet",
+      "${Config.baseUrl}/boot/deletePet",
       data: jsonEncode({"pidx": pets[index]["pidx"]}),
       options: Options(headers: {
         "Content-Type": "application/json",

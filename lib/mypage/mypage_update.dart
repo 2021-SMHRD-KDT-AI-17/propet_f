@@ -49,7 +49,7 @@ class ProfileUpdate extends StatelessWidget {
   void updateMember(Map<String, String> member, BuildContext context) async {
     try {
       Response res = await dio.patch(
-        '${Config.chatUrl}/boot/update', // 요청 URL
+        '${Config.baseUrl}/boot/update', // 요청 URL
         data: jsonEncode({'updateMember': member}), // 요청 데이터
         options: Options(headers: {
           "Content-Type": "application/json",
