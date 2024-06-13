@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/model/Schedules.dart';
 
 class ScheduleService {
@@ -10,7 +11,7 @@ class ScheduleService {
     final uidx = await storage.read(key: 'uidx');
     schedule.uidx = int.parse(uidx!);
     await dio.post(
-      'http://10.0.2.2:8089/boot/schedulesCreate',
+      '${Config.chatUrl}/boot/schedulesCreate',
       data: schedule.toJson(),
       options: Options(headers: {
         "Content-Type": "application/json",
@@ -20,7 +21,7 @@ class ScheduleService {
 
   Future<List<Schedules>> getAllSchedules() async {
     final response = await dio.get(
-      'http://10.0.2.2:8089/boot/getAllSchedules',
+      '${Config.chatUrl}/boot/getAllSchedules',
       options: Options(headers: {
         "Content-Type": "application/json",
       }),
@@ -32,7 +33,7 @@ class ScheduleService {
 
   Future<List<Schedules>> getSchedulesByUserId(int uidx) async {
     final response = await dio.get(
-      'http://10.0.2.2:8089/boot/getSchedules/user/$uidx',
+      '${Config.chatUrl}/boot/getSchedules/user/$uidx',
       options: Options(headers: {
         "Content-Type": "application/json",
       }),
@@ -44,7 +45,7 @@ class ScheduleService {
 
   Future<List<Schedules>> getSchedulesByDateAndUser(int uidx, String ndate) async {
     final response = await dio.get(
-      'http://10.0.2.2:8089/boot/getSchedulesByDateAndUser/$uidx',
+      '${Config.chatUrl}/boot/getSchedulesByDateAndUser/$uidx',
       queryParameters: {'ndate': ndate},
       options: Options(headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ class ScheduleService {
 
   Future<void> deleteSchedule(int id) async {
     await dio.delete(
-      'http://10.0.2.2:8089/boot/deleteSchedules/$id',
+      '${Config.chatUrl}/boot/deleteSchedules/$id',
       options: Options(headers: {
         "Content-Type": "application/json",
       }),
