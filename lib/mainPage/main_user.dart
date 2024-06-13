@@ -36,7 +36,7 @@ class _MainUserState extends State<MainUser> {
     String? uidx = await storage.read(key: 'uidx');
 
     Response res = await dio.post(
-      "${Config.chatUrl}/boot/selectAllPet",
+      "${Config.baseUrl}/boot/selectAllPet",
       data: {"uidx": uidx},
       options: Options(
         headers: {

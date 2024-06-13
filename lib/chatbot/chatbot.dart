@@ -114,8 +114,6 @@ class _ChatScreenState extends State<ChatScreen> {
             try {
               String response =
               await widget.apiService.sendMessage(_choose!, _query!, _breed!, _age!);
-              print("================================api");
-              print(response);
               setState(() {
                 _botResponse = response;
                 _isWaitingForResponse = false;
@@ -128,6 +126,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 _botResponse = '';
               });
             } catch (e) {
+              print("e===============================");
+              print(e);
               setState(() {
                 _isWaitingForResponse = false;
               });
