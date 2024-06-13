@@ -111,40 +111,6 @@ class _ChatScreenState extends State<ChatScreen> {
             _isWaitingForResponse = true;
             _botResponse = '';
 
-            try {
-              String response =
-              await widget.apiService.sendMessage(_choose!, _query!, _breed!, _age!);
-              setState(() {
-                _botResponse = response;
-                _isWaitingForResponse = false;
-                _messages.add({
-                  'role': 'bot',
-                  'message': _botResponse,
-                  'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
-                  'name': '프로펫서',
-                });
-                _botResponse = '';
-              });
-            } catch (e) {
-              print("e===============================");
-              print(e);
-              setState(() {
-                _isWaitingForResponse = false;
-              });
-            }
-            break;
-        }
-      } else {
-        // member가 null이 아닌 경우, 견종과 나이를 묻는 단계를 건너뜁니다.
-        if (_currentStep == 'initial') {
-          setState(() {
-            _query = message;
-            _currentStep = 'awaiting_message';
-          });
-          _isWaitingForResponse = true;
-          _botResponse = '';
-
-          try {
             String response =
             await widget.apiService.sendMessage(_choose!,_query!, _breed!, _age!);
             print("================================api");
@@ -160,11 +126,33 @@ class _ChatScreenState extends State<ChatScreen> {
               });
               _botResponse = '';
             });
-          } catch (e) {
-            setState(() {
-              _isWaitingForResponse = false;
+            break;
+        }
+      } else {
+        // member가 null이 아닌 경우, 견종과 나이를 묻는 단계를 건너뜁니다.
+        if (_currentStep == 'initial') {
+          setState(() {
+            _query = message;
+            _currentStep = 'awaiting_message';
+          });
+          _isWaitingForResponse = true;
+          _botResponse = '';
+
+          String response =
+          await widget.apiService.sendMessage(_choose!,_query!, _breed!, _age!);
+          print("================================api");
+          print(response);
+          setState(() {
+            _botResponse = response;
+            _isWaitingForResponse = false;
+            _messages.add({
+              'role': 'bot',
+              'message': _botResponse,
+              'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
+              'name': '프로펫서',
             });
-          }
+            _botResponse = '';
+          });
         }
       }
     }
