@@ -57,7 +57,7 @@ class _MainShopPageState extends State<MainShopPage> {
           _currentCategoryGoods = _goodsList; // 모든 상품
           break;
         case 1:
-          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 1 && goods.gidx <= 4).toList(); // 종합영양제
+          _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 1 && goods.gidx <= 4).toList(); // 눈/눈물
           break;
         case 2:
           _currentCategoryGoods = _goodsList.where((goods) => goods.gidx >= 5 && goods.gidx <= 6).toList(); // 장/유산균
@@ -116,7 +116,7 @@ class _MainShopPageState extends State<MainShopPage> {
               ),
               Tab(
                 child: Text(
-                  '종합영양제',
+                  '눈/눈물',
                   style: TextStyle(fontFamily: 'Geekble'),
                 ),
               ),
