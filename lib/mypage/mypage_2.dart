@@ -179,8 +179,8 @@ class _TopPortion extends StatelessWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: SizedBox(
-            width: 150,
-            height: 150,
+            width: 200,
+            height: 200,
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -196,8 +196,8 @@ class _TopPortion extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom: 0,
-                  right: 0,
+                  bottom: 12,
+                  right: 12,
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(

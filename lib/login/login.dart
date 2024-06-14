@@ -14,29 +14,28 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
-
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: isSmallScreen
-            ? Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            _Logo(),
-            _FormContent(),
-          ],
-        )
-            : Container(
-          padding: const EdgeInsets.all(32.0),
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Row(
-            children: const [
-              Expanded(child: _Logo()),
-              Expanded(
-                child: Center(child: _FormContent()),
+      body: GestureDetector(
+        onTap: () {
+          // 화면의 다른 부분을 누를 때 키보드 닫기
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(32.0),
+              constraints: BoxConstraints(maxWidth: 800),
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const _Logo(),
+                  const SizedBox(height: 20), // 로고와 입력 창 사이 간격 추가
+                  const _FormContent(),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -56,8 +55,8 @@ class _Logo extends StatelessWidget {
       children: [
         Image.asset(
           'assets/images/logo1.png',
-          width: isSmallScreen ? 200 : 400,
-          height: isSmallScreen ? 200 : 400,
+          width: 300,
+          height: 300,
         ),
       ],
     );
@@ -116,7 +115,7 @@ Widget _buildSocialLoginButton({
       child: Center(
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white, // 텍스트 색상
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -144,115 +143,118 @@ class __FormContentState extends State<_FormContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 300),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: idCon,
-              decoration: const InputDecoration(
-                labelText: 'ID',
-                labelStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
-                hintText: 'Enter your ID',
-                hintStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
-                prefixIcon: Icon(Icons.perm_identity),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+    return Center( // Center로 감싸서 중앙 정렬
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 300),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center, // 추가된 부분: 가로 정렬 중앙
+            children: [
+              TextFormField(
+                controller: idCon,
+                decoration: const InputDecoration(
+                  labelText: 'ID',
+                  labelStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
+                  hintText: 'Enter your ID',
+                  hintStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
+                  prefixIcon: Icon(Icons.perm_identity),
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                ),
               ),
-            ),
-            _gap(),
-            TextFormField(
-              controller: pwCon,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                if (value.length < 0) {
-                  return 'Password must be at least 0 characters';
-                }
-                return null;
-              },
-              obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                labelStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
-                hintText: 'Enter your password',
-                hintStyle: TextStyle(fontFamily: 'Omyu', fontSize: 16),
-                prefixIcon: const Icon(Icons.lock_outline_rounded),
-                border: const OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                suffixIcon: IconButton(
-                  icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
+              _gap(),
+              TextFormField(
+                controller: pwCon,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  if (value.length < 0) {
+                    return 'Password must be at least 0 characters';
+                  }
+                  return null;
+                },
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: const TextStyle(fontFamily: 'Omyu', fontSize: 16),
+                  hintText: 'Enter your password',
+                  hintStyle: const TextStyle(fontFamily: 'Omyu', fontSize: 16),
+                  prefixIcon: const Icon(Icons.lock_outline_rounded),
+                  border: const OutlineInputBorder(),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  suffixIcon: IconButton(
+                    icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              _gap(),
+              _buildSocialLoginButtons(), // SNS 로그인 버튼 추가
+              _gap(),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent), // 배경색
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      '로그인',
+                      style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
+                    ),
+                  ),
                   onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
+                    if (_formKey.currentState?.validate() ?? false) {
+                      // 로그인 로직 처리
+                      Users m = Users.login(id: idCon.text, pw: pwCon.text);
+                      loginMember(m, context);
+                    }
                   },
                 ),
               ),
-            ),
-            _gap(),
-            _buildSocialLoginButtons(), // SNS 로그인 버튼 추가
-            _gap(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent), // 배경색
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+              const SizedBox(height: 5), // 로그인 버튼과 회원가입 버튼 사이 간격 추가
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // 배경색
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.black), // 텍스트 색상
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    // 추가적인 로직 처리
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => JoinPage()));
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      '회원가입',
+                      style: TextStyle(fontSize: 16, fontFamily: 'Geekble', color: Colors.white),
                     ),
                   ),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    '로그인',
-                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
-                  ),
-                ),
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // 로그인 로직 처리
-                    Users m = Users.login(id: idCon.text, pw: pwCon.text);
-                    loginMember(m, context);
-                  }
-                },
               ),
-            ),
-            SizedBox(height: 5), // 로그인 버튼과 회원가입 버튼 사이 간격 추가
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // 배경색
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black), // 텍스트 색상
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  // 추가적인 로직 처리
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => JoinPage()));
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    '회원가입',
-                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble', color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

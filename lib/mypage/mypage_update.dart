@@ -21,25 +21,21 @@ class ProfileUpdate extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: isSmallScreen
-            ? Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            _Logo(),
-            _FormContent(),
-          ],
-        )
-            : Container(
-          padding: const EdgeInsets.all(32.0),
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Row(
-            children: const [
-              Expanded(child: _Logo()),
-              Expanded(
-                child: Center(child: _FormContent()),
-              ),
-            ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus(); // 화면의 다른 부분을 터치하면 키보드가 내려감
+        },
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                _Logo(),
+                SizedBox(height: 16), // 로고와 입력 창 사이 간격 추가
+                _FormContent(),
+              ],
+            ),
           ),
         ),
       ),
@@ -220,7 +216,7 @@ class __FormContentState extends State<_FormContent> {
                 child: const Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
-                    '업데이트!',
+                    '업데이트',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),

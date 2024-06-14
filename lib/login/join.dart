@@ -10,29 +10,28 @@ class JoinPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
-
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: isSmallScreen
-            ? Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            _Logo(),
-            _FormContent(),
-          ],
-        )
-            : Container(
-          padding: const EdgeInsets.all(32.0),
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Row(
-            children: const [
-              Expanded(child: _Logo()),
-              Expanded(
-                child: Center(child: _FormContent()),
+      body: GestureDetector(
+        onTap: () {
+          // 화면의 다른 부분을 누를 때 키보드 닫기
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(32.0),
+              constraints: BoxConstraints(maxWidth: 800),
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const _Logo(),
+                  const SizedBox(height: 20), // 로고와 입력 창 사이 간격 추가
+                  const _FormContent(),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -45,15 +44,13 @@ class _Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Image.asset(
           'assets/images/logo1.png',
-          width: isSmallScreen ? 200 : 400,
-          height: isSmallScreen ? 200 : 400,
+          width: 300,
+          height: 300,
         ),
       ],
     );
@@ -68,8 +65,6 @@ class _FormContent extends StatefulWidget {
 }
 
 class __FormContentState extends State<_FormContent> {
-  bool _isPasswordVisible = false;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController idCon = TextEditingController();
@@ -79,122 +74,125 @@ class __FormContentState extends State<_FormContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 300),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: idCon,
-              decoration: InputDecoration(
-                labelText: 'ID',
-                labelStyle: TextStyle(fontFamily: 'Omyu'),
-                hintText: 'Enter your ID',
-                hintStyle: TextStyle(fontFamily: 'Omyu'),
-                prefixIcon: Icon(Icons.perm_identity),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+    return Center( // Center로 감싸서 중앙 정렬
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 300),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center, // 추가된 부분: 가로 정렬 중앙
+            children: [
+              TextFormField(
+                controller: idCon,
+                decoration: InputDecoration(
+                  labelText: 'ID',
+                  labelStyle: TextStyle(fontFamily: 'Omyu'),
+                  hintText: 'Enter your ID',
+                  hintStyle: TextStyle(fontFamily: 'Omyu'),
+                  prefixIcon: Icon(Icons.perm_identity),
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                ),
               ),
-            ),
-            _gap(),
-            TextFormField(
-              controller: pwCon,
-              decoration: InputDecoration(
-                labelText: 'PassWord',
-                labelStyle: TextStyle(fontFamily: 'Omyu'),
-                hintText: 'Enter your PassWord',
-                hintStyle: TextStyle(fontFamily: 'Omyu'),
-                prefixIcon: Icon(Icons.lock_outline_rounded),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              _gap(),
+              TextFormField(
+                controller: pwCon,
+                decoration: InputDecoration(
+                  labelText: 'PassWord',
+                  labelStyle: TextStyle(fontFamily: 'Omyu'),
+                  hintText: 'Enter your PassWord',
+                  hintStyle: TextStyle(fontFamily: 'Omyu'),
+                  prefixIcon: Icon(Icons.lock_outline_rounded),
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                ),
               ),
-            ),
-            _gap(),
-            TextFormField(
-              controller: nameCon,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                labelStyle: TextStyle(fontFamily: 'Omyu'),
-                hintText: 'Enter your Name',
-                hintStyle: TextStyle(fontFamily: 'Omyu'),
-                prefixIcon: Icon(Icons.drive_file_rename_outline),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              _gap(),
+              TextFormField(
+                controller: nameCon,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  labelStyle: TextStyle(fontFamily: 'Omyu'),
+                  hintText: 'Enter your Name',
+                  hintStyle: TextStyle(fontFamily: 'Omyu'),
+                  prefixIcon: Icon(Icons.drive_file_rename_outline),
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                ),
               ),
-            ),
-            _gap(),
-            TextFormField(
-              controller: phoneCon,
-              decoration: InputDecoration(
-                labelText: 'Phone',
-                labelStyle: TextStyle(fontFamily: 'Omyu'),
-                hintText: 'Enter your Phone',
-                hintStyle: TextStyle(fontFamily: 'Omyu'),
-                prefixIcon: Icon(Icons.phone),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              _gap(),
+              TextFormField(
+                controller: phoneCon,
+                decoration: InputDecoration(
+                  labelText: 'Phone',
+                  labelStyle: TextStyle(fontFamily: 'Omyu'),
+                  hintText: 'Enter your Phone',
+                  hintStyle: TextStyle(fontFamily: 'Omyu'),
+                  prefixIcon: Icon(Icons.phone),
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                ),
               ),
-            ),
-            _gap(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent), // 배경색
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+              _gap(),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurpleAccent), // 배경색
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Users m = Users.join(
+                      id: idCon.text,
+                      uname: nameCon.text,
+                      uphone: phoneCon.text,
+                      pw: pwCon.text,
+                    );
+                    joinMember(m, context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      '회원가입 완료',
+                      style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
                     ),
                   ),
                 ),
-                onPressed: () {
-                  Users m = Users.join(
-                    id: idCon.text,
-                    uname: nameCon.text,
-                    uphone: phoneCon.text,
-                    pw: pwCon.text,
-                  );
-                  joinMember(m, context);
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    '회원가입 완료',
-                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
-                  ),
-                ),
               ),
-            ),
-            const SizedBox(height: 5),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // 배경색
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+              const SizedBox(height: 5),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // 배경색
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // 텍스트 색상
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context); // 취소 버튼 눌렀을 때 이전 화면으로 돌아가기
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      '취소',
+                      style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
                     ),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pop(context); // 취소 버튼 눌렀을 때 이전 화면으로 돌아가기
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    '취소',
-                    style: TextStyle(fontSize: 16, fontFamily: 'Geekble'),
-                  ),
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

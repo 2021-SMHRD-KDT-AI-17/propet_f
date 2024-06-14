@@ -5,11 +5,13 @@ class CustomTextField extends StatefulWidget {
   final String label;
   final bool isTime;
   final TextEditingController controller;
+  final int maxLines; // 추가된 maxLines 속성
 
   const CustomTextField({
     required this.label,
     required this.isTime,
     required this.controller,
+    this.maxLines = 1, // 기본 maxLines 설정
     Key? key,
   }) : super(key: key);
 
@@ -35,7 +37,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         SizedBox(height: 5.0),
         Container(
-          height: widget.isTime ? 60.0 : null,
           child: widget.isTime
               ? GestureDetector(
             onTap: _selectTime,
@@ -72,7 +73,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : TextFormField(
             controller: widget.controller,
             cursorColor: Colors.black,
-            maxLines: widget.isTime ? 1 : null,
+            maxLines: widget.maxLines,
             keyboardType: widget.isTime
                 ? TextInputType.number
                 : TextInputType.multiline,

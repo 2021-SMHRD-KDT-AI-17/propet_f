@@ -269,7 +269,7 @@ class _TopPortion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 175, // 변경된 높이
+      height: 280, // 변경된 높이
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),

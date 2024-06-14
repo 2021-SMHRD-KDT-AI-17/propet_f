@@ -9,65 +9,73 @@ class MainNon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Container(
-          height: 500, // 박스의 높이 증가
-          width: 350, // 박스의 너비 증가
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 5,
-                blurRadius: 10,
-                offset: Offset(0, 4), // 그림자의 위치 조정
-              ),
-            ],
-            borderRadius: BorderRadius.circular(20), // 박스의 모서리를 둥글게 조정
-            border: Border.all(color: Colors.grey.withOpacity(0.3)), // 테두리 색상 및 너비 조정
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 20),
-              Text(
-                '환영합니다!',
-                style: TextStyle(
-                  fontSize: 35,
-                  fontFamily: 'Geekble',
-                  color: Colors.deepPurpleAccent,
-                ),
-              ),
-              SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                },
-                child: Text(
-                  '마이펫 등록을 위해 로그인 해주세요!',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Omyu',
-                    color: Colors.black.withOpacity(0.6),
-                    decoration: TextDecoration.underline, // 밑줄 추가
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final double containerHeight = constraints.maxHeight * 0.8; // 부모 높이의 80%
+          final double containerWidth = constraints.maxWidth * 0.8; // 부모 너비의 80%
+          final double circleButtonSize = containerWidth * 0.5; // 원형 버튼의 크기
+
+          return Center(
+            child: Container(
+              height: containerHeight, // 박스의 높이 조정
+              width: containerWidth, // 박스의 너비 조정
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 10,
+                    offset: Offset(0, 4), // 그림자의 위치 조정
                   ),
-                ),
+                ],
+                borderRadius: BorderRadius.circular(20), // 박스의 모서리를 둥글게 조정
+                border: Border.all(color: Colors.grey.withOpacity(0.3)), // 테두리 색상 및 너비 조정
+                color: Colors.white,
               ),
-              SizedBox(height: 30),
-              _buildCircleButton(context),
-              SizedBox(height: 30),
-              _buildLoginButton(context),
-            ],
-          ),
-        ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    '환영합니다!',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontFamily: 'Geekble',
+                      color: Colors.deepPurpleAccent,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    },
+                    child: Text(
+                      '마이펫 등록을 위해 로그인 해주세요!',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontFamily: 'Omyu',
+                        color: Colors.black.withOpacity(0.6),
+                        decoration: TextDecoration.underline, // 밑줄 추가
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  _buildCircleButton(context, circleButtonSize),
+                  SizedBox(height: 50),
+                  _buildLoginButton(context, containerWidth),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildCircleButton(BuildContext context) {
+  Widget _buildCircleButton(BuildContext context, double size) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -76,8 +84,8 @@ class MainNon extends StatelessWidget {
         );
       },
       child: Container(
-        width: 180, // 크기 조절 가능
-        height: 180, // 크기 조절 가능
+        width: size, // 크기 조절 가능
+        height: size, // 크기 조절 가능
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.deepPurpleAccent, // 버튼 색상 설정
@@ -97,8 +105,8 @@ class MainNon extends StatelessWidget {
               bottom: 5,
               right: 5,
               child: Container(
-                width: 50, // 추가 원의 크기 조절
-                height: 50, // 추가 원의 크기 조절
+                width: size * 0.3, // 추가 원의 크기 조절
+                height: size * 0.3, // 추가 원의 크기 조절
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white, // 추가 원의 색상 설정
@@ -106,14 +114,14 @@ class MainNon extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.camera_alt,
-                  size: 30,
+                  size: size * 0.2,
                   color: Colors.grey.withOpacity(0.8),
                 ),
               ),
             ),
             Icon(
               Icons.add,
-              size: 80, // 아이콘 크기 조절 가능
+              size: size * 0.4, // 아이콘 크기 조절 가능
               color: Colors.white, // 아이콘 색상 설정
             ),
           ],
@@ -122,7 +130,7 @@ class MainNon extends StatelessWidget {
     );
   }
 
-  Widget _buildLoginButton(BuildContext context) {
+  Widget _buildLoginButton(BuildContext context, double containerWidth) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -133,7 +141,7 @@ class MainNon extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 40), // 좌우 마진 추가
+        margin: EdgeInsets.symmetric(horizontal: containerWidth * 0.1), // 좌우 마진 추가
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Colors.deepPurpleAccent,
@@ -153,13 +161,13 @@ class MainNon extends StatelessWidget {
             Icon(
               Icons.chat,
               color: Colors.white, // 아이콘 색상
-              size: 24, // 아이콘 크기
+              size: 25, // 아이콘 크기
             ),
             SizedBox(width: 10), // 아이콘과 텍스트 사이 간격 조정
             Text(
               '챗봇만 이용하러 가기',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 25,
                 fontFamily: 'Geekble',
                 color: Colors.white, // 텍스트 색상
               ),
