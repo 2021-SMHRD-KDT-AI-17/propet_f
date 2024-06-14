@@ -56,30 +56,41 @@ class _MainUserState extends State<MainUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: pets.isEmpty
-          ? _buildNoPetsPage(context)
-          : PageView(
-        children: [
-          ...pets.map((pet) {
-            String petName = pet['pname'] as String;
-            String petBreed = pet['pkind'] as String;
-            int petAge = int.tryParse(pet['page'].toString()) ?? 0;
-            String petGender = pet['pgender'] as String;
-            String petWeight = pet['pkg'] as String;
-            return _buildPage(
-                context, petName, petBreed, petAge, petGender, petWeight);
-          }).toList(),
-          if (pets.length < 3) _buildAddPetPage(context),
-        ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return pets.isEmpty
+              ? _buildNoPetsPage(context, constraints)
+              : PageView(
+            children: [
+              ...pets.map((pet) {
+                String petName = pet['pname'] as String;
+                String petBreed = pet['pkind'] as String;
+                int petAge = int.tryParse(pet['page'].toString()) ?? 0;
+                String petGender = pet['pgender'] as String;
+                String petWeight = pet['pkg'] as String;
+                return _buildPage(
+                    context, petName, petBreed, petAge, petGender, petWeight, constraints);
+              }).toList(),
+              if (pets.length < 3) _buildAddPetPage(context, constraints),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildNoPetsPage(BuildContext context) {
+  Widget _buildNoPetsPage(BuildContext context, BoxConstraints constraints) {
+    final double containerHeight = constraints.maxHeight * 0.8; // 부모 높이의 80%
+    final double containerWidth = constraints.maxWidth * 0.8; // 부모 너비의 80%
+
+    final double iconSize = containerWidth * 0.4; // 컨테이너 너비의 40%
+    final double textFontSize1 = containerWidth * 0.07; // 컨테이너 너비의 7%
+    final double textFontSize2 = containerWidth * 0.06; // 컨테이너 너비의 6%
+
     return Center(
       child: Container(
-        height: 500,
-        width: 350,
+        height: containerHeight,
+        width: containerWidth,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -104,8 +115,8 @@ class _MainUserState extends State<MainUser> {
                 );
               },
               child: Container(
-                width: 200,
-                height: 200,
+                width: iconSize,
+                height: iconSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.withOpacity(0.3)),
@@ -121,30 +132,30 @@ class _MainUserState extends State<MainUser> {
                 ),
                 child: Icon(
                   Icons.pets,
-                  size: 80,
+                  size: iconSize * 0.6, // 아이콘 컨테이너 크기의 60%
                   color: Colors.deepPurpleAccent,
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: containerHeight * 0.05), // 컨테이너 높이의 5%
             Text(
               '등록된 펫이 없습니다.',
               style: TextStyle(
-                fontSize: 24,
-                fontFamily: 'Geekble', // 폰트 변경
+                fontSize: textFontSize1,
+                fontFamily: 'Geekble',
                 color: Colors.grey.withOpacity(1.0),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: containerHeight * 0.05), // 컨테이너 높이의 5%
             Text(
               '지금 바로 사랑스러운 펫을 등록해 보세요!',
               style: TextStyle(
-                fontSize: 20,
-                fontFamily: 'Omyu', // 폰트 변경
+                fontSize: textFontSize2,
+                fontFamily: 'Omyu',
                 color: Colors.black.withOpacity(0.6),
               ),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: containerHeight * 0.1), // 컨테이너 높이의 10%
             _buildRegisterButton(context, '마이 펫 등록'),
           ],
         ),
@@ -153,11 +164,14 @@ class _MainUserState extends State<MainUser> {
   }
 
   Widget _buildPage(BuildContext context, String petName, String petBreed,
-      int petAge, String petGender, String petWeight) {
+      int petAge, String petGender, String petWeight, BoxConstraints constraints) {
+    final double containerHeight = constraints.maxHeight * 0.8; // 부모 높이의 80%
+    final double containerWidth = constraints.maxWidth * 0.8; // 부모 너비의 80%
+
     return Center(
       child: Container(
-        height: 500,
-        width: 350,
+        height: containerHeight,
+        width: containerWidth,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -178,21 +192,21 @@ class _MainUserState extends State<MainUser> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 _buildCustomWidget(context),
-                SizedBox(width: 10),
+                SizedBox(width: containerWidth * 0.03), // 컨테이너 너비의 3%
               ],
             ),
-            SizedBox(height: 5),
-            _buildCircleButton(context),
-            SizedBox(height: 1),
-            _buildPetInfo(petName, petBreed, petAge, petGender, petWeight),
-            SizedBox(height: 20),
+            SizedBox(height: containerHeight * 0.03), // 컨테이너 높이의 1%
+            _buildCircleButton(context, containerWidth * 0.52),
+            SizedBox(height: containerHeight * 0.04), // 컨테이너 높이의 1%
+            _buildPetInfo(petName, petBreed, petAge, petGender, petWeight, containerWidth * 0.06),
+            SizedBox(height: containerHeight * 0.06), // 컨테이너 높이의 4%
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCircleButton(BuildContext context) {
+  Widget _buildCircleButton(BuildContext context, double size) {
     return GestureDetector(
       onTap: () {
         // Navigator.push(
@@ -201,8 +215,8 @@ class _MainUserState extends State<MainUser> {
         // );
       },
       child: Container(
-        width: 200,
-        height: 200,
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -218,8 +232,8 @@ class _MainUserState extends State<MainUser> {
         child: ClipOval(
           child: Image.asset(
             'assets/images/여름.jpg',
-            width: 150,
-            height: 150,
+            width: size * 0.75,
+            height: size * 0.75,
             fit: BoxFit.cover,
           ),
         ),
@@ -228,7 +242,7 @@ class _MainUserState extends State<MainUser> {
   }
 
   Widget _buildPetInfo(String petName, String petBreed, int petAge,
-      String petGender, String petWeight) {
+      String petGender, String petWeight, double fontSize) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
       padding: EdgeInsets.all(20),
@@ -241,25 +255,25 @@ class _MainUserState extends State<MainUser> {
         children: [
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100, 20, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.drive_file_rename_outline, '이름', petName, Colors.deepPurpleAccent.shade100, fontSize, 'Omyu')),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200, 20, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.pets, '품종', petBreed, Colors.brown.shade200, fontSize, 'Omyu')),
             ],
           ),
           SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100, 16, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.cake, '나이', '$petAge살', Colors.orangeAccent.shade100, fontSize, 'Omyu')),
               SizedBox(width: 10),
               Expanded(child: _buildPetDetailBox(
                 petGender == '수컷' ? Icons.male : Icons.female,
                 '성별',
                 petGender,
                 petGender == '수컷' ? Colors.blueAccent.shade100 : Colors.pinkAccent.shade100,
-                16, 'Omyu',
+                fontSize, 'Omyu',
               )),
               SizedBox(width: 10),
-              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200, 16, 'Omyu')),
+              Expanded(child: _buildPetDetailBox(Icons.monitor_weight, '몸무게', '$petWeight kg', Colors.green.shade200, fontSize, 'Omyu')),
             ],
           ),
         ],
@@ -299,11 +313,18 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
-  Widget _buildAddPetPage(BuildContext context) {
+  Widget _buildAddPetPage(BuildContext context, BoxConstraints constraints) {
+    final double containerHeight = constraints.maxHeight * 0.8; // 부모 높이의 80%
+    final double containerWidth = constraints.maxWidth * 0.8; // 부모 너비의 80%
+
+    final double iconSize = containerWidth * 0.4; // 컨테이너 너비의 40%
+    final double textFontSize1 = containerWidth * 0.07; // 컨테이너 너비의 7%
+    final double textFontSize2 = containerWidth * 0.06; // 컨테이너 너비의 6%
+
     return Center(
       child: Container(
-        height: 500,
-        width: 350,
+        height: containerHeight,
+        width: containerWidth,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -328,8 +349,8 @@ class _MainUserState extends State<MainUser> {
                 );
               },
               child: Container(
-                width: 200,
-                height: 200,
+                width: iconSize,
+                height: iconSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.grey.withOpacity(0.3)),
@@ -345,30 +366,30 @@ class _MainUserState extends State<MainUser> {
                 ),
                 child: Icon(
                   Icons.add,
-                  size: 80,
+                  size: iconSize * 0.6, // 아이콘 컨테이너 크기의 60%
                   color: Colors.deepPurpleAccent,
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: containerHeight * 0.05), // 컨테이너 높이의 5%
             Text(
               '마이 펫 추가 등록하기',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: textFontSize1,
                 fontFamily: 'Geekble', // 폰트 변경
                 color: Colors.grey.withOpacity(1.0),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: containerHeight * 0.05), // 컨테이너 높이의 5%
             Text(
               '최대 3마리까지 등록 가능합니다!',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: textFontSize2,
                 fontFamily: 'Omyu', // 폰트 변경
                 color: Colors.black.withOpacity(0.6),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: containerHeight * 0.1), // 컨테이너 높이의 10%
             _buildRegisterButton(context, '마이펫 등록'),
           ],
         ),

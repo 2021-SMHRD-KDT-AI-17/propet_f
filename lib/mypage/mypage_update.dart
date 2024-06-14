@@ -147,7 +147,7 @@ class __FormContentState extends State<_FormContent> {
             TextFormField(
               readOnly: true,
               decoration: const InputDecoration(
-                labelText: 'Id',
+                labelText: 'ID',
                 hintText: 'ID',
                 prefixIcon: Icon(Icons.perm_identity),
                 border: OutlineInputBorder(),
@@ -158,8 +158,8 @@ class __FormContentState extends State<_FormContent> {
             TextFormField(
               controller: pwController,
               decoration: const InputDecoration(
-                labelText: 'Pw',
-                hintText: 'Enter your PW',
+                labelText: 'PassWord',
+                hintText: 'Enter your PassWord',
                 prefixIcon: Icon(Icons.lock_outline_rounded),
                 border: OutlineInputBorder(),
               ),

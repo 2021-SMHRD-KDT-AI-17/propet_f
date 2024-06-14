@@ -90,7 +90,7 @@ class __FormContentState extends State<_FormContent> {
             TextFormField(
               controller: idCon,
               decoration: InputDecoration(
-                labelText: 'Id',
+                labelText: 'ID',
                 labelStyle: TextStyle(fontFamily: 'Omyu'),
                 hintText: 'Enter your ID',
                 hintStyle: TextStyle(fontFamily: 'Omyu'),
@@ -103,9 +103,9 @@ class __FormContentState extends State<_FormContent> {
             TextFormField(
               controller: pwCon,
               decoration: InputDecoration(
-                labelText: 'Pw',
+                labelText: 'PassWord',
                 labelStyle: TextStyle(fontFamily: 'Omyu'),
-                hintText: 'Enter your PW',
+                hintText: 'Enter your PassWord',
                 hintStyle: TextStyle(fontFamily: 'Omyu'),
                 prefixIcon: Icon(Icons.lock_outline_rounded),
                 border: OutlineInputBorder(),

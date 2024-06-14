@@ -228,7 +228,7 @@ class _PetEditState extends State<PetEdit> {
               ),
               SizedBox(height: 20),
               Container(
-                height: 500,
+                height: 750,
                 width: 350,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),

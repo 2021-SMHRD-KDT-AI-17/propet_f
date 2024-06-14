@@ -12,11 +12,18 @@ class PreChat extends StatelessWidget {
   const PreChat({Key? key, required this.chatData}) : super(key: key);
 
   String _formatMessage(String message) {
-    final int maxCharsPerLine = 25; // 한 줄에 최대 25자
+    final int maxCharsPerLine = 38;
     final StringBuffer buffer = StringBuffer();
+    final List<String> lines = message.split('\n');
 
-    for (int i = 0; i < message.length; i += maxCharsPerLine) {
-      buffer.writeln(message.substring(i, i + maxCharsPerLine > message.length ? message.length : i + maxCharsPerLine));
+    for (String line in lines) {
+      for (int i = 0; i < line.length; i += maxCharsPerLine) {
+        buffer.writeln(line.substring(
+            i,
+            i + maxCharsPerLine > line.length
+                ? line.length
+                : i + maxCharsPerLine));
+      }
     }
 
     return buffer.toString().trim();
