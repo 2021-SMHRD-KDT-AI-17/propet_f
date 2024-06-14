@@ -251,7 +251,7 @@ class _PetEnrollState extends State<PetEnroll> {
                       ),
                       SizedBox(height: 20),
                       Container(
-                        height: 500,
+                        height: 700,
                         width: 350,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
