@@ -22,7 +22,7 @@ class ScheduleCard extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(left: 5.0, top: 3.0, bottom: 5.0),
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: MediaQuery.of(context).size.width * 0.85,
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
@@ -36,24 +36,37 @@ class ScheduleCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _Time(
-                    startTime: startTime,
-                    endTime: endTime,
+                  Expanded(
+                    flex: 3,
+                    child: _Time(
+                      startTime: startTime,
+                      endTime: endTime,
+                    ),
                   ),
                   VerticalDivider(
-                    color: Colors.black,
-                    thickness: 1.0,
                     width: 16.0,
+                    thickness: 1.0,
+                    color: Colors.black,
                   ),
-                  _Content(
-                    content: content,
+                  Expanded(
+                    flex: 4,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: _Content(
+                        content: content,
+                      ),
+                    ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => onDelete(),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => onDelete(),
+                    ),
                   ),
                 ],
               ),
+
             ),
           ),
           SizedBox(height: 5),
@@ -78,7 +91,7 @@ class _Time extends StatelessWidget {
     final textStyle = TextStyle(
       fontFamily: 'Omyu',
       color: Colors.black,
-      fontSize: 14.0,
+      fontSize: 16.0,
     );
 
     return Flexible(
