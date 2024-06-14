@@ -79,7 +79,7 @@ class _MainShopPageState extends State<MainShopPage> {
       case 2:
         return 'assets/images/2.png';
       case 3:
-        return 'assets/images/3.png';
+        return 'assets/images/3.jpg';
       case 4:
         return 'assets/images/4.png';
       case 5:
