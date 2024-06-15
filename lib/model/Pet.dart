@@ -9,6 +9,7 @@ class Pet{
   String pdisease; //질환 여부
   String? pdiseaseinf; //질환정보
   int? uidx; //회원 idx
+  String? pimage; // pet 사진
 
   Pet({
     required this.pidx,
@@ -21,6 +22,7 @@ class Pet{
     required this.pdisease,
     required this.pdiseaseinf,
     required this.uidx,
+    required this.pimage,
 
   });
 
@@ -38,6 +40,7 @@ class Pet{
     pdisease: json['pdisease'],
     pdiseaseinf: json['pdiseaseinf'],
     uidx: json['uidx'],
+    pimage: json['pimage']
 
   );
 
@@ -54,6 +57,7 @@ class Pet{
     'pdisease':pdisease,
     'pdiseaseinf':pdiseaseinf,
     'uidx':uidx,
+    'pimage':pimage,
   };
 
 
@@ -68,6 +72,7 @@ class Pet{
     required this.pdisease,
     this.pdiseaseinf,
     this.uidx,
+    this.pimage,
   });
 
   Pet.update({
@@ -77,6 +82,7 @@ class Pet{
     required this.pdisease,
     this.pdiseaseinf,
     this.uidx,
+    this.pimage,
 });
 
   // Object -> Map<String, String> 변환 메서드
@@ -92,6 +98,7 @@ class Pet{
       'pdisease': pdisease,
       'pdiseaseinf': pdiseaseinf ?? '',
       'uidx': uidx.toString(),
+      'pimage':pimage.toString(),
     };
   }
 
@@ -107,6 +114,7 @@ class Pet{
       pdisease: map['pdisease']!,
       pdiseaseinf: map['pdiseaseinf'],
       uidx: int.tryParse(map['uidx'] ?? ''),
+      pimage: map['pimage'],
     );
   }
 

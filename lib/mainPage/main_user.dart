@@ -1,11 +1,31 @@
 import 'dart:convert';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:propetsor/config/config.dart';
 import 'package:propetsor/main.dart';
 import 'package:propetsor/model/Pet.dart';
 import 'package:propetsor/mypage/mypetpage.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MainUser(),
+    );
+  }
+}
 
 class MainUser extends StatefulWidget {
   const MainUser();
@@ -45,11 +65,33 @@ class _MainUserState extends State<MainUser> {
       ),
     );
 
+    List<Map<String, String>> loadedPets = petModelFromJson(res.data.toString());
+
+    // 각 펫의 이미지를 로드하여 pets 리스트를 업데이트
+    for (var pet in loadedPets) {
+      String petImagePath = pet['pimage'] ?? '';
+      String petImageUrl = await _loadImage(petImagePath);
+      pet['pimage'] = petImageUrl;
+    }
+
     setState(() {
-      pets = petModelFromJson(res.data.toString());
+      pets = loadedPets;
     });
+
     String petsJson = jsonEncode(pets); // List<Map<String, String>>를 JSON 문자열로 변환
     await storage.write(key: "pets", value: petsJson); // 변환된 JSON 문자열을 storage에 저장
+  }
+
+  Future<String> _loadImage(String path) async {
+    try {
+      final ref = FirebaseStorage.instance.refFromURL("gs://image-f513d.appspot.com/$path");
+      final url = await ref.getDownloadURL();
+      print('Image URL: $url');
+      return url;
+    } catch (e) {
+      print('Error loading image: $e');
+      return '';
+    }
   }
 
   @override
@@ -68,8 +110,9 @@ class _MainUserState extends State<MainUser> {
                 int petAge = int.tryParse(pet['page'].toString()) ?? 0;
                 String petGender = pet['pgender'] as String;
                 String petWeight = pet['pkg'] as String;
+                String petImage = pet['pimage'] as String;
                 return _buildPage(
-                    context, petName, petBreed, petAge, petGender, petWeight, constraints);
+                    context, petName, petBreed, petAge, petGender, petWeight, petImage, constraints);
               }).toList(),
               if (pets.length < 3) _buildAddPetPage(context, constraints),
             ],
@@ -164,7 +207,7 @@ class _MainUserState extends State<MainUser> {
   }
 
   Widget _buildPage(BuildContext context, String petName, String petBreed,
-      int petAge, String petGender, String petWeight, BoxConstraints constraints) {
+      int petAge, String petGender, String petWeight, String petImage, BoxConstraints constraints) {
     final double containerHeight = constraints.maxHeight * 0.8; // 부모 높이의 80%
     final double containerWidth = constraints.maxWidth * 0.8; // 부모 너비의 80%
 
@@ -196,7 +239,7 @@ class _MainUserState extends State<MainUser> {
               ],
             ),
             SizedBox(height: containerHeight * 0.03), // 컨테이너 높이의 1%
-            _buildCircleButton(context, containerWidth * 0.52),
+            _buildCircleButton(context, containerWidth * 0.52, petImage),
             SizedBox(height: containerHeight * 0.04), // 컨테이너 높이의 1%
             _buildPetInfo(petName, petBreed, petAge, petGender, petWeight, containerWidth * 0.06),
             SizedBox(height: containerHeight * 0.06), // 컨테이너 높이의 4%
@@ -206,7 +249,7 @@ class _MainUserState extends State<MainUser> {
     );
   }
 
-  Widget _buildCircleButton(BuildContext context, double size) {
+  Widget _buildCircleButton(BuildContext context, double size, String imageUrl) {
     return GestureDetector(
       onTap: () {
         // Navigator.push(
@@ -230,8 +273,8 @@ class _MainUserState extends State<MainUser> {
           border: Border.all(color: Colors.grey.withOpacity(0.3)),
         ),
         child: ClipOval(
-          child: Image.asset(
-            'assets/images/여름.jpg',
+          child: Image.network(
+            imageUrl,
             width: size * 0.75,
             height: size * 0.75,
             fit: BoxFit.cover,
@@ -430,7 +473,6 @@ class _MainUserState extends State<MainUser> {
           ),
           SizedBox(width: 8),
           Icon(Icons.pets, size: 24), // 아이콘을 추가하여 버튼의 직관성을 높입니다.
-
         ],
       ),
     );
