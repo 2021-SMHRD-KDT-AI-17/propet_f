@@ -9,11 +9,11 @@ class APIService {
     String? uidx = await storage.read(key: "uidx");
     String u_idx = uidx ?? "1";
 
-    print("메서드 실행은 됨ㅋ-------------------------------");
+    print("메서드 실행은 됨-------------------------------");
 
-    print(choose + "message" + message+"breed" + breed + "age" +age);
+    print('$choose message $message breed $breed age $age');
     final response = await http.post(
-      Uri.parse('${Config.chatUrl}'),
+      Uri.parse('${Config.baseUrl}/boot/chat'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -25,15 +25,16 @@ class APIService {
         'age': age,
         'uidx': u_idx,
       }),
-    ).timeout(Duration(seconds: 30));  // 타임아웃 설정
-
-    print("*-*-*-*-*-*-*-*-*-*-*-*-");
-    print(response.body);
+    );
 
     if (response.statusCode == 200) {
-      // JSON 응답을 문자열로 변환
-      var jsonResponse = jsonDecode(response.body);
-      return jsonResponse; // 서버에서 "response" 키에 해당하는 값을 반환
+      try {
+        // JSON 문자열을 JSON 객체로 변환
+        return response.body; // JSON 객체를 문자열로 변환하여 반환
+      } catch (e) {
+        print('Error parsing JSON: $e');
+        throw Exception('Failed to parse JSON response');
+      }
     } else {
       throw Exception('Failed to load response with status code: ${response.statusCode}');
     }

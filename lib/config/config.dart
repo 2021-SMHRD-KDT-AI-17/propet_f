@@ -1,8 +1,11 @@
 // config.dart
 class Config {
   // springboot 서버
-  static const String baseUrl = 'https://a3ef-180-83-53-119.ngrok-free.app';
+  static const String baseUrl = 'http://10.0.2.2:8089';
 
   // flask 서버
   static const String chatUrl = 'https://c0ca-180-83-53-119.ngrok-free.app/chat';
+
+  // flask 서버
+  static const String picUrl = 'http://192.168.219.48:5001';
 }

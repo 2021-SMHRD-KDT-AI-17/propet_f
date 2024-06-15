@@ -1,11 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:propetsor/config/config.dart';
 import 'package:propetsor/mainPage/main_2.dart';
+import 'package:http/http.dart' as http;
 
 class PetEnroll extends StatefulWidget {
   final Function(Map<String, String>) onEnroll;
@@ -32,9 +33,44 @@ class _PetEnrollState extends State<PetEnroll> {
   String? _selectedNeutered;
   String? _selectedDisease;
   XFile? _petImage;
+  String? _uploadedImageName;
 
   final Color selectedColor = Colors.deepPurpleAccent;
   final Color unselectedColor = Colors.grey[300]!;
+
+  Future<void> uploadImage() async {
+    if (_petImage == null) return;
+
+    final uri = Uri.parse('${Config.picUrl}/chat');
+    final request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath('file', _petImage!.path));
+
+    print("43584u32985748327587");
+    print(request);
+
+    try {
+      final res = await request.send();
+      final resBody = await res.stream.bytesToString();
+      final data = json.decode(resBody);
+
+      print("-*-*----------------");
+      print(data);
+
+      print("Response status: ${res.statusCode}");
+      print("Response body: $resBody");
+
+      if (res.statusCode == 200) {
+        setState(() {
+          _uploadedImageName = data['imageName'];
+        });
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      throw e;
+    }
+  }
 
   Future<void> enroll(Map<String, String> petData) async {
     final dio = Dio();
@@ -62,6 +98,8 @@ class _PetEnrollState extends State<PetEnroll> {
       String? uidx = await _storage.read(key: 'uidx');
 
       if (uidx != null) {
+        await uploadImage();
+
         final Map<String, String> _petData = {
           'uidx': uidx,
           'pname': pnameCon.text,
@@ -72,7 +110,10 @@ class _PetEnrollState extends State<PetEnroll> {
           'pgender': _selectedGender ?? '',
           'psurgery': _selectedNeutered ?? '',
           'pdisease': _selectedDisease ?? '',
+          'pimage': _uploadedImageName ?? '',
         };
+
+        print('Sending pet data: $_petData');
 
         try {
           await enroll(_petData);
