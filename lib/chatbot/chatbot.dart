@@ -9,6 +9,12 @@ import 'api_service.dart';
 import 'package:intl/intl.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'api_service.dart'; // API 서비스 모듈
+
 class ChatScreen extends StatefulWidget {
   final APIService apiService;
 
@@ -49,7 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
       _showInitialButtons = false; // 버튼을 숨기도록 상태 업데이트
       _messages.add({
         'role': 'bot',
-        'message': choice == "1" ? '강아지의 증상이나, 필요하신 영양제의 목표를 말씀해 주시면, 가장 적합한 제품을 추천해 드리겠습니다.' : '무엇이 궁금하실까요?',
+        'message': choice == "1" ? '강아지의 증상이나, 필요하신 영양제의 목표를 말씀해 주시면, 가장 적합한 제품을 추천해 드리겠습니다.' : '무엇이 궁금하실까요? 정확한 답변을 위해 반려동물의 품종과 함께 질문을 입력해주세요',
         'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
         'name': '프로펫서',
       });
@@ -447,3 +453,4 @@ void main() {
     home: ChatScreen(apiService: APIService()), // APIService를 인스턴스화하여 전달
   ));
 }
+
