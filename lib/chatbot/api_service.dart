@@ -13,7 +13,7 @@ class APIService {
 
     print('$choose message $message breed $breed age $age');
     final response = await http.post(
-      Uri.parse('${Config.baseUrl}/boot/chat'),
+      Uri.parse('${Config.chatUrl}'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -26,11 +26,13 @@ class APIService {
         'uidx': u_idx,
       }),
     );
+    print("*-*----------------------");
+    print(response.body);
 
     if (response.statusCode == 200) {
       try {
-        // JSON 문자열을 JSON 객체로 변환
-        return response.body; // JSON 객체를 문자열로 변환하여 반환
+        var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        return jsonResponse; // JSON 객체를 문자열로 변환하여 반환
       } catch (e) {
         print('Error parsing JSON: $e');
         throw Exception('Failed to parse JSON response');

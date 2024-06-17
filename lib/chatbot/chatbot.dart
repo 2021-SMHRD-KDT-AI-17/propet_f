@@ -252,7 +252,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             color: Colors.black,
                             fontSize: 18,
                           ),
-                          speed: Duration(milliseconds: 100),
+                          speed: Duration(milliseconds: 25),
                         ),
                       ],
                       totalRepeatCount: 1,
