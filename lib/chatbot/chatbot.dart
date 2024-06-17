@@ -37,29 +37,38 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _messages.add({
       'role': 'bot',
-      'message': '안녕하세요! 프로펫서 입니다! 질문을 입력해주세요. ',
+      'message': '안녕하세요! 프로펫서 입니다! 원하시는 서비스를 클릭해주세요!',
       'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
       'name': '프로펫서',
     });
   }
-  void _handleButtonPress() {
+
+  void _handleButtonPress(String choice) {
     setState(() {
+      _choose = choice;
       _showInitialButtons = false; // 버튼을 숨기도록 상태 업데이트
+      _messages.add({
+        'role': 'bot',
+        'message': choice == "1" ? '강아지의 증상이나, 필요하신 영양제의 목표를 말씀해 주시면, 가장 적합한 제품을 추천해 드리겠습니다.' : '무엇이 궁금하실까요?',
+        'timestamp': DateFormat('hh:mm a').format(DateTime.now()),
+        'name': '프로펫서',
+      });
+      print('버튼이 클릭되었습니다: $_choose'); // 콘솔에 출력
     });
   }
 
-  Future<void> loadPets() async{
-    String? petsJson = await storage.read(key:"pets");
+  Future<void> loadPets() async {
+    String? petsJson = await storage.read(key: "pets");
     member = await storage.read(key: "member");
 
     if (petsJson != null && member != null) {
       List<dynamic> decodedList = jsonDecode(petsJson); // JSON 문자열을 디코딩하여 리스트로 변환
-      List<Map<String, String>> pets = List<Map<String, String>>.from(decodedList.map((item) => Map<String, String>.from(item)));
+      List<Map<String, String>> pets = List<Map<String, String>>.from(
+          decodedList.map((item) => Map<String, String>.from(item)));
       _breed = pets[0]['pkind'];
       _age = pets[0]['page'];
     }
   }
-
 
   @override
   void dispose() {
@@ -111,8 +120,8 @@ class _ChatScreenState extends State<ChatScreen> {
             _isWaitingForResponse = true;
             _botResponse = '';
 
-            String response =
-            await widget.apiService.sendMessage(_choose!,_query!, _breed!, _age!);
+            String response = await widget.apiService.sendMessage(
+                _choose!, _query!, _breed!, _age!);
             print("================================api");
             print(response);
             setState(() {
@@ -138,8 +147,8 @@ class _ChatScreenState extends State<ChatScreen> {
           _isWaitingForResponse = true;
           _botResponse = '';
 
-          String response =
-          await widget.apiService.sendMessage(_choose!,_query!, _breed!, _age!);
+          String response = await widget.apiService.sendMessage(
+              _choose!, _query!, _breed!, _age!);
           print("================================api");
           print(response);
           setState(() {
@@ -157,7 +166,6 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     }
   }
-
 
   void _addBotMessage(String message) {
     setState(() {
@@ -231,7 +239,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: isUserMessage ? Colors.deepPurple[300] : Colors.grey[200],
+                      color: isUserMessage
+                          ? Colors.deepPurple[300]
+                          : Colors.grey[200],
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: isFirstMessage || isUserMessage
@@ -239,7 +249,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       formattedMessage,
                       style: TextStyle(
                         fontFamily: 'Omyu',
-                        color: isUserMessage ? Colors.white : Colors.black,
+                        color:
+                        isUserMessage ? Colors.white : Colors.black,
                         fontSize: 18,
                       ),
                     )
@@ -293,8 +304,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   width: 100, // 원하는 가로 크기 설정
                   child: ElevatedButton(
                     onPressed: () {
-                      _handleButtonPress(); // 첫 번째 버튼 클릭 시 동작
-                      _choose = "1";
+                      _handleButtonPress("2"); // 애견정보 버튼 클릭 시
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -317,8 +327,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   width: 100, // 원하는 가로 크기 설정
                   child: ElevatedButton(
                     onPressed: () {
-                      _handleButtonPress(); // 두 번째 버튼 클릭 시 동작
-                      _choose = "2";
+                      _handleButtonPress("1"); // 상품추천 버튼 클릭 시
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -342,9 +351,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ],
     );
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -434,4 +440,10 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: ChatScreen(apiService: APIService()), // APIService를 인스턴스화하여 전달
+  ));
 }
