@@ -10,7 +10,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNo
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message: ${message.messageId}');
+  print('Handling a background message: ${message.data}');
   showNotification(message);
 }
 
@@ -26,9 +26,13 @@ void showNotification(RemoteMessage message) async {
   const NotificationDetails platformChannelSpecifics =
   NotificationDetails(android: androidPlatformChannelSpecifics);
 
-  String? title = message.data['title'];
-  String? body = message.data['body'];
+  print("*--*-*-----------------");
+  print(message.data);
 
+  String? title = "미응답 답변이 등록되었습니다!!";
+  String? body = "'닥스훈트 알려줘'에 대한 답변이 등록되었습니다!";
+
+  print(title);
   await flutterLocalNotificationsPlugin.show(
     0,
     title,

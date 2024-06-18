@@ -6,7 +6,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mysql_client/mysql_client.dart';
 import 'package:propetsor/FCM/fcm_service.dart';
+import 'package:propetsor/config/config.dart';
 import 'package:propetsor/login/join.dart';
 import 'package:propetsor/login/login.dart';
 import 'package:propetsor/mainPage/main_1.dart';
@@ -59,11 +61,13 @@ Future<void> initializeFCM() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await fetchUrls();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   const AndroidInitializationSettings initializationSettingsAndroid =
   AndroidInitializationSettings('@mipmap/ic_launcher');
+
   final InitializationSettings initializationSettings =
   InitializationSettings(
     android: initializationSettingsAndroid,
@@ -78,6 +82,37 @@ void main() async {
     runApp(MaterialApp(home: MyChatPage()));
   });
   runApp(MyApp());
+}
+Future<void> fetchUrls() async {
+  final conn = await MySQLConnection.createConnection(
+    host: 'project-db-cgi.smhrd.com',
+    port: 3307,
+    userName: 'vmfhvpttj',
+    password: '20240621',
+    databaseName: 'vmfhvpttj',
+  );
+
+  await conn.connect();
+
+  var result = await conn.execute("SELECT * FROM links");
+
+  for (var row in result.rows) {
+    print('Row: $row');
+    String? urlType = row.colAt(1);
+    String? url = row.colAt(2);
+    if (urlType == 'baseUrl') {
+      Config.baseUrl = url ?? ''; // url이 null일 경우 빈 문자열로 대체
+    } else if (urlType == 'chatUrl') {
+      Config.chatUrl = url ?? ''; // url이 null일 경우 빈 문자열로 대체
+    } else if (urlType == 'picUrl') {
+      Config.picUrl = url ?? ''; // url이 null일 경우 빈 문자열로 대체
+    }
+  }
+
+  print("Config.baseurl-==============================");
+  print(Config.baseUrl);
+
+  await conn.close();
 }
 
 Future<void> clearSecureStorage() async {
