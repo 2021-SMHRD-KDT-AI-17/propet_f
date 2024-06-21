@@ -98,20 +98,25 @@ Future<void> fetchUrls() async {
 
   for (var row in result.rows) {
     print('Row: $row');
-    String? urlType = row.colAt(1);
-    String? url = row.colAt(2);
+
+    String? urlType;
+    String? url;
+
+    try {
+      urlType = row.colAt(1)?.trim();
+      url = row.colAt(2)?.trim();
+    } catch (e) {
+      print('Error accessing row columns: $e');
+    }
+
     if (urlType == 'baseUrl') {
       Config.baseUrl = url ?? ''; // url이 null일 경우 빈 문자열로 대체
     } else if (urlType == 'chatUrl') {
-      Config.chatUrl = url ?? ''; // url이 null일 경우 빈 문자열로 대체
+      Config.chatUrl = url ?? '123'; // url이 null일 경우 123으로 대체
     } else if (urlType == 'picUrl') {
-      Config.picUrl = url ?? ''; // url이 null일 경우 빈 문자열로 대체
+      Config.picUrl = url ?? '123'; // url이 null일 경우 123으로 대체
     }
   }
-
-  print("Config.baseurl-==============================");
-  print(Config.baseUrl);
-
   await conn.close();
 }
 

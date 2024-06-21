@@ -41,27 +41,21 @@ class _PetEnrollState extends State<PetEnroll> {
   Future<void> uploadImage() async {
     if (_petImage == null) return;
 
-    final uri = Uri.parse('${Config.picUrl}/chat');
+    final uri = Uri.parse('${Config.picUrl}/image_upload');
     final request = http.MultipartRequest('POST', uri)
       ..files.add(await http.MultipartFile.fromPath('file', _petImage!.path));
 
-    print("43584u32985748327587");
-    print(request);
-
     try {
       final res = await request.send();
-      final resBody = await res.stream.bytesToString();
-      final data = json.decode(resBody);
-
-      print("-*-*----------------");
-      print(data);
+      final resStream = await res.stream.bytesToString();
+      final data = json.decode(resStream);
 
       print("Response status: ${res.statusCode}");
-      print("Response body: $resBody");
+      print("Response body: $resStream");
 
       if (res.statusCode == 200) {
         setState(() {
-          _uploadedImageName = data['imageName'];
+          _uploadedImageName = data['filename']; // 서버에서 받은 Firebase 파일명을 설정
         });
       } else {
         throw Exception('Failed to upload image');
@@ -71,6 +65,8 @@ class _PetEnrollState extends State<PetEnroll> {
       throw e;
     }
   }
+
+
 
   Future<void> enroll(Map<String, String> petData) async {
     final dio = Dio();
